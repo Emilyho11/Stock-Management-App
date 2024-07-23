@@ -1,0 +1,17 @@
+#root {
+  margin: 0 auto;
+  text-align: center;
+}
+
+a:visited {
+	text-decoration: none;
+}
+
+.unselectable {
+	user-drag: none;
+	user-select: none;
+	-moz-user-select: none;
+	-webkit-user-drag: none;
+	-webkit-user-select: none;
+	-ms-user-select: none;
+}
