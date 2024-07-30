@@ -1,4 +1,5 @@
 package backend.src;
+import java.sql.ResultSet;
 import java.sql.Statement;
 
 public class User {
@@ -72,13 +73,35 @@ public class User {
         }
     }
 
-    public static User findByUsername(String username) {
+    public static User findByUsername(Statement stmt, ResultSet rs, String username) {
         // Find the user in the database by username
+        String sqlFind = "SELECT * FROM \"User\" WHERE username = '" + username + "';";
+        try {
+            rs = stmt.executeQuery(sqlFind);
+            if (rs.next()) {
+                username = rs.getString("username");
+                String email = rs.getString("email");
+                String password = rs.getString("password");
+                return new User(username, password, email);
+            }
+        } catch (Exception e) {
+            System.out.println("Error finding user: " + e.getMessage());
+        }
         return null;
     }
 
-    public static User findByEmail(String email) {
-        // Find the user in the database by email
-        return null;
+    public static void printAllUsers(Statement stmt, ResultSet rs) {
+        // Print all users in the database
+        String getAllUsers = "SELECT username FROM \"User\";";
+        try {
+            rs = stmt.executeQuery(getAllUsers);
+            System.out.println("Table User contains the following tuples:\nusername \temail");
+            while (rs.next()) {
+                String username = rs.getString("username");
+                System.out.println(username);
+            }
+        } catch (Exception e) {
+            System.out.println("Error printing all users: " + e.getMessage());
+        }
     }
 }
