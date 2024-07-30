@@ -1,4 +1,5 @@
 package backend.src;
+import java.sql.Statement;
 
 public class User {
     private String username;
@@ -47,12 +48,28 @@ public class User {
         this.email = email;
     }
 
-    public void save() {
-        // Save the user to the database
+    public void insertUser(Statement stmt) {
+        // Insert the user to the database
+        String sqlInsert = "INSERT INTO \"User\" (username, password, email) " +
+            "VALUES ('" + username + "', '" + password + "', '" + email + "');";
+        
+            try {
+                stmt.executeUpdate(sqlInsert);
+                System.out.println("User inserted successfully");
+        } catch (Exception e) {
+            System.out.println("Error inserting user: " + e.getMessage());
+        }
     }
 
-    public void delete() {
+    public void delete(Statement stmt) {
         // Delete the user from the database
+        String sqlDelete = "DELETE FROM \"User\" WHERE username = '" + username + "';";
+        try {
+            stmt.executeUpdate(sqlDelete);
+            System.out.println("User deleted successfully");
+        } catch (Exception e) {
+            System.out.println("Error deleting user: " + e.getMessage());
+        }
     }
 
     public static User findByUsername(String username) {
