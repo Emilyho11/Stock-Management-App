@@ -51,7 +51,7 @@ public class User {
 
     public void insertUser(Statement stmt) {
         // Insert the user to the database
-        String sqlInsert = "INSERT INTO \"User\" (username, password, email) " +
+        String sqlInsert = "INSERT INTO User (username, password, email) " +
             "VALUES ('" + username + "', '" + password + "', '" + email + "');";
         
             try {
@@ -64,7 +64,7 @@ public class User {
 
     public void delete(Statement stmt) {
         // Delete the user from the database
-        String sqlDelete = "DELETE FROM \"User\" WHERE username = '" + username + "';";
+        String sqlDelete = "DELETE FROM user WHERE username = '" + username + "';";
         try {
             stmt.executeUpdate(sqlDelete);
             System.out.println("User deleted successfully");
@@ -75,7 +75,7 @@ public class User {
 
     public static User findByUsername(Statement stmt, ResultSet rs, String username) {
         // Find the user in the database by username
-        String sqlFind = "SELECT * FROM \"User\" WHERE username = '" + username + "';";
+        String sqlFind = "SELECT * FROM user WHERE username = '" + username + "';";
         try {
             rs = stmt.executeQuery(sqlFind);
             if (rs.next()) {
@@ -92,7 +92,7 @@ public class User {
 
     public static void printAllUsers(Statement stmt, ResultSet rs) {
         // Print all users in the database
-        String getAllUsers = "SELECT username FROM \"User\";";
+        String getAllUsers = "SELECT username FROM user;";
         try {
             rs = stmt.executeQuery(getAllUsers);
             System.out.println("Table User contains the following tuples:\nusername \temail");
