@@ -29,7 +29,7 @@ public class Stocks {
 
     public void insertStocks(Statement stmt) {
         // Insert the user to the database
-        String sqlInsert = "INSERT INTO \"Stocks\" (symbol, COV) " +
+        String sqlInsert = "INSERT INTO stocks (symbol, COV) " +
             "VALUES ('" + symbol + "', '" + COV + "');";
         
             try {
@@ -42,7 +42,7 @@ public class Stocks {
 
     public void deleteStocks(Statement stmt) {
         // Insert the user to the database
-        String sqlDelete = "DELETE FROM \"Stocks\" WHERE symbol = '" + symbol + "';";
+        String sqlDelete = "DELETE FROM stocks WHERE symbol = '" + symbol + "';";
         
             try {
                 stmt.executeUpdate(sqlDelete);
@@ -55,7 +55,7 @@ public class Stocks {
     public static Stocks findBySymbol(Statement stmt, ResultSet rs, String symbol) {
         Stocks stocks = null;
         try {
-            String sqlQuery = "SELECT * FROM \"Stocks\" WHERE symbol = '" + symbol + "';";
+            String sqlQuery = "SELECT * FROM stocks WHERE symbol = '" + symbol + "';";
             rs = stmt.executeQuery(sqlQuery);
             if (rs.next()) {
                 stocks = new Stocks(rs.getString("symbol"), rs.getDouble("COV"));
@@ -68,7 +68,7 @@ public class Stocks {
 
     public static void printAllStocks(Statement stmt, ResultSet rs) {
         try {
-            String sqlQuery = "SELECT * FROM \"Stocks\";";
+            String sqlQuery = "SELECT * FROM stocks;";
             rs = stmt.executeQuery(sqlQuery);
             System.out.println("Table Stocks contains the following tuples:\nsymbol \tCOV");
             while (rs.next()) {
