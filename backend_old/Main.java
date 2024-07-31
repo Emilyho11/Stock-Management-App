@@ -59,7 +59,7 @@ public class Main {
 			// Create SQL statement to query all tuples
 			//
 			//
-			String getAllUsers = "SELECT username, email FROM user;";
+			String getAllUsers = "SELECT username, email FROM users;";
 			ResultSet rs = stmt.executeQuery(getAllUsers);
 
 			//
