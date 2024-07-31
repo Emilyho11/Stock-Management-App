@@ -1,10 +1,12 @@
-package backend_old;
+package cs.toronto.edu;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+
+import backend_old.src.User;
 
 // import io.github.cdimascio.dotenv.Dotenv;
 
@@ -24,7 +26,7 @@ public class Main {
 			// Connect to the database
 			//
 			//
-			conn = DriverManager.getConnection("jdbc:postgresql://34.130.151.83:5432/mydb", "postgres", "postgres");
+			conn = DriverManager.getConnection("jdbc:postgresql://34.130.14.35:5432/mydb", "postgres", "postgres");
 			System.out.println("Opened database successfully"); 
 
 			//
@@ -69,6 +71,15 @@ public class Main {
 				String email = rs.getString("email");
 				System.out.println(username + ", " + email);
 			}
+
+			// Create a new user
+			User user = new User("john_doe", "password123", "john.doe@email.com");
+			System.out.println("Username: " + user.getUsername());
+			System.out.println("Email: " + user.getEmail());
+			System.out.println("Password matches: " + user.checkPassword("password123"));
+			// Insert the user to the database
+			user.insertUser(stmt);
+
 			rs.close();
 		} catch (Exception e) {
 			e.printStackTrace();
