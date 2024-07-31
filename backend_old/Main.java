@@ -2,6 +2,7 @@ package cs.toronto.edu;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -45,7 +46,7 @@ public class Main {
 			// System.out.println("Tuple inserted successfully");
 
 			// Verify the columns in the User table
-            // String verifyColumns = "SELECT column_name FROM information_schema.columns WHERE table_name = 'User';";
+            // String verifyColumns = "SELECT column_name FROM information_schema.columns WHERE table_name = 'Friendship';";
             // ResultSet rsColumns = stmt.executeQuery(verifyColumns);
             // System.out.println("Columns in User table:");
             // while (rsColumns.next()) {
@@ -58,14 +59,14 @@ public class Main {
 			// Create SQL statement to query all tuples
 			//
 			//
-			String getAllUsers = "SELECT username, email FROM \"User\";";
+			String getAllUsers = "SELECT username, email FROM user;";
 			ResultSet rs = stmt.executeQuery(getAllUsers);
 
 			//
 			// Print the queried tuples
 			//
 			//
-			System.out.println("Table testtbl contains the following tuples:\nusername \temail");
+			System.out.println("Table user contains the following tuples:\nusername \temail");
 			while (rs.next()) {
 				String username = rs.getString("username");
 				String email = rs.getString("email");
@@ -78,7 +79,7 @@ public class Main {
 			System.out.println("Email: " + user.getEmail());
 			System.out.println("Password matches: " + user.checkPassword("password123"));
 			// Insert the user to the database
-			user.insertUser(stmt);
+			// user.insertUser(stmt);
 
 			rs.close();
 		} catch (Exception e) {
