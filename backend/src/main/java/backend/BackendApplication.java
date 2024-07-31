@@ -1,14 +1,21 @@
-package cs.toronto.edu;
+package backend;
+
 
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-// import io.github.cdimascio.dotenv.Dotenv;
+import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
 
-public class Main {
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+
+@SpringBootApplication(exclude = {DataSourceAutoConfiguration.class })
+public class BackendApplication {
+
 	public static void main(String[] args) {
+		SpringApplication.run(BackendApplication.class, args);
 		Connection conn = null;
 		Statement stmt = null;
 
@@ -23,7 +30,7 @@ public class Main {
 			// Connect to the database
 			//
 			//
-			conn = DriverManager.getConnection("jdbc:postgresql://127.0.0.0:5432/mydb", "postgres", "postgres");
+			conn = DriverManager.getConnection("jdbc:postgresql://34.130.14.35:5432/mydb", "postgres", "postgres");
 			System.out.println("Opened database successfully"); 
 
 			//
