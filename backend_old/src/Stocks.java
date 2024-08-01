@@ -81,4 +81,25 @@ public class Stocks {
         }
     }
 
+    public void updateCOV(Statement stmt, Double COV) {
+        this.COV = COV;
+        String sqlUpdate = "UPDATE stocks SET cov = '" + COV + "' WHERE symbol = '" + symbol + "';";
+        try {
+            stmt.executeUpdate(sqlUpdate);
+            System.out.println("Stocks updated successfully");
+        } catch (Exception e) {
+            System.out.println("Error updating Stocks: " + e.getMessage());
+        }
+    }
+
+    public void updateSymbol(Statement stmt, String symbol) {
+        String sqlUpdate = "UPDATE stocks SET symbol = '" + symbol + "' WHERE symbol = '" + this.symbol + "';";
+        try {
+            this.symbol = symbol;
+            stmt.executeUpdate(sqlUpdate);
+            System.out.println("Stocks updated successfully");
+        } catch (Exception e) {
+            System.out.println("Error updating Stocks: " + e.getMessage());
+        }
+    }
 }
