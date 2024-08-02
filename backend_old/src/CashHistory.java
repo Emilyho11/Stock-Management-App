@@ -28,10 +28,10 @@ public class CashHistory {
     }
 
     //searches the db for the most recent balance of a portfolio
-    public double getBalance(int id, Connection conn) {
+    public static double getBalance(int id, Connection conn) {
         try {
             PreparedStatement stmt;
-            stmt = conn.prepareStatement("SELECT MAX(balance) FROM changes WHERE (portfolioId = ?);");
+            stmt = conn.prepareStatement("SELECT MAX(balance) FROM cash_history WHERE (portfolioId = ?);");
             stmt.setInt(1, id);
             ResultSet rs = stmt.executeQuery();
             System.out.println("Retrieved the latest balance of the portfolio");
@@ -42,8 +42,23 @@ public class CashHistory {
         }
     }
 
+    //retrieves from the db all the past cash transactions for a portfolio
+    public static ResultSet getCashHistory(int id, Connection conn) {
+        try {
+            PreparedStatement stmt;
+            stmt = conn.prepareStatement("SELECT * FROM cash_history WHERE (portfolioId = ?);");
+            stmt.setInt(1, id);
+            ResultSet rs = stmt.executeQuery();
+            System.out.println("Retrieved the cash transactions of the portfolio");
+            return rs;
+        } catch (SQLException ex) {
+            System.out.println("Error getting a portfolios balance" + ex.getMessage());
+            return null;
+        }
+    }
+
     //creates a new cash transaction and withdraws cash from a portfolio
-    private void withdrawCash(int id, double amount, double balance, Connection conn) {
+    private static void withdrawCash(int id, double amount, double balance, Connection conn) {
         try {
             PreparedStatement stmt;
             stmt = conn.prepareStatement("INSERT INTO cash_history (portfolioId, timestamp, type, amount, balance) "
@@ -61,7 +76,7 @@ public class CashHistory {
     }
 
     //creates a new cash transaction and deposits cash from a portfolio
-    private void depositCash(int id, double amount, double balance, Connection conn) {
+    private static void depositCash(int id, double amount, double balance, Connection conn) {
         try {
             PreparedStatement stmt;
             stmt = conn.prepareStatement("INSERT INTO cash_history (portfolioId, timestamp, type, amount, balance) "
@@ -80,7 +95,7 @@ public class CashHistory {
 
     //creates a new cash transaction and changes cash from a portfolio
     //assumes the id given is a valid id (handled by portfolio class)
-    public void performCashTransaction(int id, String type, double amount, Connection conn){
+    public static void performCashTransaction(int id, String type, double amount, Connection conn){
         double newbal = getBalance(id, conn);
         if ("withdraw".equals(type)){
             newbal = newbal - amount;
