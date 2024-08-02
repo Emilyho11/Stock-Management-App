@@ -1,5 +1,10 @@
 package cs.toronto.edu.src;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
 public class StockData extends Table<StockData> {
     
     public static final String TABLE_NAME = "stock_data";
@@ -94,6 +99,19 @@ public class StockData extends Table<StockData> {
 
     public void setVolume(double volume) {
         f_volume = volume;
+    }
+
+    public static ResultSet getLatestStockData(String symbol, Connection conn) {
+        try {
+            PreparedStatement stmt;
+            stmt = conn.prepareStatement("SELECT MAX(timestamp) FROM stock_data WHERE symbol = ?;");
+            ResultSet rs = stmt.executeQuery();
+            System.out.println("Retrieved latest stock data successfully");
+            return rs;
+        } catch (SQLException ex) {
+            System.out.println("Error getting a new portfolio id" + ex.getMessage());
+            return null;
+        }
     }
 
     // Calculate the future value of a stock
