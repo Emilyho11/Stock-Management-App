@@ -5,20 +5,25 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Calendar;
+import java.util.Date;
+import backend_old.src.CashHistory;
+
 
 public class Portfolio {
+
     private String owner;
     private String name;
     private double beta;
     private int id;
     private double cash;
 
-    public Portfolio(String name, String owner) {
-        this.name = name;
-        this.owner = owner;
-        this.beta = 0;
-        this.id = 0;
-        this.cash = 0;
+    public Portfolio() {
+        // this.name = name;
+        // this.owner = owner;
+        // this.beta = 0;
+        // this.id = 0;
+        // this.cash = 0;
     }
 
     public String getOwner() {
@@ -37,21 +42,21 @@ public class Portfolio {
         return this.id;
     }
 
-    private int getNewId(Connection conn){
+    private static int getNewId(Connection conn){
         try {
             PreparedStatement stmt;
             stmt = conn.prepareStatement("SELECT MAX(portfolioId) FROM portfolio;");
             ResultSet rs = stmt.executeQuery();
             System.out.println("Generated a new portfolio id successfully");
-            return (rs.getInt(id) + 1);
+            return (rs.getInt("id") + 1);
         } catch (SQLException ex) {
             System.out.println("Error getting a new portfolio id" + ex.getMessage());
             return -1;
         }
     }
 
-    private void createNewUserPortfolio(String owner, String name, Connection conn){
-        //adds portfolio to database and the owner/id tuple into the owns table
+    //adds portfolio to database and the owner/id tuple into the owns table
+    public static void createNewUserPortfolio(String owner, String name, Connection conn){
         int newid = getNewId(conn);
         if(newid == -1){
             try {
@@ -71,7 +76,7 @@ public class Portfolio {
         }
     }
 
-    private void createNewPortfolio(String name, int id, Connection conn){
+    private static void createNewPortfolio(String name, int id, Connection conn){
         //adds portfolio to database
         try {
                 PreparedStatement stmt;
@@ -86,8 +91,8 @@ public class Portfolio {
         }
     }
 
+    // Find the portfolio in the database by the user
     public static ResultSet findByOwner(String username, Connection conn) {
-        // Find the portfolio in the database by the user
         try {
             PreparedStatement stmt;
             stmt = conn.prepareStatement("SELECT * FROM portfolio "
@@ -98,8 +103,8 @@ public class Portfolio {
             return rs;
         } catch (SQLException ex) {
             System.out.println("Error finding this user's portfolio: " + ex.getMessage());
+            return null;
         }
-        return null;
     }
 
     public static ResultSet findByOwnerAndName(String username, String name, Connection conn) {
@@ -119,6 +124,22 @@ public class Portfolio {
         return null;    
     }
 
+    //check the portfolio db to see if this portfolio exists or not
+    private static boolean checkPortfolioExist(int id, Connection conn){
+        // Find the portfolio in the database by the id
+        try {
+            PreparedStatement stmt;
+            stmt = conn.prepareStatement("SELECT EXISTS(SELECT * FROM portfolio WHERE portfolioId = ?);");
+            stmt.setInt(1, id);
+            ResultSet rs = stmt.executeQuery();
+            System.out.println("Checked for this portfolio id successfully");
+            return rs.isBeforeFirst();
+        } catch (SQLException ex) {
+            System.out.println("Error finding this user's portfolio: " + ex.getMessage());
+        }
+        return false;
+    }
+
     // public static StockList* findStockLists() {
     //     // Find the portfolio in the database by the name and user
     //     return null;
@@ -133,18 +154,30 @@ public class Portfolio {
 
     // }
 
-    // public static CashHistory* getCashHistory(){
-
-    // }
-
-    public static withdraw(double amount){
-        this.cash = this.cash - amount;
-        //this also needs to record this into the cash history
+    //gets all the cash transactions for a given portfolio
+    public static ResultSet getPortfolioCashHistory(int portfolioId, Connection conn){
+        if (checkPortfolioExist(portfolioId, conn)){
+            ResultSet rs = CashHistory.getCashHistory(portfolioId, conn);
+            System.out.println("Retrieved this portfolios cash history successfully");
+            return rs;
+        }
+        System.out.println("Error there is no portfolio with this id");
     }
 
-    public static deposit(double amount){
-        this.cash = this.cash + amount;
-        //this also needs to record this into cash history
+    public static void withdrawCash(int portfolioId, double amount, Connection conn){
+        if (checkPortfolioExist(portfolioId, conn)){
+            CashHistory.performCashTransaction(portfolioId, "withdraw", amount, conn);
+            System.out.println("Withdrew cash from this portfolio successfully");
+        }
+        System.out.println("Error there is no portfolio with this id");
+    }
+
+    public static void depositCash(int portfolioId, double amount, Connection conn){
+        if (checkPortfolioExist(portfolioId, conn)){
+            CashHistory.performCashTransaction(portfolioId, "deposit", amount, conn);
+            System.out.println("Deposited cash from this portfolio successfully");
+        }
+        System.out.println("Error there is no portfolio with this id");
     }
 
     public void deletePortfolio() {
