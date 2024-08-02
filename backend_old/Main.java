@@ -1,10 +1,13 @@
 package cs.toronto.edu;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 
-
-import cs.toronto.edu.src.*;
+import cs.toronto.edu.src.DBHandler;
+import cs.toronto.edu.src.Reviews;
+import cs.toronto.edu.src.Stocks;
+import cs.toronto.edu.src.Table;
+import cs.toronto.edu.src.TableManager;
+import cs.toronto.edu.src.User;
 
 // import io.github.cdimascio.dotenv.Dotenv;
 
@@ -40,12 +43,21 @@ public class Main {
 			Stocks stockTest = Stocks.create(Stocks::new, "AAPL", 0.5);
 
 			stockTest.update();
-			stockTest.delete();
+			// stockTest.delete();
 
 			// Test reviews
-			Reviews reviewTest = Reviews.create(Reviews::new, "john_doe", 1, "This is third review omg");
+			// Reviews reviewTest = Reviews.create(Reviews::new, "john_doe", 2, "Review 2");
+			// Reviews reviewTest2 = Reviews.create(Reviews::new, "john_doe", 3, "Review 1");
+			// Reviews reviewTest3 = Reviews.create(Reviews::new, "emilyho", 1, "Emily's review");
 			
-			reviewTest.delete();
+			// reviewTest.delete();
+			
+			// Call function: public static <T extends Table<T>> ArrayList<T> printAll(Supplier<? extends T> constructor) and print the entries
+			Table.printAll(Reviews.TABLE_NAME);
+			// get all rows returns all rows
+
+			// Print rows by column
+			// Table.printRowsByColumn(Reviews.TABLE_NAME, "username", "john_doe");
 
 			rs.close();
 
