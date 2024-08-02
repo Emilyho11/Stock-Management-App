@@ -29,14 +29,14 @@ public class Stocks {
 
     public void insertStocks(Statement stmt) {
         // Insert the user to the database
-        String sqlInsert = "INSERT INTO stocks (symbol, COV) " +
+        String sqlInsert = "INSERT INTO stocks (symbol, cov) " +
             "VALUES ('" + symbol + "', '" + COV + "');";
         
             try {
                 stmt.executeUpdate(sqlInsert);
                 System.out.println("Stocks inserted successfully");
         } catch (Exception e) {
-            System.out.println("Error inserting Stocks");
+            System.out.println("Error inserting Stocks: " + e.getMessage());
         }
     }
 
@@ -48,7 +48,7 @@ public class Stocks {
                 stmt.executeUpdate(sqlDelete);
                 System.out.println("Stocks deleted successfully");
         } catch (Exception e) {
-            System.out.println("Error deleting Stocks");
+            System.out.println("Error deleting Stocks: " + e.getMessage());
         }
     }
 
@@ -58,7 +58,7 @@ public class Stocks {
             String sqlQuery = "SELECT * FROM stocks WHERE symbol = '" + symbol + "';";
             rs = stmt.executeQuery(sqlQuery);
             if (rs.next()) {
-                stocks = new Stocks(rs.getString("symbol"), rs.getDouble("COV"));
+                stocks = new Stocks(rs.getString("symbol"), rs.getDouble("cov"));
             }
         } catch (Exception e) {
             System.out.println("Error finding Stocks: " + e.getMessage());
@@ -73,7 +73,7 @@ public class Stocks {
             System.out.println("Table Stocks contains the following tuples:\nsymbol \tCOV");
             while (rs.next()) {
                 String symbol = rs.getString("symbol");
-                Double COV = rs.getDouble("COV");
+                Double COV = rs.getDouble("cov");
                 System.out.println(symbol + ", " + COV);
             }
         } catch (Exception e) {

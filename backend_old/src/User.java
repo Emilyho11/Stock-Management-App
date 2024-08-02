@@ -41,14 +41,6 @@ public class User {
         return this.password.equals(password);
     }
 
-    public void changePassword(String password) {
-        this.password = password;
-    }
-
-    public void changeEmail(String email) {
-        this.email = email;
-    }
-
     public void insertUser(Statement stmt) {
         // Insert the user to the database
         String sqlInsert = "INSERT INTO users (username, password, email) " +
@@ -92,16 +84,66 @@ public class User {
 
     public static void printAllUsers(Statement stmt, ResultSet rs) {
         // Print all users in the database
-        String getAllUsers = "SELECT username FROM users;";
+        String getAllUsers = "SELECT username, email FROM users;";
         try {
             rs = stmt.executeQuery(getAllUsers);
             System.out.println("Table User contains the following tuples:\nusername \temail");
             while (rs.next()) {
                 String username = rs.getString("username");
-                System.out.println(username);
+                String email = rs.getString("email");
+                System.out.println(username + ", " + email);
             }
         } catch (Exception e) {
             System.out.println("Error printing all users: " + e.getMessage());
+        }
+    }
+    public void changePassword(Statement stmt, String password) {
+        this.password = password;
+        String sqlUpdate = "UPDATE users SET password = '" + password + "' WHERE username = '" + username + "';";
+        try {
+            stmt.executeUpdate(sqlUpdate);
+            System.out.println("Password updated successfully");
+        } catch (Exception e) {
+            System.out.println("Error updating password: " + e.getMessage());
+        }
+    }
+
+    public void changeEmail(Statement stmt, String email) {
+        this.email = email;
+        String sqlUpdate = "UPDATE users SET email = '" + email + "' WHERE username = '" + username + "';";
+        if (findByUsername(stmt, null, email) != null) {
+            System.out.println("A user with this email already exists");
+            return;
+        }
+        try {
+            stmt.executeUpdate(sqlUpdate);
+            System.out.println("Email updated successfully");
+        } catch (Exception e) {
+            System.out.println("Error updating email: " + e.getMessage());
+        }
+    }
+
+    public void changeUsername(Statement stmt, String newUsername) {
+        // Check if username already exists. If it does, print that a user with this username already exists
+        if (findByUsername(stmt, null, newUsername) != null) {
+            System.out.println("A user with this username already exists");
+            return;
+        }
+    
+        // SQL query to update the username
+        String sqlUpdate = "UPDATE users SET username = '" + newUsername + "' WHERE username = '" + username + "';";
+        try {
+            // Execute the update
+            int rowsAffected = stmt.executeUpdate(sqlUpdate);
+            if (rowsAffected > 0) {
+                // Update the username in the object only if the database update was successful
+                this.username = newUsername;
+                System.out.println("Username updated successfully");
+            } else {
+                System.out.println("No user found with the current username");
+            }
+        } catch (Exception e) {
+            System.out.println("Error updating username: " + e.getMessage());
         }
     }
 }

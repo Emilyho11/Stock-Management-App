@@ -7,6 +7,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
+import backend_old.src.Stocks;
 import backend_old.src.User;
 
 // import io.github.cdimascio.dotenv.Dotenv;
@@ -80,6 +81,13 @@ public class Main {
 			System.out.println("Password matches: " + user.checkPassword("password123"));
 			// Insert the user to the database
 			// user.insertUser(stmt);
+
+			// insert stocks
+			// Stocks stocks = new Stocks("AAPL", 0.5);
+			// stocks.insertStocks(stmt);
+
+			// print all stocks
+			Stocks.printAllStocks(stmt, rs);
 
 			rs.close();
 		} catch (Exception e) {
