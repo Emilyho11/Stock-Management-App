@@ -1,103 +1,62 @@
 package cs.toronto.edu;
-
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
-import backend_old.src.Stocks;
-import backend_old.src.User;
+
+import cs.toronto.edu.src.*;
 
 // import io.github.cdimascio.dotenv.Dotenv;
 
 public class Main {
 	public static void main(String[] args) {
-		Connection conn = null;
-		Statement stmt = null;
+		// Connection conn = null;
+		// Statement stmt = null;
 
 		try {
-			// 
-			// Register the PostgreSQL driver
-			//
-			//
-			Class.forName("org.postgresql.Driver");
+			DBHandler.Initialize();
+			TableManager tableManager = TableManager.getInstance();
+			DBHandler testingDB = DBHandler.getInstance();
+			tableManager.addTable(User.TABLE_NAME, User::new);
+			tableManager.addTable(Stocks.TABLE_NAME, Stocks::new);
+			tableManager.addTable(Reviews.TABLE_NAME, Reviews::new);
 
-			//
-			// Connect to the database
-			//
-			//
-			conn = DriverManager.getConnection("jdbc:postgresql://34.130.14.35:5432/mydb", "postgres", "postgres");
-			System.out.println("Opened database successfully"); 
+			// DEBUGGING
+			Table.clearTable(Stocks.TABLE_NAME);
+			Table.clearTable(User.TABLE_NAME);
+			Table.clearTable(Reviews.TABLE_NAME);
 
-			//
-			// Create a statement object
-			//
-			//
-			stmt = conn.createStatement();
-
-			//
-			// Create SQL statement to insert a tuple
-			//
-			//
-			// String sqlInsert = "INSERT INTO testtbl (name, value) " +
-			// 	"VALUES ('world', 1024);";
-			// stmt.executeUpdate(sqlInsert);
-			// System.out.println("Tuple inserted successfully");
-
-			// Verify the columns in the User table
-            // String verifyColumns = "SELECT column_name FROM information_schema.columns WHERE table_name = 'Friendship';";
-            // ResultSet rsColumns = stmt.executeQuery(verifyColumns);
-            // System.out.println("Columns in User table:");
-            // while (rsColumns.next()) {
-            //     String columnName = rsColumns.getString("column_name");
-            //     System.out.println(columnName);
-            // }
-            // rsColumns.close();
-
-			//
-			// Create SQL statement to query all tuples
-			//
-			//
-			String getAllUsers = "SELECT username, email FROM users;";
-			ResultSet rs = stmt.executeQuery(getAllUsers);
-
-			//
-			// Print the queried tuples
-			//
-			//
+			ResultSet rs = testingDB.executeQuery("SELECT username, email FROM users;");
+	
+			// Print the queried tuples			
 			System.out.println("Table user contains the following tuples:\nusername \temail");
+			
 			while (rs.next()) {
 				String username = rs.getString("username");
 				String email = rs.getString("email");
 				System.out.println(username + ", " + email);
 			}
+			
+			Stocks stockTest = Stocks.create(Stocks::new, "AAPL", 0.5);
 
-			// Create a new user
-			User user = new User("john_doe", "password123", "john.doe@email.com");
-			System.out.println("Username: " + user.getUsername());
-			System.out.println("Email: " + user.getEmail());
-			System.out.println("Password matches: " + user.checkPassword("password123"));
-			// Insert the user to the database
-			// user.insertUser(stmt);
+			stockTest.update();
+			stockTest.delete();
 
-			// insert stocks
-			// Stocks stocks = new Stocks("AAPL", 0.5);
-			// stocks.insertStocks(stmt);
-
-			// print all stocks
-			Stocks.printAllStocks(stmt, rs);
+			// Test reviews
+			Reviews reviewTest = Reviews.create(Reviews::new, "john_doe", 1, "This is third review omg");
+			
+			reviewTest.delete();
 
 			rs.close();
+
+
 		} catch (Exception e) {
 			e.printStackTrace();
 			System.err.println(e.getClass().getName() + ": " + e.getMessage());
 			System.exit(1);
 		} finally {
 			try {
-				if (stmt != null) stmt.close();
-				if (conn != null) conn.close();
+				DBHandler.Close();
 			
 				System.out.println("Disconnected from the database");
 			} catch (SQLException e) {
