@@ -101,8 +101,8 @@ public class Friendship {
             stmt = conn.prepareStatement("UPDATE friendship "
                     + "SET status = Rejected, timeRejected = ?"
                     + "WHERE (username = ? && target = ?);");
-            java.sql.Time time = new java.sql.Time(Calendar.getInstance().getTime().getTime());
-            stmt.setTime(1, time);
+            java.sql.Timestamp time = new java.sql.Timestamp(Calendar.getInstance().getTime().getTime());
+            stmt.setTimestamp(1, time);
             stmt.setString(2, username);
             stmt.setString(3, target);
             stmt.executeUpdate();
