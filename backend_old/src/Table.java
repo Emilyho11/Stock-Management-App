@@ -1,15 +1,11 @@
 package cs.toronto.edu.src;
 
 import java.lang.reflect.Field;
-import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.function.Supplier;
-
-import cs.toronto.edu.src.TableManager;
-import cs.toronto.edu.src.TableManagerEntry;
-
-import java.sql.ResultSet;
 
 public abstract class Table<T> {
     protected static DBHandler db;
@@ -226,43 +222,57 @@ public abstract class Table<T> {
         return deletes > 0;
     }
 
-    // Get rows by key
-    // public static <T extends Table<T>> T findByKey(Supplier<? extends T> constructor, String key) {
-    //     T table = constructor.get();
-    //     table.setKey(key);
+    // Print all entries in the table based on table name. It should not have any parameters
+    public static void printAll(String tableName) {
+        try {
+            
+            String getAll = "SELECT * FROM " + tableName + ";";
+            ResultSet rs = db.executeQuery(getAll);
+            
+            ResultSetMetaData metadata = rs.getMetaData();
+            int columnCount = metadata.getColumnCount();  
 
-    //     String sqlQuery = "SELECT * FROM " + table.getTableName() + " WHERE " + table.getWhereIdentifier() + ";";
-    //     System.out.println(sqlQuery);
-    //     try {
-    //         ResultSet rs = db.executeQuery(sqlQuery);
+            for (int i = 1; i <= columnCount; i++) {
+                System.out.print(metadata.getColumnName(i) + "\t");      
+            }
+            System.out.println();
 
-    //         if (rs.next()) {
-    //             createFromRS(constructor, rs);
-    //             return table;
-    //         }
-    //     } catch (Exception e) {
-    //         System.out.println("Error finding instance: " + e.getMessage());
-    //     }
+            while (rs.next()) {
+                String row = "";
+                for (int i = 1; i <= columnCount; i++)
+                    row += rs.getString(i) + "\t";          
+                System.out.println(row);
+            }
 
-    //     return null;
-    // }
+        } catch (Exception e) {
+            System.out.println("Error printing all entries: " + e.getMessage());
+        }
+    }
 
-    // public static <T extends Table<T>> findByKey(String tableName, String key) {
-    //     TableManagerEntry entry = TableManager.getInstance().getTable(tableName);
+    // Get all rows based on a value in a column
+    public static void printRowsFromValue(String tableName, String columnName) {
+        try {
+            String getAll = "SELECT " + columnName + " FROM " + tableName + ";";
+            ResultSet rs = db.executeQuery(getAll);
+            
+            ResultSetMetaData metadata = rs.getMetaData();
+            int columnCount = metadata.getColumnCount();  
 
-    //     if (entry == null) {
-    //         return null;
-    //     }
+            for (int i = 1; i <= columnCount; i++) {
+                System.out.print(metadata.getColumnName(i) + "\t");      
+            }
+            System.out.println();
 
-    //     ArrayList<T> rows = entry.getRows();
+            while (rs.next()) {
+                String row = "";
+                for (int i = 1; i <= columnCount; i++)
+                    row += rs.getString(i) + "\t";          
+                System.out.println(row);
+            }
 
-    //     for (T row : rows) {
-    //         if (row.getKey().equals(key)) {
-    //             return row;
-    //         }
-    //     }
-    //     return null;
-    // }
-    // For each other class like friends and reviews, we have a static function that will take only a key. It will call the table function (internal version) and it will pass the table name (decorator).
+        } catch (Exception e) {
+            System.out.println("Error printing all entries: " + e.getMessage());
+     }
+    }
 }
 
