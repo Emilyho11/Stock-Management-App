@@ -2,6 +2,7 @@ package stocks_api.stocks_api.routes;
 import java.sql.Connection;
 import java.sql.ResultSet;
 
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -55,5 +56,10 @@ public class FriendshipController {
         ResultSet rs = Friendship.viewIncomingFriendRequests(username, conn);
         String result = ParserUtil.resultSetToJson(rs);
         return "'{'content': " + result + "}'";
+    }
+
+    @DeleteMapping("/delete/{username}/{target}")
+    public void deleteFriendship(@PathVariable String username, @PathVariable String target) {
+        Friendship.deleteFriend(username, target, conn);
     }
 }

@@ -41,7 +41,7 @@ public class Friendship {
         try {
             LocalTime lastrejection = rs.getTime("rejected").toLocalTime();
             LocalTime now = LocalTime.now();
-            if (MINUTES.between(now, lastrejection) < 5 ) {
+            if (MINUTES.between(now, lastrejection) > 5 ) {
                 return true;
             } else {
                 return false;
@@ -195,5 +195,23 @@ public class Friendship {
             System.out.println("Error viewing friends: " + ex.getMessage());
         }
         return null;
+    }
+
+    //delete 2 users friendship
+    public static void deleteFriend(String username, String target, Connection conn) {
+        try {
+            //get friendships from database
+            PreparedStatement stmt;
+            stmt = conn.prepareStatement("DELETE FROM friendship "
+                    + "WHERE ((username = ? AND target = ?) OR (username = ? AND target = ?));");
+            stmt.setString(1, username);
+            stmt.setString(2, target);
+            stmt.setString(3, target);
+            stmt.setString(4, username);
+            stmt.executeUpdate();
+            System.out.println("Deleted friendship successfully");
+        } catch (SQLException ex) {
+            System.out.println("Error deleting friend: " + ex.getMessage());
+        }
     }
 }
