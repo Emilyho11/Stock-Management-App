@@ -25,27 +25,20 @@ public class Main {
 			tableManager.addTable(Reviews.TABLE_NAME, Reviews::new);
 
 			// DEBUGGING
-			Table.clearTable(Stocks.TABLE_NAME);
-			Table.clearTable(User.TABLE_NAME);
-			Table.clearTable(Reviews.TABLE_NAME);
+			// Table.clearTable(Stocks.TABLE_NAME);
+			// Table.clearTable(User.TABLE_NAME);
+			// Table.clearTable(Reviews.TABLE_NAME);
 
 			// add reviews to reviews table
-			Reviews reviewTest = Reviews.create(Reviews::new, "john_doe", 2, "Review 2");
-			Reviews reviewTest2 = Reviews.create(Reviews::new, "john_doe", 3, "Review 1");
-			Reviews reviewTest3 = Reviews.create(Reviews::new, "emilyho", 1, "Emily's review");
+			// Reviews reviewTest = Reviews.create(Reviews::new, "john_doe", 2, "Review 2");
+			// Reviews reviewTest2 = Reviews.create(Reviews::new, "john_doe", 3, "Review 1");
+			// Reviews reviewTest3 = Reviews.create(Reviews::new, "emilyho", 1, "Emily's review");
 			
-			// test parserUtil.java
-			ResultSet rs = testingDB.executeQuery("SELECT * FROM reviews;");
-			// ParserUtil.resultSetToJson(rs);
-			// print out result of parserUtil
-			System.out.println(ParserUtil.resultSetToJson(rs));
 		} catch (Exception e) {
 			e.printStackTrace();
 			System.err.println(e.getClass().getName() + ": " + e.getMessage());
 			System.exit(1);
 		}
-
-
 	}
 
 	public void exit() {
