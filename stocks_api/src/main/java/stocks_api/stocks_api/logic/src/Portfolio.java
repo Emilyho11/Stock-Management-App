@@ -160,6 +160,69 @@ public class Portfolio {
         return Transaction.getTransactions(portfolioId, conn);
     }
 
+    //adds stock list to database and the id tuples into the contains table
+    public static void createStockListInPortfolio(int portfolio_id, String listName, String owner, Connection conn){
+        try {
+            int newid = StockList.createStockList(owner, listName, conn);
+            if (newid > -1){
+                PreparedStatement stmt;
+                stmt = conn.prepareStatement("INSERT INTO contains (stocklist_id, portfolio_id) VALUES (?, ?);");
+                stmt.setInt(1, portfolio_id);
+                stmt.setInt(2, newid);
+                stmt.executeUpdate();
+                System.out.println("Created a new portfolio successfully for this user");
+            }
+        } catch (Exception ex) {
+            System.out.println("Error creating a new portfolio for this user");
+            ex.printStackTrace();
+        }
+    }
+
+    // adds stock list to contains table so that a portfolio contains it
+    public static void addStockListToPortfolio(int portfolio_id, int stocklist_id, Connection conn) {
+        try {
+            PreparedStatement stmt;
+            stmt = conn.prepareStatement("INSERT INTO contains (portfolio_id, stocklist_id) "
+                    + "VALUES (?, ?);");
+            stmt.setInt(1, portfolio_id);
+            stmt.setInt(2, stocklist_id);
+            stmt.executeUpdate();
+            System.out.println("Added stock list to a portfolio successfully");            
+        } catch (SQLException ex) {
+            System.out.println("Error adding stock list to portfolio: " + ex.getMessage());
+        }
+    }
+
+    //returns all stock lists for a given portfolio
+    public static ResultSet getStockLists(int portfolioId, Connection conn){
+        try {
+            PreparedStatement stmt;
+            stmt = conn.prepareStatement("SELECT stocklist_id FROM contains WHERE (portfolio_id = ?);");
+            stmt.setInt(1, portfolioId);
+            ResultSet rs = stmt.executeQuery();
+            System.out.println("Retrieved stock lists in this portfolio successfully");
+            return rs;
+        } catch (SQLException ex) {
+            System.out.println("Error getting stock lists in this portfolio" + ex.getMessage());
+            return null;
+        }
+    }
+
+    // Delete the stock list from being contained by portfolio in the database
+    public static void deleteStockListFromPortfolio(int portfolio_id, int stocklist_id, Connection conn) {
+        try {
+            PreparedStatement stmt;
+            stmt = conn.prepareStatement("DELETE FROM contains "
+                    + "WHERE (portfolio_id = ? AND stocklist_id = ?);");
+            stmt.setInt(1, portfolio_id);
+            stmt.setInt(2, stocklist_id);
+            stmt.executeUpdate();
+            System.out.println("Deleted stock list from portfolio successfully");            
+        } catch (SQLException ex) {
+            System.out.println("Error deleting stock list from portfolio: " + ex.getMessage());
+        }
+    }
+
     // Delete the portfolio from the database
     public static void deletePortfolio(int portfolio_id, Connection conn) {
         try {
