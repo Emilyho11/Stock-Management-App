@@ -43,10 +43,6 @@ public class DBHandler {
         return instance;
     }
 
-    public static Connection getConnection() {
-        return conn;
-    }
-
     public ResultSet executeQuery(String query) throws SQLException {
         // Statement stmt = DBHandler.conn.createStatement();
         ResultSet results = stmt.executeQuery(query);
