@@ -133,6 +133,28 @@ public class Portfolio {
         }
     }
 
+    //searches the db for the most recent balance of a portfolio
+    public static double getBalance(int id, Connection conn) {
+        return CashHistory.getBalance(id, conn);
+    }
+
+    //gets all the cash transactions for a given portfolio
+    public static ResultSet getPortfolioCashHistory(int portfolioId, Connection conn){
+        ResultSet rs = CashHistory.getCashHistory(portfolioId, conn);
+        System.out.println("Retrieved this portfolios cash history successfully");
+        return rs;
+    }
+
+    public static void withdrawCash(int portfolioId, double amount, Connection conn){
+        CashHistory.performCashTransaction(portfolioId, "withdraw", amount, conn);
+        System.out.println("Withdrew cash from this portfolio successfully");
+    }
+
+    public static void depositCash(int portfolioId, double amount, Connection conn){
+        CashHistory.performCashTransaction(portfolioId, "deposit", amount, conn);
+        System.out.println("Deposited cash from this portfolio successfully");
+    }
+
     // Delete the portfolio from the database
     public static void deletePortfolio(int portfolio_id, Connection conn) {
         try {

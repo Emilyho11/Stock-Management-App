@@ -46,6 +46,29 @@ public class PortfolioController {
         return "'{'content': " + result + "}'";
     }
 
+    @GetMapping("/getBalance/{id}")
+    public String getBalance(@PathVariable int id) {
+        Double bal = Portfolio.getBalance(id, conn);
+        return "'{'content': " + bal + "}'";
+    }
+
+    @GetMapping("/getCashHistory/{id}")
+    public String getCashHistory(@PathVariable int id) {
+        ResultSet rs = Portfolio.getPortfolioCashHistory(id, conn);
+        String result = ParserUtil.resultSetToJson(rs);
+        return "'{'content': " + result + "}'";
+    }
+
+    @PostMapping("/withdraw/{id}/{amount}")
+    public void withdrawCash(@PathVariable int id, @PathVariable double amount) {
+        Portfolio.withdrawCash(id, amount, conn);
+    }
+
+    @PostMapping("/deposit/{id}/{amount}")
+    public void depositCash(@PathVariable int id, @PathVariable double amount) {
+        Portfolio.depositCash(id, amount, conn);
+    }
+
     @DeleteMapping("/delete/{id}")
     public void deletePortfolio(@PathVariable int id) {
         Portfolio.deletePortfolio(id, conn);
