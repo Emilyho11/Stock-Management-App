@@ -4,9 +4,6 @@ package stocks_api.stocks_api.logic.src;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
-import java.sql.Statement;
-
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
@@ -40,6 +37,10 @@ public class DBHandler {
 
     public static DBHandler getInstance() {
         return instance;
+    }
+
+    public static Connection getConnection() {
+        return conn;
     }
 
     public ResultSet executeQuery(String query) throws SQLException {
