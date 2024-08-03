@@ -1,10 +1,12 @@
 package stocks_api.stocks_api.logic;
 
-import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 
-import stocks_api.stocks_api.logic.src.*;
+import stocks_api.stocks_api.logic.src.DBHandler;
+import stocks_api.stocks_api.logic.src.Reviews;
+import stocks_api.stocks_api.logic.src.Stocks;
+import stocks_api.stocks_api.logic.src.TableManager;
+import stocks_api.stocks_api.logic.src.User;
 // import stocks_api.stocks_api.logic.src.DBHandler;
 // import stocks_api.stocks_api.logic.src.Reviews;
 // import stocks_api.stocks_api.logic.src.Stocks;
@@ -23,11 +25,6 @@ public class Main {
 			tableManager.addTable(User.TABLE_NAME, User::new);
 			tableManager.addTable(Stocks.TABLE_NAME, Stocks::new);
 			tableManager.addTable(Reviews.TABLE_NAME, Reviews::new);
-
-			// DEBUGGING
-			// Table.clearTable(Stocks.TABLE_NAME);
-			// Table.clearTable(User.TABLE_NAME);
-			// Table.clearTable(Reviews.TABLE_NAME);
 
 			// add reviews to reviews table
 			// Reviews reviewTest = Reviews.create(Reviews::new, "john_doe", 2, "Review 2");
