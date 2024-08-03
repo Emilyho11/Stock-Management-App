@@ -176,6 +176,58 @@ public class Portfolio {
         }
     }
 
+    // Gets the all the stocks in a portfolio
+    public static ResultSet getStocks(int id, Connection conn) {
+        try {
+            PreparedStatement stmt;
+            stmt = conn.prepareStatement("SELECT symbol, total FROM bought "
+                    + "WHERE (portfolio_id = ?);");
+            stmt.setInt(1, id);
+            ResultSet rs = stmt.executeQuery();
+            System.out.println("Retrieved this user's portfolio stocks");
+            return rs;
+        } catch (SQLException ex) {
+            System.out.println("Error finding this user's portfolio stocks: ");
+            ex.printStackTrace();
+            return null;
+        }
+    }
+
+    // Gets the sum of most recent stock values of portfolio purchased stocks
+    public static double estimateStockValue(int id, Connection conn) {
+        try {
+            PreparedStatement stmt;
+            stmt = conn.prepareStatement("SELECT SUM(b.total * s.close) "
+                                            + "FROM bought b "
+                                            + "INNER JOIN ("
+                                                +    "SELECT symbol, timestamp, close "
+                                                +    "FROM stock_data "
+                                                +    "WHERE (symbol, timestamp) IN ("
+                                                    +        "SELECT symbol, MAX(timestamp) "
+                                                    +         "FROM stock_data "
+                                                    +         "GROUP BY symbol"
+                                                    +")"
+                                                    +")s "
+                                                    +"ON b.symbol = s.symbol;");
+
+            ResultSet rs = stmt.executeQuery();
+            System.out.println("Retrieved this user's portfolio stocks estimate");
+            if (rs.next()){
+                return rs.getDouble(1);
+            }
+            return 0;
+        } catch (SQLException ex) {
+            System.out.println("Error finding this user's portfolio stocks estimate: ");
+            ex.printStackTrace();
+            return -1;
+        }
+    }
+
+    // Gets the all the stocks in a portfolio
+    public static double estimatePortfolioValue(int id, Connection conn) {
+        return getBalance(id, conn) + estimateStockValue(id, conn);
+    }
+
     //creates a new bought tuple
     private static void createStockBought(int portfolioId, String symbol, int total, Connection conn){
         try {

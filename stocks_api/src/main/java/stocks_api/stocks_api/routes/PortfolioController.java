@@ -84,6 +84,18 @@ public class PortfolioController {
         Portfolio.tradeStocksUpdate(id, symbol, type, amount, conn);
     }
 
+    @GetMapping("/estimateStock/{id}")
+    public String estimateStockValue(@PathVariable int id) {
+        double result = Portfolio.estimateStockValue(id, conn);
+        return "'{'content': " + result + "}'";
+    }
+
+    @GetMapping("/estimateValue/{id}")
+    public String estimateValue(@PathVariable int id) {
+        double result = Portfolio.estimatePortfolioValue(id, conn);
+        return "'{'content': " + result + "}'";
+    }
+
     @GetMapping("/getTransactions/{id}")
     public String getPortfolioTransactions(@PathVariable int id) {
         ResultSet rs = Portfolio.getPortfolioTransactions(id, conn);
