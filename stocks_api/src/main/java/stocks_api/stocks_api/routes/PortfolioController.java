@@ -69,6 +69,21 @@ public class PortfolioController {
         Portfolio.depositCash(id, amount, conn);
     }
 
+    @GetMapping("/check/{id}/{symbol}")
+    public int getIfBought(@PathVariable int id, @PathVariable String symbol, @PathVariable int quantity) {
+        return Portfolio.getTotalStock(id, symbol, conn);
+    }
+
+    @PostMapping("/trade/{id}/{symbol}/{quantity}/{type}")
+    public void tradeStocksCreate(@PathVariable int id, @PathVariable String symbol, @PathVariable int quantity, @PathVariable String type) {
+        Portfolio.tradeStocksCreate(id, symbol, type, quantity, conn);
+    }
+
+    @PatchMapping("/trade/{id}/{symbol}/{amount}/{type}")
+    public void tradeStocksUpdate(@PathVariable int id, @PathVariable String symbol, @PathVariable int amount, @PathVariable String type) {
+        Portfolio.tradeStocksUpdate(id, symbol, type, amount, conn);
+    }
+
     @GetMapping("/getTransactions/{id}")
     public String getPortfolioTransactions(@PathVariable int id) {
         ResultSet rs = Portfolio.getPortfolioTransactions(id, conn);

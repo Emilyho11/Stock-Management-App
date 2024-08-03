@@ -27,7 +27,7 @@ public class CashHistory{
     public static double getBalance(int id, Connection conn) {
         try {
             PreparedStatement stmt;
-            stmt = conn.prepareStatement("SELECT MAX(balance) FROM cash_history WHERE (portfolio_id = ?);");
+            stmt = conn.prepareStatement("SELECT balance FROM cash_history WHERE (portfolio_id = ?) ORDER BY timestamp DESC FETCH FIRST 1 ROW ONLY;");
             stmt.setInt(1, id);
             ResultSet rs = stmt.executeQuery();
             System.out.println("Retrieved the latest balance of the portfolio");
