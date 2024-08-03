@@ -5,9 +5,9 @@ import java.sql.Statement;
 
 public class User extends Table {
     public static final String TABLE_NAME = "users";
-    private String username;
-    private String password; // Stored as a hash
-    private String email;
+    private String f_username;
+    private String f_password; // Stored as a hash
+    private String f_email;
 
     public User() {};
 
