@@ -183,7 +183,7 @@ public class Portfolio {
                 stmt = conn.prepareStatement("INSERT INTO bought (portfolio_id, symbol, total) VALUES (?, ?, ?);");
                 stmt.setInt(1, portfolioId);
                 stmt.setString(2, symbol);
-                stmt.setInt(3, 0);
+                stmt.setInt(3, total);
                 stmt.executeUpdate();
             System.out.println("Created bought stock for portfolio successfully");
         } catch (SQLException ex) {
