@@ -25,9 +25,9 @@ public class Main {
 			tableManager.addTable(Reviews.TABLE_NAME, Reviews::new);
 
 			// DEBUGGING
-			Table.clearTable(Stocks.TABLE_NAME);
-			Table.clearTable(User.TABLE_NAME);
-			Table.clearTable(Reviews.TABLE_NAME);
+			// Table.clearTable(Stocks.TABLE_NAME);
+			// Table.clearTable(User.TABLE_NAME);
+			// Table.clearTable(Reviews.TABLE_NAME);
 
 			ResultSet rs = testingDB.executeQuery("SELECT username, email FROM users;");
 	

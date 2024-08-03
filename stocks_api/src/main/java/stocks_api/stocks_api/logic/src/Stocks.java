@@ -8,8 +8,8 @@ import java.lang.reflect.Field;
 
 public class Stocks extends Table<Stocks> {
     public static final String TABLE_NAME = "stocks";
-    protected String f_symbol;
-    protected Double f_COV;
+    public String f_symbol;
+    public Double f_COV;
 
     public Stocks() {}
 

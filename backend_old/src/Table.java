@@ -24,6 +24,7 @@ public abstract class Table<T> {
     // Getters and setters for PK
     public abstract String getKey();
     public abstract void setKey(String key);
+    public abstract String toString();
 
     public abstract String getTableName();
     // Create entry
@@ -123,7 +124,7 @@ public abstract class Table<T> {
 
             sqlUpdate.append(") VALUES (");
             sqlUpdate.append(String.join(", ", values));
-            sqlUpdate.append(") ");
+            sqlUpdate.append(") WHERE " + newClass.getWhereIdentifier() + ";");
 
             System.out.println(sqlUpdate.toString());
             int change = db.executeUpdate(sqlUpdate.toString());

@@ -35,6 +35,10 @@ public class DBHandler {
     // Prevent external instantiations
     private DBHandler(){}
 
+    public Connection getConnection() {
+        return conn;
+    }
+
     public static DBHandler getInstance() {
         return instance;
     }

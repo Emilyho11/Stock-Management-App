@@ -106,9 +106,9 @@ public abstract class Table<T> {
                 try {
                     // Parse the ones with 'f_' prefix
                     if (!field.getName().startsWith("f_")) continue;
-                    // field.set(newClass, args[i]);
-                    setField(newClass, field.getName(), args[i]);
+                    field.set(newClass, args[i]);
                 } catch (Exception e) {
+                    System.out.println("Error getting field: " + e.getMessage());
                 }
             }
             
@@ -136,19 +136,6 @@ public abstract class Table<T> {
         }
 
         return null;
-    }
-
-    protected static void setField(Object newClass, String fieldName, Object value) {
-        try {
-            Field field = newClass.getClass().getDeclaredField(fieldName);
-            boolean accessible = field.canAccess(field);
-
-            if (accessible) field.set(newClass, value);
-            else { throw new IllegalAccessException("Field is not accessible"); }
-        } catch (NoSuchFieldException | IllegalAccessException e) {
-            // Handle the exception according to your needs
-            e.printStackTrace();
-        }
     }
 
     public static boolean clearTable(String tableName) {

@@ -3,13 +3,13 @@ package stocks_api.stocks_api.logic.src;
 public class StockData extends Table<StockData> {
     
     public static final String TABLE_NAME = "stock_data";
-    private String f_symbol;
-    private String f_timestamp;
-    private double f_open;
-    private double f_close;
-    private double f_high;
-    private double f_low;
-    private double f_volume;
+    public String f_symbol;
+    public String f_timestamp;
+    public double f_open;
+    public double f_close;
+    public double f_high;
+    public double f_low;
+    public double f_volume;
 
     public StockData() {}
 
