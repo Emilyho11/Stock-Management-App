@@ -155,6 +155,11 @@ public class Portfolio {
         System.out.println("Deposited cash from this portfolio successfully");
     }
 
+    //gets stock transactions for a portfolio
+    public static ResultSet getPortfolioTransactions(int portfolioId, Connection conn){
+        return Transaction.getTransactions(portfolioId, conn);
+    }
+
     // Delete the portfolio from the database
     public static void deletePortfolio(int portfolio_id, Connection conn) {
         try {

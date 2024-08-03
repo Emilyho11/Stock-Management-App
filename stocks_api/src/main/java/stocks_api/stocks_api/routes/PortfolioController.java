@@ -69,6 +69,13 @@ public class PortfolioController {
         Portfolio.depositCash(id, amount, conn);
     }
 
+    @GetMapping("/getTransactions/{id}")
+    public String getPortfolioTransactions(@PathVariable int id) {
+        ResultSet rs = Portfolio.getPortfolioTransactions(id, conn);
+        String result = ParserUtil.resultSetToJson(rs);
+        return "'{'content': " + result + "}'";
+    }
+
     @DeleteMapping("/delete/{id}")
     public void deletePortfolio(@PathVariable int id) {
         Portfolio.deletePortfolio(id, conn);

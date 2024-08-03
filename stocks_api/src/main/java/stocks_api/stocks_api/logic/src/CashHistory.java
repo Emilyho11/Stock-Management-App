@@ -7,7 +7,7 @@ import java.sql.SQLException;
 import java.util.Calendar;
 import java.util.Date;
 
-public class CashHistory extends Portfolio{
+public class CashHistory{
 
     private int portfolio_id;
     private Date timestamp;
