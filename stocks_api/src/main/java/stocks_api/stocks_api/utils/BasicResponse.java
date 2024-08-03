@@ -17,7 +17,11 @@ public class BasicResponse {
         response.setValue(value);
         return response;
     }
-  
+    
+    public static BasicResponse error(String msg) {
+        return new BasicResponse(msg);
+    }
+    
     public String getMessage() {
         return msg;
     }

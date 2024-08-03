@@ -195,21 +195,4 @@ public class UserController {
             return BasicResponse.ok("FAILED to login");
         }
     }
-
-    //adds a new stock list to the database (not in a portfolio)
-    // public static void createUserStockList(String username, String name, Connection conn){
-    //         try {
-    //             int newid = StockList.createStockList(name, conn);
-    //             PreparedStatement stmt1;
-    //             stmt1 = conn.prepareStatement("INSERT INTO created (username, stocklist_id) VALUES (?, ?);");
-    //             stmt1.setString(1, username);
-    //             stmt1.setInt(2, newid);
-    //             stmt1.executeUpdate();
-    //             System.out.println("Created a new stock list for this user successfully");
-    //             return newid;
-    //         } catch (Exception ex) {
-    //             System.out.println("Error creating a new stock list for this user");
-    //             ex.printStackTrace();
-    //         }
-    // }
 }

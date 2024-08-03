@@ -1,7 +1,12 @@
 package stocks_api.stocks_api.logic.src;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.sql.Statement;
+import stocks_api.stocks_api.logic.src.Table;
+import stocks_api.stocks_api.logic.src.StockList;
 
 public class User extends Table {
     public static final String TABLE_NAME = "users";
@@ -94,5 +99,36 @@ public class User extends Table {
             System.out.println("Error finding user: " + e.getMessage());
         }
         return false;
+    }
+
+    // Adds a new stock list to the database (not in a portfolio)
+    public static void createUserStockList(String username, String name, Connection conn){
+        try {
+            int newid = StockList.createStockList(username, name, conn);
+            PreparedStatement stmt1;
+            stmt1 = conn.prepareStatement("INSERT INTO created (username, stocklist_id) VALUES (?, ?);");
+            stmt1.setString(1, username);
+            stmt1.setInt(2, newid);
+            stmt1.executeUpdate();
+            System.out.println("Created a new stock list for this user successfully");
+        } catch (Exception ex) {
+            System.out.println("Error creating a new stock list for this user");
+            ex.printStackTrace();
+        }
+    }
+
+    // Returns all stock lists for a given user
+    public static ResultSet getUserStockLists(String username, Connection conn) {
+        try {
+            PreparedStatement stmt;
+            stmt = conn.prepareStatement("SELECT stocklist_id FROM created WHERE username = ?;");
+            stmt.setString(1, username);
+            ResultSet rs = stmt.executeQuery();
+            return rs;
+        } catch (Exception ex) {
+            System.out.println("Error getting stock lists for this user");
+            ex.printStackTrace();
+            return null;
+        }
     }
 }

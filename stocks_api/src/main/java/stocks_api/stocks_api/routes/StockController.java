@@ -154,7 +154,7 @@ public class StockController {
             String result = ParserUtil.resultSetToJson(rs);
             System.out.println("ResultSet");
             System.out.println(result);
-            return BasicResponse.ok(result);            
+            return BasicResponse.ok(result);
             
         } catch (Exception e) {
             e.printStackTrace();
