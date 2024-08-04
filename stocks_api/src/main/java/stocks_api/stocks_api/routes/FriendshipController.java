@@ -9,12 +9,13 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.CrossOrigin;
 
 import stocks_api.stocks_api.logic.src.DBHandler;
 import stocks_api.stocks_api.logic.src.Friendship;
 import stocks_api.stocks_api.logic.src.ParserUtil;
 
-
+@CrossOrigin(origins = "*", allowedHeaders = "*")
 @RestController
 @RequestMapping(value = "/friends", produces="application/json")
 

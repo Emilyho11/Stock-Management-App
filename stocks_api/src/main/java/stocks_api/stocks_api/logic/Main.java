@@ -1,12 +1,10 @@
 package stocks_api.stocks_api.logic;
 
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 
-import stocks_api.stocks_api.logic.src.DBHandler;
-import stocks_api.stocks_api.logic.src.Reviews;
-import stocks_api.stocks_api.logic.src.Stocks;
-import stocks_api.stocks_api.logic.src.TableManager;
-import stocks_api.stocks_api.logic.src.User;
+import stocks_api.stocks_api.logic.src.*;
 // import stocks_api.stocks_api.logic.src.DBHandler;
 // import stocks_api.stocks_api.logic.src.Reviews;
 // import stocks_api.stocks_api.logic.src.Stocks;
@@ -27,15 +25,17 @@ public class Main {
 			tableManager.addTable(Reviews.TABLE_NAME, Reviews::new);
 
 			// add reviews to reviews table
-			// Reviews reviewTest = Reviews.create(Reviews::new, "john_doe", 2, "Review 2");
-			// Reviews reviewTest2 = Reviews.create(Reviews::new, "john_doe", 3, "Review 1");
-			// Reviews reviewTest3 = Reviews.create(Reviews::new, "emilyho", 1, "Emily's review");
-			
+			ResultSet rs = testingDB.executeQuery("SELECT * FROM reviews;");
+			// ParserUtil.resultSetToJson(rs);
+			// print out result of parserUtil
+			System.out.println(ParserUtil.resultSetToJson(rs));
 		} catch (Exception e) {
 			e.printStackTrace();
 			System.err.println(e.getClass().getName() + ": " + e.getMessage());
 			System.exit(1);
 		}
+
+
 	}
 
 	public void exit() {
