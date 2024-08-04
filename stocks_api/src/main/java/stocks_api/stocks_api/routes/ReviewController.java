@@ -20,8 +20,11 @@ import stocks_api.stocks_api.logic.src.StockList;
 import stocks_api.stocks_api.logic.src.DBHandler;
 import stocks_api.stocks_api.logic.src.ParserUtil;
 import stocks_api.stocks_api.utils.BasicResponse;
+import org.springframework.web.bind.annotation.CrossOrigin;
+
 import stocks_api.stocks_api.logic.src.User;
 
+@CrossOrigin(origins = "*", allowedHeaders = "*")
 @RestController
 @RequestMapping(value = "/reviews", produces="application/json")
 public class ReviewController {
