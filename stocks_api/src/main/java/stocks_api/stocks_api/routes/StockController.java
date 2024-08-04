@@ -2,6 +2,7 @@ package stocks_api.stocks_api.routes;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -19,6 +20,7 @@ import stocks_api.stocks_api.logic.src.StockData;
 import stocks_api.stocks_api.logic.src.Stocks;
 import stocks_api.stocks_api.utils.BasicResponse;
 
+@CrossOrigin(origins = "*", allowedHeaders = "*")
 @RestController
 @RequestMapping(value = "/stocks", produces="application/json")
 public class StockController {
@@ -167,7 +169,7 @@ public class StockController {
             String result = ParserUtil.resultSetToJson(rs);
             System.out.println("ResultSet");
             System.out.println(result);
-            return BasicResponse.ok(result);            
+            return BasicResponse.ok(result);
             
         } catch (Exception e) {
             e.printStackTrace();
@@ -259,6 +261,26 @@ public class StockController {
             e.printStackTrace();
             // output error message
             return BasicResponse.ok("Failed.");
+        }
+    }
+
+    @GetMapping("/future-value")
+    @ResponseBody
+    public BasicResponse getFutureValue(@RequestParam String symbol, @RequestParam String timestamp) {
+        try {
+            String sqlQuery = "SELECT * FROM stock_data WHERE symbol = ? AND timestamp = ?";
+            PreparedStatement preparedStatement = DBHandler.getInstance().getConnection().prepareStatement(sqlQuery);
+            preparedStatement.setString(1, symbol);
+            preparedStatement.setString(2, timestamp);
+            ResultSet rs = preparedStatement.executeQuery();
+            String result = ParserUtil.resultSetToJson(rs);
+            System.out.println("ResultSet");
+            System.out.println(result);
+            return BasicResponse.ok(result);            
+        } catch (Exception e) {
+            e.printStackTrace();
+            // output error message
+            return BasicResponse.ok("Failed");
         }
     }
 
