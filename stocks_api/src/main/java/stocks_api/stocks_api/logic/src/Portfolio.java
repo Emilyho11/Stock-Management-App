@@ -155,6 +155,135 @@ public class Portfolio {
         System.out.println("Deposited cash from this portfolio successfully");
     }
 
+    // Gets the current total of a stock in a portfolio
+    public static int getTotalStock(int id, String symbol, Connection conn) {
+        try {
+            PreparedStatement stmt;
+            stmt = conn.prepareStatement("SELECT total FROM bought "
+                    + "WHERE ((symbol = ?) AND portfolio_id = ?);");
+            stmt.setString(1, symbol);
+            stmt.setInt(2, id);
+            ResultSet rs = stmt.executeQuery();
+            System.out.println("Retrieved this user's portfolio with that name successfully");
+            if (rs.next()){
+                return rs.getInt(1);
+            }
+            return -1;
+        } catch (SQLException ex) {
+            System.out.println("Error finding this user's portfolio: ");
+            ex.printStackTrace();
+            return -1;
+        }
+    }
+
+    // Gets the all the stocks in a portfolio
+    public static ResultSet getStocks(int id, Connection conn) {
+        try {
+            PreparedStatement stmt;
+            stmt = conn.prepareStatement("SELECT symbol, total FROM bought "
+                    + "WHERE (portfolio_id = ?);");
+            stmt.setInt(1, id);
+            ResultSet rs = stmt.executeQuery();
+            System.out.println("Retrieved this user's portfolio stocks");
+            return rs;
+        } catch (SQLException ex) {
+            System.out.println("Error finding this user's portfolio stocks: ");
+            ex.printStackTrace();
+            return null;
+        }
+    }
+
+    // Gets the sum of most recent stock values of portfolio purchased stocks
+    public static double estimateStockValue(int id, Connection conn) {
+        try {
+            PreparedStatement stmt;
+            stmt = conn.prepareStatement("SELECT SUM(b.total * s.close) "
+                                            + "FROM bought b "
+                                            + "INNER JOIN ("
+                                                +    "SELECT symbol, timestamp, close "
+                                                +    "FROM stock_data "
+                                                +    "WHERE (symbol, timestamp) IN ("
+                                                    +        "SELECT symbol, MAX(timestamp) "
+                                                    +         "FROM stock_data "
+                                                    +         "GROUP BY symbol"
+                                                    +")"
+                                                    +")s "
+                                                    +"ON b.symbol = s.symbol;");
+
+            ResultSet rs = stmt.executeQuery();
+            System.out.println("Retrieved this user's portfolio stocks estimate");
+            if (rs.next()){
+                return rs.getDouble(1);
+            }
+            return 0;
+        } catch (SQLException ex) {
+            System.out.println("Error finding this user's portfolio stocks estimate: ");
+            ex.printStackTrace();
+            return -1;
+        }
+    }
+
+    // Gets the all the stocks in a portfolio
+    public static double estimatePortfolioValue(int id, Connection conn) {
+        return getBalance(id, conn) + estimateStockValue(id, conn);
+    }
+
+    //creates a new bought tuple
+    private static void createStockBought(int portfolioId, String symbol, int total, Connection conn){
+        try {
+                PreparedStatement stmt;
+                stmt = conn.prepareStatement("INSERT INTO bought (portfolio_id, symbol, total) VALUES (?, ?, ?);");
+                stmt.setInt(1, portfolioId);
+                stmt.setString(2, symbol);
+                stmt.setInt(3, total);
+                stmt.executeUpdate();
+            System.out.println("Created bought stock for portfolio successfully");
+        } catch (SQLException ex) {
+            System.out.println("Error creating bought stock for portfolio");
+            ex.printStackTrace();
+        }
+    }
+
+    //updates a bought tuple
+    private static void updateStockBought(int portfolioId, String symbol, int newtotal, Connection conn){
+        try {
+                PreparedStatement stmt;
+                stmt = conn.prepareStatement("UPDATE bought SET total = ? WHERE (portfolio_id = ? AND symbol = ?);");
+                stmt.setInt(1, newtotal);
+                stmt.setInt(2, portfolioId);
+                stmt.setString(3, symbol);
+                stmt.executeUpdate();
+                System.out.println("Updated bought stock for portfolio successfully");
+        } catch (SQLException ex) {
+            System.out.println("Error updating stock for portfolio");
+            ex.printStackTrace();
+        }
+    }
+
+    //creates a buy stock transaction, and also updates the cash history, and the bought table
+    public static void tradeStocksUpdate(int portfolioId, String symbol, String type, int quantity, Connection conn){
+        double totalCost = Transaction.buyStockTransaction(portfolioId, symbol, quantity, conn);
+        int totalStock = getTotalStock(portfolioId, symbol, conn);
+        if (type.equals("buy") && totalStock > -1 && totalCost > -1){    
+            CashHistory.performCashTransaction(portfolioId, "withdraw", totalCost, conn);
+            updateStockBought(portfolioId, symbol, totalStock+quantity, conn);
+        }
+        else if (type.equals("sell") && totalStock > -1 && totalCost > -1){
+            CashHistory.performCashTransaction(portfolioId, "deposit", totalCost, conn);
+            updateStockBought(portfolioId, symbol, totalStock-quantity, conn);
+        }
+    }
+
+    //creates a buy stock transaction, and also updates the cash history, and the bought table
+    public static void tradeStocksCreate(int portfolioId, String symbol, String type, int quantity, Connection conn){
+        double totalCost = Transaction.buyStockTransaction(portfolioId, symbol, quantity, conn);
+        int totalStock = getTotalStock(portfolioId, symbol, conn);
+        if (type.equals("buy") && totalStock == -1 && totalCost > -1){    
+            CashHistory.performCashTransaction(portfolioId, "withdraw", totalCost, conn);
+            createStockBought(portfolioId, symbol, quantity, conn);
+        }
+    }
+
     //gets stock transactions for a portfolio
     public static ResultSet getPortfolioTransactions(int portfolioId, Connection conn){
         return Transaction.getTransactions(portfolioId, conn);

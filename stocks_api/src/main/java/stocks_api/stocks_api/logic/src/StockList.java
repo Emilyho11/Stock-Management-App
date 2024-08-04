@@ -131,6 +131,78 @@ public class StockList extends Table {
         }
     }
 
+    // Gets the current total of a stock in a list
+    public static int getTotalStock(int id, String symbol, Connection conn) {
+        try {
+            PreparedStatement stmt;
+            stmt = conn.prepareStatement("SELECT quantity FROM lists "
+                    + "WHERE (symbol = ? AND stocklist_id = ?);");
+            stmt.setString(1, symbol);
+            stmt.setInt(2, id);
+            ResultSet rs = stmt.executeQuery();
+            System.out.println("Retrieved this user's stocks in the stock list successfully");
+            if (rs.next()){
+                return rs.getInt(1);
+            }
+            return -1;
+        } catch (SQLException ex) {
+            System.out.println("Error finding this user's stock lists stocks: ");
+            ex.printStackTrace();
+            return -1;
+        }
+    }
+
+    //creates a new lists tuple
+    private static void createListStock(int stocklist_id, String symbol, int total, Connection conn){
+        try {
+                PreparedStatement stmt;
+                stmt = conn.prepareStatement("INSERT INTO lists (stocklist_id, symbol, quantity) VALUES (?, ?, ?);");
+                stmt.setInt(1, stocklist_id);
+                stmt.setString(2, symbol);
+                stmt.setInt(3, total);
+                stmt.executeUpdate();
+            System.out.println("Created lists tuple successfully");
+        } catch (SQLException ex) {
+            System.out.println("Error creating lists tuple portfolio");
+            ex.printStackTrace();
+        }
+    }
+
+    //updates a lists tuple
+    private static void updateListStock(int stocklist_id, String symbol, int newtotal, Connection conn){
+        try {
+                PreparedStatement stmt;
+                stmt = conn.prepareStatement("UPDATE lists SET quantity = ? WHERE (stocklist_id = ? AND symbol = ?);");
+                stmt.setInt(1, newtotal);
+                stmt.setInt(2, stocklist_id);
+                stmt.setString(3, symbol);
+                stmt.executeUpdate();
+                System.out.println("Updated lists tuple successfully");
+        } catch (SQLException ex) {
+            System.out.println("Error updating lists tuple");
+            ex.printStackTrace();
+        }
+    }
+
+    //updates the stock on the lists table to factoring in the new quantity
+    public static void listStocksUpdate(int stocklist_id, String symbol, String type, int quantity, Connection conn){
+        int totalStock = getTotalStock(stocklist_id, symbol, conn);
+        if (type.equals("add") && totalStock > -1){    
+            updateListStock(stocklist_id, symbol, totalStock+quantity, conn);
+        }
+        else if (type.equals("remove") && totalStock > -1){
+            updateListStock(stocklist_id, symbol, totalStock-quantity, conn);
+        }
+    }
+
+    //creates a lists tuple for a adding a new stock to it
+    public static void listStocksCreate(int stocklist_id, String symbol, String type, int quantity, Connection conn){
+        int totalStock = getTotalStock(stocklist_id, symbol, conn);
+        if (type.equals("add") && totalStock == -1){    
+            createListStock(stocklist_id, symbol, quantity, conn);
+        }
+    }
+
     // Delete the stock list
     private static void deleteStockList(int stocklist_id, Connection conn) {
         try {

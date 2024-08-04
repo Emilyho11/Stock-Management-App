@@ -1,10 +1,7 @@
 package stocks_api.stocks_api.logic.src;
-import java.io.ObjectInputStream;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
-import java.util.Arrays;
-import java.util.*;
-import java.lang.reflect.Field;
 
 public class Stocks extends Table<Stocks> {
     public static final String TABLE_NAME = "stocks";
@@ -68,4 +65,43 @@ public class Stocks extends Table<Stocks> {
             System.out.println("Error printing Stocks: " + e.getMessage());
         }
     }
+
+    public static double getCurrentStockPrice(String symbol) {
+        try {
+            String sqlQuery = "SELECT close FROM stock_data WHERE (symbol = ?) ORDER BY timestamp DESC FETCH FIRST 1 ROW ONLY;";
+            PreparedStatement preparedStatement = DBHandler.getInstance().getConnection().prepareStatement(sqlQuery);
+            preparedStatement.setString(1, symbol);
+            ResultSet rs = preparedStatement.executeQuery();
+            if (rs.next()){
+                return rs.getDouble(1);
+            }
+            return -1;            
+            
+        } catch (Exception e) {
+            e.printStackTrace();
+            return -1;
+        }
+    }
+
+    // public void updateCOV(Statement stmt, Double COV) {
+    //     this.COV = COV;
+    //     String sqlUpdate = "UPDATE stocks SET cov = '" + COV + "' WHERE symbol = '" + f_symbol + "';";
+    //     try {
+    //         stmt.executeUpdate(sqlUpdate);
+    //         System.out.println("Stocks updated successfully");
+    //     } catch (Exception e) {
+    //         System.out.println("Error updating Stocks: " + e.getMessage());
+    //     }
+    // }
+
+    // public void updateSymbol(Statement stmt, String f_symbol) {
+    //     String sqlUpdate = "UPDATE stocks SET f_symbol = '" + symbol + "' WHERE symbol = '" + this.symbol + "';";
+    //     try {
+    //         this.symbol = symbol;
+    //         stmt.executeUpdate(sqlUpdate);
+    //         System.out.println("Stocks updated successfully");
+    //     } catch (Exception e) {
+    //         System.out.println("Error updating Stocks: " + e.getMessage());
+    //     }
+    // }
 }
