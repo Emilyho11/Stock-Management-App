@@ -28,15 +28,15 @@ import stocks_api.stocks_api.logic.src.User;
 @RestController
 @RequestMapping(value = "/reviews", produces="application/json")
 public class ReviewController {
+
     @GetMapping("/")
-    @ResponseBody
     public BasicResponse getReviews() {
         try {
-            ResultSet rs = DBHandler.getInstance().executeQuery("SELECT * FROM reviews;");
+            String sqlQuery = "SELECT * FROM reviews";
+            PreparedStatement preparedStatement = DBHandler.getInstance().getConnection().prepareStatement(sqlQuery);
+            ResultSet rs = preparedStatement.executeQuery();
             String result = ParserUtil.resultSetToJson(rs);
-            System.out.println("ResultSet");
-            System.out.println(result);
-            return BasicResponse.ok(result);
+            return {msg: "Success", data: result};           
         } catch (Exception e) {
             e.printStackTrace();
             return BasicResponse.error("Failed to get reviews");
@@ -44,7 +44,6 @@ public class ReviewController {
     }
 
     @GetMapping("/{username}/{stock_list_id}")
-    @ResponseBody
     public BasicResponse getReview(@PathVariable String username, @PathVariable int stock_list_id) {
         try {
             String sqlQuery = "SELECT * FROM reviews WHERE username = ? AND stock_list_id = ?";
