@@ -36,7 +36,7 @@ public class ReviewController {
             PreparedStatement preparedStatement = DBHandler.getInstance().getConnection().prepareStatement(sqlQuery);
             ResultSet rs = preparedStatement.executeQuery();
             String result = ParserUtil.resultSetToJson(rs);
-            return {msg: "Success", data: result};           
+            return BasicResponse.ok(result);           
         } catch (Exception e) {
             e.printStackTrace();
             return BasicResponse.error("Failed to get reviews");
