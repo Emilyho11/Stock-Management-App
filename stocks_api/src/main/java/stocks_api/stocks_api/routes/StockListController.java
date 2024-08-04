@@ -2,6 +2,7 @@ package stocks_api.stocks_api.routes;
 import java.sql.Connection;
 import java.sql.ResultSet;
 
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -9,22 +10,13 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-<<<<<<< HEAD
-=======
-import org.springframework.web.bind.annotation.CrossOrigin;
-
->>>>>>> f32b372c63dd000cd21c08b554627aa9febcd540
 
 import stocks_api.stocks_api.logic.src.DBHandler;
 import stocks_api.stocks_api.logic.src.ParserUtil;
 import stocks_api.stocks_api.logic.src.Portfolio;
 import stocks_api.stocks_api.logic.src.StockList;
 
-<<<<<<< HEAD
-
-=======
 @CrossOrigin(origins = "*", allowedHeaders = "*")
->>>>>>> f32b372c63dd000cd21c08b554627aa9febcd540
 @RestController
 @RequestMapping(value = "/stocklist", produces="application/json")
 
@@ -66,7 +58,6 @@ public class StockListController {
         StockList.renameStockList(id, newname, conn);
     }
 
-<<<<<<< HEAD
     @GetMapping("/check/{id}/{symbol}")
     public int getTotalStock(@PathVariable int id, @PathVariable String symbol, @PathVariable int quantity) {
         return StockList.getTotalStock(id, symbol, conn);
@@ -82,8 +73,6 @@ public class StockListController {
         StockList.listStocksUpdate(id, symbol, type, amount, conn);
     }
 
-=======
->>>>>>> f32b372c63dd000cd21c08b554627aa9febcd540
     @PostMapping("/movein/{portfolio_id}/{stocklist_id}")
     public void moveInStockListPortfolio(@PathVariable int portfolio_id, @PathVariable int stocklist_id) {
         Portfolio.addStockListToPortfolio(portfolio_id, stocklist_id, conn);

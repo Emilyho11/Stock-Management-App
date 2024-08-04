@@ -1,8 +1,10 @@
 package stocks_api.stocks_api.logic;
 
+import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import stocks_api.stocks_api.logic.src.DBHandler;
+import stocks_api.stocks_api.logic.src.ParserUtil;
 import stocks_api.stocks_api.logic.src.Reviews;
 import stocks_api.stocks_api.logic.src.Stocks;
 import stocks_api.stocks_api.logic.src.TableManager;

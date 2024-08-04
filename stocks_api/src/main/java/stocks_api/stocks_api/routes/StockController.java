@@ -60,26 +60,6 @@ public class StockController {
         }
     }
 
-    @GetMapping("/price/{symbol}")
-    @ResponseBody
-    public BasicResponse getStockPrice(@PathVariable String symbol) {
-        try {
-            String sqlQuery = "SELECT close FROM stock_data WHERE (symbol = ?) ORDER BY timestamp DESC FETCH FIRST 1 ROW ONLY;";
-            PreparedStatement preparedStatement = DBHandler.getInstance().getConnection().prepareStatement(sqlQuery);
-            preparedStatement.setString(1, symbol);
-            ResultSet rs = preparedStatement.executeQuery();
-            String result = ParserUtil.resultSetToJson(rs);
-            System.out.println("ResultSet");
-            System.out.println(result);
-            return BasicResponse.ok(result);            
-            
-        } catch (Exception e) {
-            e.printStackTrace();
-            // output error message
-            return BasicResponse.ok("Failed");
-        }
-    }
-
 
     @PostMapping("/")
     @ResponseBody
