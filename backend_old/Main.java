@@ -29,16 +29,16 @@ public class Main {
 			// Table.clearTable(User.TABLE_NAME);
 			// Table.clearTable(Reviews.TABLE_NAME);
 
-			ResultSet rs = testingDB.executeQuery("SELECT username, email FROM users;");
+			// ResultSet rs = testingDB.executeQuery("SELECT username, email FROM users;");
 	
 			// Print the queried tuples			
-			System.out.println("Table user contains the following tuples:\nusername \temail");
+			// System.out.println("Table user contains the following tuples:\nusername \temail");
 			
-			while (rs.next()) {
-				String username = rs.getString("username");
-				String email = rs.getString("email");
-				System.out.println(username + ", " + email);
-			}
+			// while (rs.next()) {
+			// 	String username = rs.getString("username");
+			// 	String email = rs.getString("email");
+			// 	System.out.println(username + ", " + email);
+			// }
 			
 			Stocks stockTest = Stocks.create(Stocks::new, "AAPL", 0.5);
 
