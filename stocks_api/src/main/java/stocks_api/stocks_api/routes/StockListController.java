@@ -2,6 +2,7 @@ package stocks_api.stocks_api.routes;
 import java.sql.Connection;
 import java.sql.ResultSet;
 
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -15,7 +16,7 @@ import stocks_api.stocks_api.logic.src.ParserUtil;
 import stocks_api.stocks_api.logic.src.Portfolio;
 import stocks_api.stocks_api.logic.src.StockList;
 
-
+@CrossOrigin(origins = "*", allowedHeaders = "*")
 @RestController
 @RequestMapping(value = "/stocklist", produces="application/json")
 

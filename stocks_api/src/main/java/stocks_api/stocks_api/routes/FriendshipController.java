@@ -2,6 +2,7 @@ package stocks_api.stocks_api.routes;
 import java.sql.Connection;
 import java.sql.ResultSet;
 
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -14,7 +15,7 @@ import stocks_api.stocks_api.logic.src.DBHandler;
 import stocks_api.stocks_api.logic.src.Friendship;
 import stocks_api.stocks_api.logic.src.ParserUtil;
 
-
+@CrossOrigin(origins = "*", allowedHeaders = "*")
 @RestController
 @RequestMapping(value = "/friends", produces="application/json")
 

@@ -14,6 +14,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.CrossOrigin;
+
 
 import com.fasterxml.jackson.databind.introspect.TypeResolutionContext;
 
@@ -23,6 +25,7 @@ import stocks_api.stocks_api.logic.src.DBHandler;
 import stocks_api.stocks_api.logic.src.ParserUtil;
 import stocks_api.stocks_api.utils.BasicResponse;
 
+@CrossOrigin(origins = "*", allowedHeaders = "*")
 @RestController
 @RequestMapping(value = "/users", produces="application/json")
 
@@ -195,21 +198,4 @@ public class UserController {
             return BasicResponse.ok("FAILED to login");
         }
     }
-
-    //adds a new stock list to the database (not in a portfolio)
-    // public static void createUserStockList(String username, String name, Connection conn){
-    //         try {
-    //             int newid = StockList.createStockList(name, conn);
-    //             PreparedStatement stmt1;
-    //             stmt1 = conn.prepareStatement("INSERT INTO created (username, stocklist_id) VALUES (?, ?);");
-    //             stmt1.setString(1, username);
-    //             stmt1.setInt(2, newid);
-    //             stmt1.executeUpdate();
-    //             System.out.println("Created a new stock list for this user successfully");
-    //             return newid;
-    //         } catch (Exception ex) {
-    //             System.out.println("Error creating a new stock list for this user");
-    //             ex.printStackTrace();
-    //         }
-    // }
 }

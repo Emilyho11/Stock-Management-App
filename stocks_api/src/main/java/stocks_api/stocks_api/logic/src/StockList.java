@@ -238,21 +238,22 @@ public class StockList extends Table {
             }
     }
 
-    // public static StockList findByStockListId(int stockListId) {
-    //     StockList stockList = null;
-    //     try {
-
-    //         String sqlQuery = "SELECT * FROM stock_list WHERE stock_list_id = " + stockListId + ";";
-    //         // ResultSet rs = stmt.executeQuery(sqlQuery);
-    //         ResultSet rs = db.executeQuery(sqlQuery);
-
-    //         if (rs.next()) {
-    //             stockList = new StockList(rs.getInt("stock_list_id"), rs.getString("name"), rs.getBoolean("privacy"));
-    //         }
-    //     } catch (Exception e) {
-    //         System.out.println("Error finding StockList: " + e.getMessage());
-    //     }
-    //     return stockList;
-    // }
-
+    // Check if stocklist is private or not
+    public static boolean isPrivate(int stocklist_id, Connection conn) {
+        try {
+            PreparedStatement stmt;
+            stmt = conn.prepareStatement("SELECT privacy FROM stock_list"
+                    + "WHERE (stocklist_id = ?);");
+            stmt.setInt(1, stocklist_id);
+            ResultSet rs = stmt.executeQuery();
+            if (rs.next()) {
+                // return privacy value, which is a boolean
+                return rs.getString(1).equals("private");
+            }
+            return false;
+        } catch (SQLException ex) {
+            System.out.println("Error checking if stocklist is private: " + ex.getMessage());
+            return false;
+        }
+    }
 }

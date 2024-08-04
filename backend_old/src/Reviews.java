@@ -1,27 +1,17 @@
 package cs.toronto.edu.src;
-import java.sql.ResultSet;
-import java.sql.Statement;
-import java.util.ArrayList;
-import java.util.HashMap;
 
 public class Reviews extends Table{
     public static final String TABLE_NAME = "reviews";
-    protected String f_username;
-    protected int f_stock_list_id;
-    protected String f_content;
+    public String f_username;
+    public int f_stock_list_id;
+    public String f_content;
 
-    public Reviews() {}
+    public Reviews() {};
 
-    private Reviews(String f_username, int f_stock_list_id, String f_content) {
-        this.f_username = f_username;
-        this.f_stock_list_id = f_stock_list_id;
-        this.f_content = f_content;
+    @Override
+    public String getTableName() {
+        return TABLE_NAME;
     }
-
-    // @Override
-    // public String getTableName() {
-    //     return tableName;
-    // }
 
     @Override
     public String getKey() {
