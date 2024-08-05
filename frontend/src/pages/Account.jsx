@@ -11,15 +11,17 @@ const Account = () => {
 			<Card className="flex flex-col w-1/4">
 				<h2 className="text-xl">Transaction History</h2>
 				<div className="w-1/3">
-					<p>Some Details</p>
-					<p>Some Details</p>
-					<p>Some Details</p>
-					<p>Some Details</p>
-					<p>Some Details</p>
-					<p>Some Details</p>
-					<p>Some Details</p>
+					<p className="text-base">Stocks Bought: 0</p>
+					<p className="text-base">Stocks Sold: 0</p>
+
 				</div>
 			</Card>
+
+			<div className="mt-4">
+                <Button className="mr-2">Edit Username</Button>
+                <Button className="mr-2">Edit Password</Button>
+                <Button className="mr-2">Edit Email</Button>
+            </div>
 
 			<Link to={"/logout"}>
 				<Button className="mt-4">Logout</Button>
