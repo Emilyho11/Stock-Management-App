@@ -1,8 +1,5 @@
 package stocks_api.stocks_api.logic.src;
 import java.sql.ResultSet;
-import java.sql.Statement;
-import java.util.ArrayList;
-import java.util.HashMap;
 
 public class Reviews extends Table{
     public static final String TABLE_NAME = "reviews";
@@ -10,7 +7,11 @@ public class Reviews extends Table{
     public int f_stock_list_id;
     public String f_content;
 
-    public Reviews() {};
+    public Reviews(String username, int id, String content) {
+        f_username = username;
+        f_stock_list_id = id;
+        f_content = content;
+    };
 
     @Override
     public String getTableName() {

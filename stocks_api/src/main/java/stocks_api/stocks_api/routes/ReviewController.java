@@ -2,6 +2,7 @@ package stocks_api.stocks_api.routes;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.util.ArrayList;
 
 import org.springframework.boot.autoconfigure.security.SecurityProperties;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -30,16 +31,23 @@ import stocks_api.stocks_api.logic.src.User;
 public class ReviewController {
 
     @GetMapping("/")
-    public BasicResponse getReviews() {
+    public ArrayList<Reviews> getReviews() {
         try {
             String sqlQuery = "SELECT * FROM reviews";
             PreparedStatement preparedStatement = DBHandler.getInstance().getConnection().prepareStatement(sqlQuery);
             ResultSet rs = preparedStatement.executeQuery();
+            ArrayList<Reviews> reviews = new ArrayList<Reviews>();
+            while (rs.next()){
+                Reviews review = new Reviews(rs.getString("username"), rs.getInt("stock_list_id"), rs.getString("content"));
+                reviews.add(review);
+            }
             String result = ParserUtil.resultSetToJson(rs);
-            return BasicResponse.ok(result);           
+            return reviews;
+            //return BasicResponse.ok(result);           
         } catch (Exception e) {
             e.printStackTrace();
-            return BasicResponse.error("Failed to get reviews");
+            return null;
+            //return BasicResponse.error("Failed to get reviews");
         }
     }
 

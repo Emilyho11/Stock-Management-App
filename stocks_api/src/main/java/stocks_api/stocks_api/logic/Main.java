@@ -5,10 +5,7 @@ import java.sql.SQLException;
 
 import stocks_api.stocks_api.logic.src.DBHandler;
 import stocks_api.stocks_api.logic.src.ParserUtil;
-import stocks_api.stocks_api.logic.src.Reviews;
-import stocks_api.stocks_api.logic.src.Stocks;
 import stocks_api.stocks_api.logic.src.TableManager;
-import stocks_api.stocks_api.logic.src.User;
 // import stocks_api.stocks_api.logic.src.DBHandler;
 // import stocks_api.stocks_api.logic.src.Reviews;
 // import stocks_api.stocks_api.logic.src.Stocks;
@@ -24,9 +21,9 @@ public class Main {
 			DBHandler.Initialize();
 			TableManager tableManager = TableManager.getInstance();
 			DBHandler testingDB = DBHandler.getInstance();
-			tableManager.addTable(User.TABLE_NAME, User::new);
-			tableManager.addTable(Stocks.TABLE_NAME, Stocks::new);
-			tableManager.addTable(Reviews.TABLE_NAME, Reviews::new);
+			// tableManager.addTable(User.TABLE_NAME, User::new);
+			// tableManager.addTable(Stocks.TABLE_NAME, Stocks::new);
+			// tableManager.addTable(Reviews.TABLE_NAME, Reviews::new);
 
 			// add reviews to reviews table
 			ResultSet rs = testingDB.executeQuery("SELECT * FROM reviews;");

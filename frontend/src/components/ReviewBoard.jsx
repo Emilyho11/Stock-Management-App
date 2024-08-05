@@ -29,7 +29,10 @@ const ReviewBoard = () => {
 	  const fetchReviews = async () => {
 		try {
 		  const response = await AxiosClient.get("reviews/");
-		  if (Array.isArray(response.data)) {
+		  if (reviews){
+			setReviews([]);
+			}
+		  if (response.data) {
 			setReviews(response.data);
 		  } else {
 			console.error("Unexpected data format:", response.data);
@@ -46,9 +49,9 @@ const ReviewBoard = () => {
 		<>
 			<h2 className="text-xl">{reviews.length} REVIEWS</h2>
 			<div className="flex flex-col gap-12">
-				{reviews.map((review, index) => (
-					<Review key={index} review={review} />
-				))}
+				{reviews.map(review => (
+					<Review key={[review.f_username, review.f_stock_list_id]} username={review.f_username} content={review.f_content} />
+				))}	
 			</div>
 	  </>
 	);
