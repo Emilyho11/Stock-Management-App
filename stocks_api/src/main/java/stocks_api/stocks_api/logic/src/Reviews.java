@@ -9,10 +9,8 @@ public class Reviews extends Table{
     public int f_stock_list_id;
     public String f_content;
 
-    public Reviews(String username, int id, String content) {
-        f_username = username;
-        f_stock_list_id = id;
-        f_content = content;
+    public Reviews() {
+
     };
 
     @Override
