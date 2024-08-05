@@ -6,6 +6,9 @@ public class Reviews extends Table{
     public String f_username;
     public int f_stock_list_id;
     public String f_content;
+    public String f_username;
+    public int f_stock_list_id;
+    public String f_content;
 
     public Reviews(String username, int id, String content) {
         f_username = username;
@@ -45,6 +48,11 @@ public class Reviews extends Table{
         return "{username: " + this.f_username + ", stock_list_id: " + this.f_stock_list_id + ", content: " + this.f_content + "}";
     }
 
+    @Override
+    public String toString() {
+        return "{username: " + this.f_username + ", stock_list_id: " + this.f_stock_list_id + ", content: " + this.f_content + "}";
+    }
+
     public String getf_username() {
         return f_username;
     }
@@ -69,6 +77,30 @@ public class Reviews extends Table{
         this.f_content = f_content;
     }
 
+    // Find reviews by username
+    public static ResultSet findByf_username(String username) {
+        try {
+            ResultSet rs = Table.db.executeQuery("SELECT * FROM reviews WHERE username = '" + username + "';");
+            return rs;
+        }
+        catch (Exception e) {
+            System.out.println("Error finding Reviews: " + e.getMessage());
+            return null;
+        }
+    }
+
+    // Find reviews by stock list id
+    public static ResultSet findByf_stock_list_id(int stock_list_id) {
+        try {
+            ResultSet rs = Table.db.executeQuery("SELECT * FROM reviews WHERE stock_list_id = '" + stock_list_id + "';");
+            return rs;
+        }
+        catch (Exception e) {
+            System.out.println("Error finding Reviews: " + e.getMessage());
+            return null;
+        }
+    }
+}
     // Find reviews by username
     public static ResultSet findByf_username(String username) {
         try {

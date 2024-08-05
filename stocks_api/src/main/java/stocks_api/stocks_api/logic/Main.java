@@ -1,6 +1,7 @@
 package stocks_api.stocks_api.logic;
 
 import java.sql.ResultSet;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import stocks_api.stocks_api.logic.src.DBHandler;
@@ -30,11 +31,17 @@ public class Main {
 			// ParserUtil.resultSetToJson(rs);
 			// print out result of parserUtil
 			System.out.println(ParserUtil.resultSetToJson(rs));
+			ResultSet rs = testingDB.executeQuery("SELECT * FROM reviews;");
+			// ParserUtil.resultSetToJson(rs);
+			// print out result of parserUtil
+			System.out.println(ParserUtil.resultSetToJson(rs));
 		} catch (Exception e) {
 			e.printStackTrace();
 			System.err.println(e.getClass().getName() + ": " + e.getMessage());
 			System.exit(1);
 		}
+
+
 
 
 	}
