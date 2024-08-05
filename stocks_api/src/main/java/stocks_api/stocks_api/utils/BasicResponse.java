@@ -1,5 +1,7 @@
 package stocks_api.stocks_api.utils;
 
+import stocks_api.stocks_api.logic.src.Reviews;
+
 public class BasicResponse {
     private String msg;
     private String value;

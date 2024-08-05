@@ -3,10 +3,6 @@ package stocks_api.stocks_api.logic.src;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
-import stocks_api.stocks_api.logic.src.Table;
-import stocks_api.stocks_api.logic.src.StockList;
 
 public class User extends Table {
     public static final String TABLE_NAME = "users";
@@ -69,8 +65,20 @@ public class User extends Table {
         this.f_email = f_email;
     }
 
-    public boolean checkPassword(String f_password) {
-        return this.f_password.equals(f_password);
+    public boolean checkPassword(String username, String password) {
+        // Check if password is in database when user = username
+        try {
+            ResultSet rs = Table.db.executeQuery("SELECT password FROM " + TABLE_NAME + " WHERE username = '" + username + "';");
+            if (rs.next()) {
+                String dbPassword = rs.getString("password");
+                if (dbPassword != null && password != null) {
+                    return dbPassword.trim().equals(password.trim());
+                }
+            }
+        } catch (Exception e) {
+            System.out.println("Error finding user: " + e.getMessage());
+        }
+        return false;
     }
 
     // Find by key
@@ -91,10 +99,11 @@ public class User extends Table {
     }
 
     // Check if user exists in database and return true if it exists and false otherwise
-    public static boolean userExists(String f_username) {
+    public static boolean userExists(String username) {
         try {
-            ResultSet rs = Table.db.executeQuery("SELECT username FROM " + TABLE_NAME + " WHERE username = '" + f_username + "';");
-            return rs.next() ? true : false;
+            ResultSet rs = Table.db.executeQuery("SELECT username FROM " + TABLE_NAME + " WHERE username = '" + username + "';");
+            // if the result set is not empty, the user exists
+            return rs.next();
         } catch (Exception e) {
             System.out.println("Error finding user: " + e.getMessage());
         }
