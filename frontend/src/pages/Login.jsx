@@ -2,13 +2,15 @@ import React, { useState, useEffect } from "react";
 import Card from "../components/Card";
 import Button, { ButtonVariants } from "../components/Button";
 import AxiosClient from "../api/AxiosClient";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { useAuth } from "../components/AuthContext";
 
 const Login = () => {
 	const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
     const [message, setMessage] = useState("");
 	const navigate = useNavigate();
+	const { login } = useAuth();
 
     const handleSubmit = async (event) => {
 		setMessage("Logging in...");
@@ -20,6 +22,7 @@ const Login = () => {
             });
             if (response.data.message === "Logged in") {
                 setMessage("Login successful");
+				login();
 				navigate("/");
             } else {
                 setMessage("Login failed");
@@ -29,8 +32,6 @@ const Login = () => {
             setMessage("Error during login");
         }
     };
-
-	console.log(username, password);
 
 	return (
 		<div className="w-full">
@@ -62,6 +63,7 @@ const Login = () => {
 					</Button>
 				</form>
 				{message && <p>{message}</p>}
+				<Link className="text-blue-600 hover:text-dark_red hover:underline" to="/signup">Don't have an account yet? Sign up here.</Link>
 			</Card>
 		</div>
 	);
