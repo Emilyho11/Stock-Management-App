@@ -31,6 +31,7 @@ import stocks_api.stocks_api.utils.BasicResponse;
 
 public class UserController {
 
+    // Api that returns all users in the database
     @GetMapping("/")
     @ResponseBody
     public BasicResponse getUsers() {
@@ -46,6 +47,7 @@ public class UserController {
         return BasicResponse.ok("FAILED to get users");
     }
 
+    // Api that returns a user with a specific username
     @GetMapping("/{username}")
     @ResponseBody
     public BasicResponse getUser(@PathVariable String username) {
@@ -65,13 +67,13 @@ public class UserController {
         }
     }
 
+    // Api that creates a user
     @PostMapping("/")
     @ResponseBody
     public BasicResponse createUser(@RequestBody User user) {
         // Check if user already exists
         if (user.userExists(user.getUsername())) {
             return BasicResponse.ok("User already exists");
-            // return "'{'msg': 'User already exists'}'";
         }
         try {
 			user = (User)User.create(User::new, user.getUsername(), user.getPassword(), user.getEmail());
@@ -91,6 +93,7 @@ public class UserController {
         }
     }
 
+    // Api that updates a user's username
     @PatchMapping("/updateUsername/{oldUsername}/{newUsername}")
     @ResponseBody
     public BasicResponse updateUsername(@PathVariable String oldUsername, @PathVariable String newUsername) {
@@ -108,6 +111,7 @@ public class UserController {
         }
     }
 
+    // Api that updates a user's email
     @PatchMapping("/updateEmail/{username}/{email}")
     @ResponseBody
     public BasicResponse updateEmail(@PathVariable String username, @PathVariable String email) {
@@ -125,6 +129,7 @@ public class UserController {
         }
     }
 
+    // Api that updates a user's password
     @PatchMapping("/updatePassword/{username}/{password}")
     @ResponseBody
     public BasicResponse updatePassword(@PathVariable String username, @PathVariable String password) {
@@ -142,6 +147,7 @@ public class UserController {
         }
     }
 
+    // Api that deletes a user
     @DeleteMapping("/")
     @ResponseBody
     public BasicResponse deleteUser(@RequestBody User user) {
@@ -180,22 +186,24 @@ public class UserController {
         }
     }
 
+    // Api that logs in a user
     @PostMapping("/login")
     @ResponseBody
     public BasicResponse login(@RequestBody User user) {
         if (!user.userExists(user.getUsername())) {
-            return BasicResponse.ok("User does not exist");
+            return BasicResponse.ok("You do not have an account");
         }
 
         try {
-            if (user.checkPassword(user.getPassword())) {
-                return BasicResponse.value("ok", user.getUsername());
+            if (user.checkPassword(user.getUsername(), user.getPassword())) {
+                return BasicResponse.value("Logged in", user.getUsername());
             }
-            return BasicResponse.ok("Login failed");
+            // return BasicResponse.ok("Incorrect password");
+            return BasicResponse.value("Incorrect password", user.getPassword());
         } catch (Exception e) {
             e.printStackTrace();
             // output error message
-            return BasicResponse.ok("FAILED to login");
+            return BasicResponse.ok("Failed to login");
         }
     }
 }

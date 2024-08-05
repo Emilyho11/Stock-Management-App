@@ -2,22 +2,29 @@ import React, { useState } from "react";
 import { NavLink } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faBars, faHouse, faBoxesStacked, faUserFriends, faArrowTrendUp } from "@fortawesome/free-solid-svg-icons";
+import { useAuth } from "./AuthContext";
 
 const Navbar = () => {
 	const [isOpen, setIsOpen] = useState(false);
+	const { isLoggedIn, logout } = useAuth();
+
+    if (!isLoggedIn) {
+		// Don't render the Navbar if the user is not logged in
+        return null;
+    }
 
 	const myLinks = [
-		{ to: "/", text: "Home", icon: faHouse },
-		{ to: "/stock-manager", text: "Manage My Stocks", icon: faBoxesStacked },
-		{ to: "/account", text: "Account", icon: faBoxesStacked },
+		{ to: "/", text: "Stocks", icon: faBoxesStacked },
+		{ to: "/manage-my-stocks", text: "Manage My Stocks", icon: faHouse },
 		{ to: "/friends", text: "Friends", icon: faUserFriends },
+		{ to: "/account", text: "Account", icon: faBoxesStacked },
 	];
 
 	return (
 		<header className="header flex w-full h-[72px] relative shadow z-10">
 			<div className="flex items-center ml-16">
 				<FontAwesomeIcon icon={faArrowTrendUp} className="text-4xl text-green-500 m-4" />
-				<h1 className="text-xl tracking-wide">C43 - no name yet</h1>
+				<h1 className="text-xl tracking-wide">Stock Management</h1>
 			</div>
 			<div className="m-4 mr-32 absolute top-5 right-0 gap-14 text-base hidden md:flex">
 				{myLinks.map((link, index) => (

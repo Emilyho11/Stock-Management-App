@@ -5,40 +5,43 @@ import AxiosClient from "../api/AxiosClient";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../components/AuthContext";
 
-const Login = () => {
+const Signup = () => {
 	const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
+    const [email, setEmail] = useState("");
     const [message, setMessage] = useState("");
 	const navigate = useNavigate();
-	const { login } = useAuth();
+    const { login } = useAuth();
 
-    const handleSubmit = async (event) => {
-		setMessage("Logging in...");
+    const handleCreate = async (event) => {
         event.preventDefault();
         try {
-            const response = await AxiosClient.post("/users/login", {
+            const response = await AxiosClient.post("/users/", {
 				f_username: username,
 				f_password: password,
+                f_email: email,
             });
-            if (response.data.message === "Logged in") {
-                setMessage("Login successful");
-				login();
+            if (response.data.message === "User created successfully") {
+                setMessage("Account created successfully");
+                login();
 				navigate("/");
+            } else if (response.data.message === "User already exists") {
+                setMessage("Account already exists. Please login.");
             } else {
-                setMessage("Login failed");
+                setMessage("Failed to create account");
             }
         } catch (error) {
-            console.error("Error during login:", error);
-            setMessage("Error during login");
+            console.error("Error during signup:", error);
+            setMessage("Error during signup");
         }
     };
 
 	return (
 		<div className="w-full">
 			<Card className="!w-full md:!w-1/3 p-4 ml-auto mr-auto flex flex-col ">
-				<h1>Login</h1>
+				<h1>Signup</h1>
 
-				<form onSubmit={handleSubmit} className="flex flex-col  w-full md:w-1/2 [&>input]:bg-gray-200 [&>input]:px-2 [&>input]:py-1 [&>input]:rounded-sm [&>label]:text-left">
+				<form onSubmit={handleCreate} className="flex flex-col  w-full md:w-1/2 [&>input]:bg-gray-200 [&>input]:px-2 [&>input]:py-1 [&>input]:rounded-sm [&>label]:text-left">
 					<label htmlFor="username">Username:</label>
 					<input
 						type="text"
@@ -58,15 +61,24 @@ const Login = () => {
 						onChange={(e) => setPassword(e.target.value)}
 						required />
 					<br className="my-2" />
+                    <label htmlFor="email">Email:</label>
+                    <input
+                        type="email"
+                        id="email"
+                        name="email"
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
+                        required />
+                    <br className="my-2" />
 					<Button type="submit" variant={ButtonVariants.LIGHT}>
 						Login{" "}
 					</Button>
 				</form>
 				{message && <p>{message}</p>}
-				<Link className="text-blue-600 hover:text-dark_red hover:underline" to="/signup">Don't have an account yet? Sign up here.</Link>
+				<Link className="text-blue-600 hover:text-dark_red hover:underline" to="/login">Have an account? Sign in here.</Link>
 			</Card>
 		</div>
 	);
 };
 
-export default Login;
+export default Signup

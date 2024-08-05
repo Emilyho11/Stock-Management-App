@@ -31,16 +31,18 @@ public class ReviewController {
             PreparedStatement preparedStatement = DBHandler.getInstance().getConnection().prepareStatement(sqlQuery);
             ResultSet rs = preparedStatement.executeQuery();
             ArrayList<Reviews> reviews = new ArrayList<Reviews>();
-            while (rs.next()){
-                Reviews review = new Reviews(rs.getString("username"), rs.getInt("stock_list_id"), rs.getString("content"));
+            while (rs.next()) {
+                Reviews review = new Reviews();
+                review.setf_username(rs.getString("username"));
+                review.setf_stock_list_id(rs.getInt("stock_list_id"));
+                review.setf_content(rs.getString("content"));
                 reviews.add(review);
             }
             return reviews;
-            //return BasicResponse.ok(result);           
+
         } catch (Exception e) {
             e.printStackTrace();
             return null;
-            //return BasicResponse.error("Failed to get reviews");
         }
     }
 
