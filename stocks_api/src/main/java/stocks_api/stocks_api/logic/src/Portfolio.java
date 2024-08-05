@@ -7,22 +7,14 @@ import java.sql.SQLException;
 
 public class Portfolio {
 
-    private String owner;
     private String name;
     private double beta;
     private int id;
-    private double cash;
 
-    public Portfolio() {
-        //String username, String target, String status, Date rejection
-        // this.username = username;
-        // this.targetFriendUsername = target;
-        // this.status = status;
-        // this.timeRejected = rejection;
-    }
-
-    public String getOwner() {
-        return this.owner;
+    public Portfolio(int id, String name, double beta) {
+        this.name = name;
+        this.beta = beta;
+        this.id = id;
     }
 
     public String getName() {
@@ -103,7 +95,7 @@ public class Portfolio {
     public static ResultSet findByOwner(String username, Connection conn) {
         try {
             PreparedStatement stmt;
-            stmt = conn.prepareStatement("SELECT portfolio_id FROM owns WHERE (username = ?);");
+            stmt = conn.prepareStatement("SELECT portfolio_id, name, beta FROM portfolio WHERE (portfolio_id IN (SELECT portfolio_id FROM owns WHERE (username = ?)));");
             stmt.setString(1, username);
             ResultSet rs = stmt.executeQuery();
             System.out.println("Retrieved this user's portfolio successfully");
@@ -290,9 +282,9 @@ public class Portfolio {
     }
 
     //adds stock list to database and the id tuples into the contains table
-    public static void createStockListInPortfolio(int portfolio_id, String listName, String owner, Connection conn){
+    public static void createStockListInPortfolio(int portfolio_id, String listName, String owner, String privacy, Connection conn){
         try {
-            int newid = StockList.createStockList(owner, listName, conn);
+            int newid = StockList.createStockList(owner, listName, privacy, conn);
             if (newid > -1){
                 PreparedStatement stmt;
                 stmt = conn.prepareStatement("INSERT INTO contains (stocklist_id, portfolio_id) VALUES (?, ?);");

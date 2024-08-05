@@ -1,6 +1,8 @@
 package stocks_api.stocks_api.routes;
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.util.ArrayList;
 
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -9,12 +11,16 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.CrossOrigin;
+
 
 import stocks_api.stocks_api.logic.src.DBHandler;
 import stocks_api.stocks_api.logic.src.ParserUtil;
 import stocks_api.stocks_api.logic.src.Portfolio;
+import stocks_api.stocks_api.logic.src.Reviews;
 
 
+@CrossOrigin(origins = "*", allowedHeaders = "*")
 @RestController
 @RequestMapping(value = "/portfolio", produces="application/json")
 
@@ -33,10 +39,20 @@ public class PortfolioController {
     }
 
     @GetMapping("/get/{username}")
-    public String getUserPortfolios(@PathVariable String username) {
-        ResultSet rs = Portfolio.findByOwner(username, conn);
-        String result = ParserUtil.resultSetToJson(rs);
-        return "'{'content': " + result + "}'";
+    public ArrayList<Portfolio> getUserPortfolios(@PathVariable String username) {
+        try {
+            ResultSet rs = Portfolio.findByOwner(username, conn);
+            ArrayList<Portfolio> portfolios = new ArrayList<Portfolio>();
+            while (rs.next()){
+                Portfolio portfolio = new Portfolio(rs.getInt("portfolio_id"), rs.getString("name"), rs.getDouble("beta"));
+                portfolios.add(portfolio);
+            }
+            return portfolios;
+            
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 
     @GetMapping("/get/{username}/{name}")

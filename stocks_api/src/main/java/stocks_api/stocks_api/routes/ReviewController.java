@@ -1,10 +1,8 @@
 package stocks_api.stocks_api.routes;
-import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
 
-import org.springframework.boot.autoconfigure.security.SecurityProperties;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -13,17 +11,13 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ResponseBody;
-import com.fasterxml.jackson.databind.introspect.TypeResolutionContext;
 import stocks_api.stocks_api.logic.src.Reviews;
 import stocks_api.stocks_api.logic.src.StockList;
 import stocks_api.stocks_api.logic.src.DBHandler;
 import stocks_api.stocks_api.logic.src.ParserUtil;
 import stocks_api.stocks_api.utils.BasicResponse;
 import org.springframework.web.bind.annotation.CrossOrigin;
-
-import stocks_api.stocks_api.logic.src.User;
 
 @CrossOrigin(origins = "*", allowedHeaders = "*")
 @RestController
@@ -41,7 +35,6 @@ public class ReviewController {
                 Reviews review = new Reviews(rs.getString("username"), rs.getInt("stock_list_id"), rs.getString("content"));
                 reviews.add(review);
             }
-            String result = ParserUtil.resultSetToJson(rs);
             return reviews;
             //return BasicResponse.ok(result);           
         } catch (Exception e) {

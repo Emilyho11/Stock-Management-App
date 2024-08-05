@@ -7,11 +7,15 @@ import java.sql.SQLException;
 
 public class StockList extends Table {
     private static final String TABLE_NAME = "stock_list";
-    private int stockListId;
+    private int id;
     private String name;
-    private Boolean privacy;
+    private String privacy;
 
-    public StockList() {}
+    public StockList(int id, String name, String privacy) {
+        this.id = id;
+        this.name = name;
+        this.privacy = privacy;
+    }
     
     @Override
     public String getTableName() {
@@ -20,40 +24,40 @@ public class StockList extends Table {
 
     @Override
     protected String getWhereIdentifier() {
-        return "stock_list_id = " + stockListId;
+        return "stock_list_id = " + id;
     }
 
     @Override
     public String getKey() {
-        return Integer.toString(this.stockListId);
+        return Integer.toString(this.id);
     }
 
     @Override
     public void setKey(String key) {
         if (key == null) {
-            this.stockListId = 0;
+            this.id = 0;
             return;
         }
-        this.stockListId = Integer.parseInt(key);
+        this.id = Integer.parseInt(key);
     }
 
     public String getName() {
         return name;
     }
 
-    public Boolean getPrivacy() {
+    public String getPrivacy() {
         return privacy;
     }
 
     public void setStockListId(int stockListId) {
-        this.stockListId = stockListId;
+        this.id = stockListId;
     }
 
     public void setName(String name) {
         this.name = name;
     }
 
-    public void setPrivacy(Boolean privacy) {
+    public void setPrivacy(String privacy) {
         this.privacy = privacy;
     }
 
@@ -76,14 +80,15 @@ public class StockList extends Table {
     }
 
     //adds a new stock list to the database
-    public static int createStockList(String owner, String name, Connection conn){
+    public static int createStockList(String owner, String name, String privacy, Connection conn){
         int newid = StockList.getNewId(conn);
         if(newid > -1){
             try {
                 PreparedStatement stmt1;
-                stmt1 = conn.prepareStatement("INSERT INTO stock_list (stocklist_id, name, privacy) VALUES (?, ?, 'private');");
+                stmt1 = conn.prepareStatement("INSERT INTO stock_list (stocklist_id, name, privacy) VALUES (?, ?, ?);");
                 stmt1.setInt(1, newid);
                 stmt1.setString(2, name);
+                stmt1.setString(3, privacy);
                 stmt1.executeUpdate();
                 System.out.println("Created a new stock list successfully");
                 return newid;

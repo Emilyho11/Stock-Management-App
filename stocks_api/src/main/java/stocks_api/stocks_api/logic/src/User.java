@@ -102,9 +102,9 @@ public class User extends Table {
     }
 
     // Adds a new stock list to the database (not in a portfolio)
-    public static void createUserStockList(String username, String name, Connection conn){
+    public static void createStockList(String username, String name, String privacy, Connection conn){
         try {
-            int newid = StockList.createStockList(username, name, conn);
+            int newid = StockList.createStockList(username, name, privacy, conn);
             PreparedStatement stmt1;
             stmt1 = conn.prepareStatement("INSERT INTO created (username, stocklist_id) VALUES (?, ?);");
             stmt1.setString(1, username);
@@ -121,7 +121,7 @@ public class User extends Table {
     public static ResultSet getUserStockLists(String username, Connection conn) {
         try {
             PreparedStatement stmt;
-            stmt = conn.prepareStatement("SELECT stocklist_id FROM created WHERE username = ?;");
+            stmt = conn.prepareStatement("SELECT stocklist_id, name, privacy FROM stock_list WHERE (stocklist_id IN (SELECT stocklist_id FROM created WHERE (username = ?)));");
             stmt.setString(1, username);
             ResultSet rs = stmt.executeQuery();
             return rs;

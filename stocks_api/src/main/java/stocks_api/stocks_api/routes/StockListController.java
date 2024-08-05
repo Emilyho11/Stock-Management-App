@@ -1,6 +1,7 @@
 package stocks_api.stocks_api.routes;
 import java.sql.Connection;
 import java.sql.ResultSet;
+import java.util.ArrayList;
 
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -15,6 +16,7 @@ import stocks_api.stocks_api.logic.src.DBHandler;
 import stocks_api.stocks_api.logic.src.ParserUtil;
 import stocks_api.stocks_api.logic.src.Portfolio;
 import stocks_api.stocks_api.logic.src.StockList;
+import stocks_api.stocks_api.logic.src.User;
 
 @CrossOrigin(origins = "*", allowedHeaders = "*")
 @RestController
@@ -24,24 +26,33 @@ public class StockListController {
 
     private static Connection conn = DBHandler.getInstance().getConnection();
 
-    @PostMapping("/{username}/{name}")
-    public void createStockList(@PathVariable String username, @PathVariable String name) {
-        //User.createStockList(username, name, conn);
+    @PostMapping("/{username}/{name}/{privacy}")
+    public void createStockList(@PathVariable String username, @PathVariable String name, @PathVariable String privacy) {
+        User.createStockList(username, name, privacy, conn);
     }
     
-    @PostMapping("/{username}/{id}/{name}")
-    public void createStockListInPortfolio(@PathVariable String username, @PathVariable int id, @PathVariable String name) {
-        Portfolio.createStockListInPortfolio(id, name, username, conn);
+    @PostMapping("/{username}/{id}/{name}/{privacy}")
+    public void createStockListInPortfolio(@PathVariable String username, @PathVariable int id, @PathVariable String name, @PathVariable String privacy) {
+        Portfolio.createStockListInPortfolio(id, name, username, privacy, conn);
     }
 
-    // @GetMapping("/get/{username}")
-    // public String getUserStockLists(@PathVariable String username) {
-    //     ResultSet rs = User.getUserStockLists(username, conn);
-    //     String result = ParserUtil.resultSetToJson(rs);
-    //     return "'{'content': " + result + "}'";
-    // }
+    @GetMapping("/get/{username}")
+    public ArrayList<StockList> getUserStockLists(@PathVariable String username) {
+        try {
+            ResultSet rs = User.getUserStockLists(username, conn);
+            ArrayList<StockList> lists = new ArrayList<StockList>();
+            while (rs.next()){
+                StockList list = new StockList(rs.getInt("stocklist_id"), rs.getString("name"), rs.getString("privacy"));
+                lists.add(list);
+            }
+            return lists;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
 
-    @GetMapping("/get/{id}")
+    @GetMapping("/get/id/{id}")
     public String getPortfolioStockLists(@PathVariable int id) {
         ResultSet rs = Portfolio.getStockLists(id, conn);
         String result = ParserUtil.resultSetToJson(rs);

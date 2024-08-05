@@ -31,10 +31,6 @@ public class Main {
 			// ParserUtil.resultSetToJson(rs);
 			// print out result of parserUtil
 			System.out.println(ParserUtil.resultSetToJson(rs));
-			ResultSet rs = testingDB.executeQuery("SELECT * FROM reviews;");
-			// ParserUtil.resultSetToJson(rs);
-			// print out result of parserUtil
-			System.out.println(ParserUtil.resultSetToJson(rs));
 		} catch (Exception e) {
 			e.printStackTrace();
 			System.err.println(e.getClass().getName() + ": " + e.getMessage());
