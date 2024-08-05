@@ -74,7 +74,6 @@ public class UserController {
         // Check if user already exists
         if (user.userExists(user.getUsername())) {
             return BasicResponse.ok("User already exists");
-            // return "'{'msg': 'User already exists'}'";
         }
         try {
 			user = (User)User.create(User::new, user.getUsername(), user.getPassword(), user.getEmail());

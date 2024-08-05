@@ -1,6 +1,5 @@
 import "./App.css";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import Home from "./pages/Home";
 import ManageStocks from "./pages/ManageStocks";
 import Account from "./pages/Account";
 import Navbar from "./components/Navbar.jsx";
@@ -14,6 +13,7 @@ import StockLists from "./pages/StockLists.jsx";
 import StocksManager from "./pages/StocksManager.jsx";
 import Signup from "./pages/Signup.jsx";
 import { AuthProvider } from "./components/AuthContext.jsx";
+import Stocks from "./pages/Stocks.jsx";
 
 function App() {
 	return (
@@ -23,7 +23,7 @@ function App() {
 					<Navbar />
 					<div className="flex-1 bg-gray-100 relative pt-4">
 						<Routes>
-							<Route path="/" element={<Home />} />
+							<Route path="/" element={<Stocks />} />
 							<Route path="/manage-my-stocks" element={<ManageStocks />} />
 							<Route path="/stock-manager" element={<StocksManager />} />
 							<Route path="/account" element={<Account />} />
