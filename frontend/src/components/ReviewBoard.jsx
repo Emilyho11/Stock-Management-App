@@ -3,7 +3,6 @@ import Review from "./Review";
 import AxiosClient from "../api/AxiosClient";
 
 const ReviewBoard = () => {
-	// Review(username, stockListId, content)
 	// const [reviews, setReviews] = React.useState([
 	// 	{
 	// 		username: "Alice Wunderlan",
@@ -26,22 +25,26 @@ const ReviewBoard = () => {
 	const [reviews, setReviews] = useState([]);
 
 	useEffect(() => {
-	  const fetchReviews = async () => {
-		try {
-		  const response = await AxiosClient.get("reviews/");
-		  if (response.status === 200) {
-			console.log("Data fetched successfully:", response.data);
-			setReviews(response.data);
-			console.log("Reviews:", reviews);
-		  } else {
-			console.error("Unexpected data format:", response.data);
-		  }
-		} catch (error) {
-		  console.error("Error fetching data:", error);
-		}
-	  };
-  
-	  fetchReviews();
+		const fetchReviews = async () => {
+			try {
+				const response = await AxiosClient.get("reviews/");
+				if (response.data && Array.isArray(response.data)) {
+					// setReviews(response.data);
+					const parsedReviews = response.data.map((item) => ({
+                        username: item.f_username.trim(),
+                        stockListId: item.f_stock_list_id,
+                        content: item.f_content.trim(),
+                    }));
+					setReviews(parsedReviews);
+				} else {
+					console.error("Unexpected data format:", response.data);
+				}
+			} catch (error) {
+				console.error("Error fetching data:", error);
+			}
+		};
+
+		fetchReviews();
 	}, []);
 
 	return (
@@ -49,7 +52,7 @@ const ReviewBoard = () => {
 			<h2 className="text-xl">{reviews.length} REVIEWS</h2>
 			<div className="flex flex-col gap-12">
 				{reviews.map((review, index) => (
-					<Review key={index} review={review} />
+					<Review key={index} data={review} />
 				))}
 			</div>
 	  </>
