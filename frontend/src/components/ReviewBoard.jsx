@@ -29,8 +29,10 @@ const ReviewBoard = () => {
 	  const fetchReviews = async () => {
 		try {
 		  const response = await AxiosClient.get("reviews/");
-		  if (Array.isArray(response.data)) {
+		  if (response.status === 200) {
+			console.log("Data fetched successfully:", response.data);
 			setReviews(response.data);
+			console.log("Reviews:", reviews);
 		  } else {
 			console.error("Unexpected data format:", response.data);
 		  }
