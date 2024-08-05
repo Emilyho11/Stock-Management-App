@@ -1,6 +1,7 @@
 package stocks_api.stocks_api.routes;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.util.ArrayList;
 
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -25,21 +26,28 @@ import stocks_api.stocks_api.utils.BasicResponse;
 @RequestMapping(value = "/stocks", produces="application/json")
 public class StockController {
 
+    // Get all stocks
     @GetMapping("/")
-    @ResponseBody
-    public BasicResponse getAllStocks() {
+    public ArrayList<Stocks> getAllStocks() {
         try {
-            ResultSet rs = DBHandler.getInstance().executeQuery("SELECT * FROM stocks;");
-            String result = ParserUtil.resultSetToJson(rs);
-            System.out.println("ResultSet");
-            System.out.println(result);
-            return BasicResponse.ok(result);
+            String sqlQuery = "SELECT symbol, cov FROM stocks;";
+            PreparedStatement preparedStatement = DBHandler.getInstance().getConnection().prepareStatement(sqlQuery.toString());
+            ResultSet rs = preparedStatement.executeQuery();
+            ArrayList<Stocks> stocks = new ArrayList<Stocks>();
+            while (rs.next()) {
+                Stocks stock = new Stocks();
+                stock.setSymbol(rs.getString("symbol"));
+                stock.setCOV(rs.getDouble("cov"));
+                stocks.add(stock);
+            }
+            return stocks;
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return BasicResponse.ok("Failed");
+        return null;
     }
 
+    // Get a specific stock
     @GetMapping("/{symbol}")
     @ResponseBody
     public BasicResponse getStock(@PathVariable String symbol) {
@@ -59,7 +67,6 @@ public class StockController {
             return BasicResponse.ok("Failed");
         }
     }
-
 
     @PostMapping("/")
     @ResponseBody
@@ -126,10 +133,10 @@ public class StockController {
 
     // ----- STOCK DATA -----
 
-    
+    // Get all stock data of a company by symbol
     @GetMapping("/{symbol}/data")
     @ResponseBody
-    public BasicResponse getStockData(@PathVariable String symbol,
+    public ArrayList<StockData> getStockData(@PathVariable String symbol,
         @RequestParam(required = false) String start_date, 
         @RequestParam(required = false) String end_date) {
         try {
@@ -146,18 +153,28 @@ public class StockController {
             PreparedStatement preparedStatement = DBHandler.getInstance().getConnection().prepareStatement(sqlQuery.toString());
             preparedStatement.setString(1, symbol);
             ResultSet rs = preparedStatement.executeQuery();
-            String result = ParserUtil.resultSetToJson(rs);
-            System.out.println("ResultSet");
-            System.out.println(result);
-            return BasicResponse.ok(result);
+            ArrayList<StockData> stockData = new ArrayList<StockData>();
+            while (rs.next()) {
+                StockData stock = new StockData();
+                stock.f_symbol = rs.getString("symbol");
+                stock.f_timestamp = rs.getString("timestamp");
+                stock.f_open = rs.getDouble("open");
+                stock.f_close = rs.getDouble("close");
+                stock.f_high = rs.getDouble("high");
+                stock.f_low = rs.getDouble("low");
+                stock.f_volume = rs.getDouble("volume");
+                stockData.add(stock);
+            }
+            return stockData;
             
         } catch (Exception e) {
             e.printStackTrace();
             // output error message
-            return BasicResponse.ok("Failed");
+            return null;
         }
     }
 
+    // Insert stock data
     @PostMapping("/{symbol}/data")
     @ResponseBody
     public BasicResponse createStockData(@PathVariable String symbol, @RequestBody StockData stock) {
@@ -227,6 +244,7 @@ public class StockController {
         }
     }
 
+    // Delete a specific stock data
     @DeleteMapping("/{symbol}/data/{timestamp}")
     @ResponseBody
     public BasicResponse deleteStockData(@PathVariable String symbol, @PathVariable String timestamp) {
