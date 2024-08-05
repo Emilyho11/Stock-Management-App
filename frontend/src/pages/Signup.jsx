@@ -25,6 +25,8 @@ const Signup = () => {
                 setMessage("Account created successfully");
                 login();
 				navigate("/");
+            } else if (response.data.message === "User already exists") {
+                setMessage("Account already exists. Please login.");
             } else {
                 setMessage("Failed to create account");
             }
