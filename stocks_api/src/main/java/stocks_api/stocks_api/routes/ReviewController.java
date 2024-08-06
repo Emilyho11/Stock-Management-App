@@ -1,7 +1,9 @@
 package stocks_api.stocks_api.routes;
+
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
+import java.util.List;
 
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -17,11 +19,14 @@ import stocks_api.stocks_api.logic.src.StockList;
 import stocks_api.stocks_api.logic.src.DBHandler;
 import stocks_api.stocks_api.logic.src.ParserUtil;
 import stocks_api.stocks_api.utils.BasicResponse;
+import stocks_api.stocks_api.utils.ListResponse;
+
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.CrossOrigin;
 
 @CrossOrigin(origins = "*", allowedHeaders = "*")
 @RestController
-@RequestMapping(value = "/reviews", produces="application/json")
+@RequestMapping(value = "/reviews", produces = "application/json")
 public class ReviewController {
 
     @GetMapping("/")
@@ -57,7 +62,7 @@ public class ReviewController {
             String result = ParserUtil.resultSetToJson(rs);
             System.out.println("ResultSet");
             System.out.println(result);
-            return BasicResponse.ok(result);            
+            return BasicResponse.ok(result);
         } catch (Exception e) {
             e.printStackTrace();
             return BasicResponse.error("Failed to get review by username and stock list id");
@@ -67,7 +72,8 @@ public class ReviewController {
     @PostMapping("/")
     @ResponseBody
     public BasicResponse createReview(@RequestBody Reviews review) {
-        // Check if the stockListId's privacy value is set to true, return because users cannot review the stock without it being public.
+        // Check if the stockListId's privacy value is set to true, return because users
+        // cannot review the stock without it being public.
         if (StockList.isPrivate(review.getf_stock_list_id(), DBHandler.getInstance().getConnection())) {
             return BasicResponse.error("Stock list is private, cannot review");
         }
@@ -87,7 +93,8 @@ public class ReviewController {
 
     @PatchMapping("/{username}/{stock_list_id}")
     @ResponseBody
-    public BasicResponse updateReview(@PathVariable String username, @PathVariable int stock_list_id, @RequestBody Reviews review) {
+    public BasicResponse updateReview(@PathVariable String username, @PathVariable int stock_list_id,
+            @RequestBody Reviews review) {
         try {
             String sqlQuery = "UPDATE reviews SET content = ? WHERE username = ? AND stock_list_id = ?";
             PreparedStatement preparedStatement = DBHandler.getInstance().getConnection().prepareStatement(sqlQuery);
@@ -118,22 +125,42 @@ public class ReviewController {
         }
     }
 
-    @GetMapping("/stock/{stock_list_id}")
+    // ?username='username'
+    @GetMapping("/{stock_list_id}")
     @ResponseBody
-    public BasicResponse getReviewsByStockListId(@PathVariable int stock_list_id) {
+    public ListResponse<Reviews> getReviewsByStockListId(
+            @PathVariable int stock_list_id,
+            @RequestParam(required = false) String username) {
+
         try {
             String sqlQuery = "SELECT * FROM reviews WHERE stock_list_id = ?";
             PreparedStatement preparedStatement = DBHandler.getInstance().getConnection().prepareStatement(sqlQuery);
             preparedStatement.setInt(1, stock_list_id);
+            boolean alreadyReviewed = false;
+            // Set booleen as true if we find a review with the same username and
+            // stocklistid. This way, it prevents user from making another review on the
+            // same stocklist
+            String sqlQuery2 = "SELECT * FROM reviews WHERE stock_list_id = ?";
+
             ResultSet rs = preparedStatement.executeQuery();
-            String result = ParserUtil.resultSetToJson(rs);
-            System.out.println("ResultSet");
-            System.out.println(result);
-            return BasicResponse.ok(result);            
-            
+            List<Reviews> reviews = new ArrayList<>();
+            while (rs.next()) {
+                Reviews review = new Reviews();
+                review.setf_username(rs.getString("username"));
+                review.setf_stock_list_id(rs.getInt("stock_list_id"));
+                review.setf_content(rs.getString("content"));
+
+                if (review.getf_username().equals(username)) {
+                    alreadyReviewed = true;
+                }
+                reviews.add(review);
+            }
+            return new ListResponse<>(alreadyReviewed ? "Reviewed" : "Unreviewed", reviews);
+
         } catch (Exception e) {
             // output error message
-            return BasicResponse.error("Failed to get reviews by stock list id");
+            e.printStackTrace();
+            return null;
         }
     }
 
@@ -148,8 +175,8 @@ public class ReviewController {
             String result = ParserUtil.resultSetToJson(rs);
             System.out.println("ResultSet");
             System.out.println(result);
-            return BasicResponse.ok(result);            
-            
+            return BasicResponse.ok(result);
+
         } catch (Exception e) {
             // output error message
             return BasicResponse.error("Failed to get reviews by username");
