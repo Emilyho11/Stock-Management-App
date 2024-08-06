@@ -11,6 +11,7 @@ import AddStocksModal from "../components/AddStocksModal";
 import CreateStockListModal from "../components/CreateStockListModal";
 import AxiosClient from "../api/AxiosClient";
 import CreateButton from "../components/CreateButton";
+import { useNavigate } from 'react-router-dom';
 
 
 const StocksManager = () => {
@@ -18,6 +19,7 @@ const StocksManager = () => {
 	const [portfolios, setPortfolios] = useState([])
 	const [stockLists, setStockLists] = useState([])
 	const username = "mirihuang"; //replace with logged in user
+	const navigate = useNavigate();
 
 	useEffect(() => {
 		const getPortfolios = async () => {
@@ -57,6 +59,10 @@ const StocksManager = () => {
 		getStockLists();
 	  }, []);
 
+	const handleOpenPortfolio = (portfolio) => {
+		navigate(`/portfolio/${portfolio.id}`, { state: { portfolio: portfolio } });
+	}
+
 	return (
 		<>
 			{/* <CreateStockListModal /> */}
@@ -69,23 +75,30 @@ const StocksManager = () => {
 						</CreateButton>
 					</div>
 					<h1 className="text-base text-left w-fit text-gray-500 tracking-wide uppercase">Portfolios</h1>
-					<DndProvider backend={HTML5Backend}>
+					{/* <DndProvider backend={HTML5Backend}> */}
 						<div className="flex gap-4 flex-wrap w-full">
 							{portfolios
 								.map((portfolio) => (
-									<DndStockCard
-										key={portfolio.id}
-										className="flex gap-4 items-center px-8 hover:!bg-white"
-										itemData={portfolio}
-									>
+									<div className="flex gap-4 items-center px-8 hover:!bg-white transition-all bg-white p-2 rounded-md w-72 min-h-3 hover:shadow-lg " onClick={() => handleOpenPortfolio(portfolio)}>
 										<p className="uppercase text-sm bg-gray-100  w-fit rounded-md px-2 py-1 ml-auto mr-auto">
 											Portfolio
 										</p>
 										<h1 className="text-xl font-normal">{portfolio.name}</h1>
-									</DndStockCard>
+									</div>
+									// <DndStockCard
+									// 	key={portfolio.id}
+									// 	className="flex gap-4 items-center px-8 hover:!bg-white"
+									// 	itemData={portfolio}
+									// 	onClick={(portfolio) => handleOpenPortfolio(portfolio)}
+									// >
+									// 	<p className="uppercase text-sm bg-gray-100  w-fit rounded-md px-2 py-1 ml-auto mr-auto">
+									// 		Portfolio
+									// 	</p>
+									// 	<h1 className="text-xl font-normal">{portfolio.name}</h1>
+									// </DndStockCard>
 								))}
 						</div>
-					</DndProvider>
+					{/* </DndProvider> */}
 					<h1 className="text-base text-left w-fit text-gray-500 tracking-wide uppercase">Stock Lists</h1>
 					<DndProvider backend={HTML5Backend}>
 						<div className="flex gap-4 flex-wrap w-full">

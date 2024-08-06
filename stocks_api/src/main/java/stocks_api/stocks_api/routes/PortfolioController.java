@@ -18,6 +18,7 @@ import stocks_api.stocks_api.logic.src.DBHandler;
 import stocks_api.stocks_api.logic.src.ParserUtil;
 import stocks_api.stocks_api.logic.src.Portfolio;
 import stocks_api.stocks_api.logic.src.Reviews;
+import stocks_api.stocks_api.logic.src.Stocks;
 
 
 @CrossOrigin(origins = "*", allowedHeaders = "*")
@@ -60,6 +61,24 @@ public class PortfolioController {
         ResultSet rs = Portfolio.findByOwnerAndName(username, name, conn);
         String result = ParserUtil.resultSetToJson(rs);
         return "'{'content': " + result + "}'";
+    }
+
+    @GetMapping("/getStocks/{id}")
+    public ArrayList<Object> getUserPortfolios(@PathVariable int id) {
+        try {
+            ResultSet rs = Portfolio.getStocks(id, conn);
+            ArrayList<Object> stocks = new ArrayList<Object>();
+            while (rs.next()){
+                ArrayList<Object> stock = new ArrayList<Object>();
+                stock.add(rs.getString("symbol"));
+                stock.add(rs.getInt("total"));
+                stocks.add(stock);
+            }
+            return stocks; 
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 
     @GetMapping("/getBalance/{id}")

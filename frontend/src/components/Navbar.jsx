@@ -8,10 +8,10 @@ const Navbar = () => {
 	const [isOpen, setIsOpen] = useState(false);
 	const { isLoggedIn, logout } = useAuth();
 
-    if (!isLoggedIn) {
-		// Don't render the Navbar if the user is not logged in
-        return null;
-    }
+    // if (!isLoggedIn) {
+	// 	// Don't render the Navbar if the user is not logged in
+    //     return null;
+    // }
 
 	const myLinks = [
 		{ to: "/", text: "Stocks", icon: faBoxesStacked },

@@ -1,0 +1,201 @@
+import React from "react";
+import StockCard from "../components/StockCard";
+import Card from "../components/Card";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faArrowLeft } from "@fortawesome/free-solid-svg-icons";
+import Button, { ButtonVariants } from "../components/Button";
+import { Link } from "react-router-dom";
+import ReviewBoard from "../components/ReviewBoard";
+import PrivacyIcon from "../components/PrivacyIcon";
+import { useLocation } from "react-router-dom";
+import { useEffect } from "react";
+import AxiosClient from "../api/AxiosClient";
+import CreateButton from "../components/CreateButton";
+
+const ManagePortfolio = () => {
+	const [showStocks, setShowStocks] = React.useState(true);
+	const { state } = useLocation();
+    const { portfolio } = state;
+	const [stocks, setStocks] = React.useState([])
+	const [stocklists, setStockLists] = React.useState([])
+	const [selectedStock, setSelectedStock] = React.useState([]);
+	const [selectedList, setSelectedList] = React.useState([]);
+	const username = "mirihuang" //replace with logged in user
+
+	useEffect(() => {
+		const getOwnedStocks = async () => {
+		  try {
+			const response = await AxiosClient.get(`portfolio/getStocks/${portfolio.id}`);
+			if (response.data) {
+				setStocks(response.data);
+			} else {
+			  console.error("Unexpected data format:", response.data);
+			}
+		  } catch (error) {
+			console.error("Error fetching data:", error);
+		  }
+		};
+
+		const getPortfolioStockLists = async () => {
+			try {
+			  const response = await AxiosClient.get(`stocklist/get/id/${portfolio.id}`);
+			  if (response.data) {
+				setStockLists(response.data);
+			  } else {
+				console.error("Unexpected data format:", response.data);
+			  }
+			} catch (error) {
+			  console.error("Error fetching data:", error);
+			}
+		  };
+	
+		getOwnedStocks();
+		getPortfolioStockLists();
+	  }, []);
+
+	const displayDetails = () => {
+		if (showStocks){
+			return (
+				<p>temporary info, need to fill with stock stuff</p>
+			)
+		} else {
+			
+			return (
+				<div className="flex flex-row  my-4  gap-4">
+					<div className="flex min-w-[10vw] flex-col gap-2">
+					{stocks.map((stock, index) => (
+					<button key={stock.symbol} onMouseDown={() => setSelectedStock(stock)}>
+						<Card
+							className={ (!(selectedStock[0] == stock[0]) ? ("flex gap-4 items-center hover:scale-105 hover:shadow-xl transition-all bg-white") : (
+								"flex gap-4 items-center hover:scale-105 hover:shadow-xl transition-all bg-blue-500 text-white"
+							))}
+						>
+							<div className="text-left">
+								<h5 className="card-title">{stock[0]}</h5>
+								<p className="card-text">Quantity: {stock[1]}</p>
+							</div>
+						</Card>
+					</button>
+					))}
+					
+					</div>
+					<div className="flex-1 flex flex-col gap-2 w-1/2">
+						<h1 className="text-xl text-left">Stock Information</h1>
+						<Card className="h-full "></Card>
+						<Card className="w-full h-full !items-start flex-col py-8 px-12 border-t-2 border-blue-300">
+							<ReviewBoard />
+						</Card>
+					</div>
+					
+				</div>
+				
+				
+			)
+		}
+	}
+
+	return (
+		<div className="md:w-2/3 ml-auto mr-auto flex flex-col gap-2">
+			<Link to="/stock-manager">
+				<Button className="flex items-center gap-4" variant={ButtonVariants.TRANSPARENT}>
+					<FontAwesomeIcon icon={faArrowLeft} />
+					<p className="font-semibold uppercase tracking-wide">Home</p>
+				</Button>
+			</Link>
+			<Card className="min-h-[50vh] !bg-transparent !items-start !p-0 max-lg:flex-col">
+				<div className="scale-75 ml-auto ">
+					<h1 className="text-left text-4xl">{portfolio.name}</h1>
+				</div>
+				<Card className="w-full h-full !items-start flex-col py-8 px-12 bg-white">
+					<CreateButton username={username} type={"stocklist"} id={portfolio.id}/>
+					
+				</Card>
+			</Card>
+			{/* <hr className="mb-2" /> */}
+			<div className="flex flex-row  my-4  gap-4">
+				<div className="flex min-w-[20vw] flex-col gap-2">
+					<div className="flex gap-4 items-center justify-between">
+						<h1 className="text-xl text-left w-fit">Stocks and Lists</h1>
+
+						<div className="sm:hidden">
+							<label for="tabs" className="sr-only">
+								Portfolio Type
+							</label>
+							<select
+								id="tabs"
+								className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
+							>
+								<option>Stocks</option>
+								<option>Lists</option>
+							</select>
+						</div>
+
+						<ul className="hidden text-sm font-medium text-center text-gray-400 rounded-lg sm:flex">
+							<li className="w-full focus-within:z-10">
+								<button
+									onClick={() => setShowStocks(true)}
+									className={
+										"inline-block w-full p-2 px-4 bg-gray-400/50 border-r border-gray-200 hover:bg-gray-300 rounded-s-lg active focus:outline-none  " +
+										(showStocks ? "!bg-dark_red/80 !text-white font-bold shadow" : "shadow-inner")
+									}
+									aria-current="page"
+								>
+									Stocks
+								</button>
+							</li>
+							<li className="w-full focus-within:z-10">
+								<button
+									onClick={() => setShowStocks(false)}
+									className={
+										"inline-block w-full p-2 px-4  bg-gray-400/50 border-s-0 border-gray-200 rounded-e-lg hover:text-gray-700 hover:bg-gray-300 focus:outline-none " +
+										(!showStocks ? "!bg-dark_red/80 !text-white shadow" : "shadow-inner")
+									}
+								>
+									Lists
+								</button>
+							</li>
+						</ul>
+					</div>
+					{showStocks ? (
+						stocks.map((stock, index) => (
+							<button key={stock.symbol} onMouseDown={() => setSelectedStock(stock)}>
+								<Card
+									className={ (!(selectedStock[0] == stock[0]) ? ("flex gap-4 items-center hover:scale-105 hover:shadow-xl transition-all bg-white") : (
+										"flex gap-4 items-center hover:scale-105 hover:shadow-xl transition-all bg-blue-500 text-white"
+									))}
+								>
+									<div className="text-left">
+										<h5 className="card-title">{stock[0]}</h5>
+										<p className="card-text">Quantity: {stock[1]}</p>
+									</div>
+								</Card>
+							</button>
+						))
+					) : (
+						stocklists.map((list, index) => (
+							<button key={list.id} onMouseDown={() => setSelectedList(list)}>
+								<Card
+									className={ (!(selectedList.id == list.id) ? ("flex gap-4 items-center hover:scale-105 hover:shadow-xl transition-all bg-white") : (
+										"flex gap-4 items-center hover:scale-105 hover:shadow-xl transition-all bg-blue-500 text-white"
+									))}
+								>
+									<div className="text-left">
+										<h5 className="card-title">{list.name}</h5>
+										<PrivacyIcon privacy={list.privacy} />
+									</div>
+								</Card>
+							</button>
+						))
+					)}
+				</div>
+
+				<div className="flex-1 flex flex-col gap-2">
+					<h1 className="text-xl text-left">Details</h1>
+					<Card className="h-full bg-white">{displayDetails()}</Card>
+				</div>
+			</div>
+		</div>
+	);
+};
+
+export default ManagePortfolio;

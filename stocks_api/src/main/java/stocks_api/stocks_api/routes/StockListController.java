@@ -53,10 +53,19 @@ public class StockListController {
     }
 
     @GetMapping("/get/id/{id}")
-    public String getPortfolioStockLists(@PathVariable int id) {
-        ResultSet rs = Portfolio.getStockLists(id, conn);
-        String result = ParserUtil.resultSetToJson(rs);
-        return "'{'content': " + result + "}'";
+    public ArrayList<StockList> getPortfolioStockLists(@PathVariable int id) {
+        try {
+            ResultSet rs = Portfolio.getStockLists(id, conn);
+            ArrayList<StockList> lists = new ArrayList<StockList>();
+            while (rs.next()){
+                StockList list = new StockList(rs.getInt("stocklist_id"), rs.getString("name"), rs.getString("privacy"));
+                lists.add(list);
+            }
+            return lists;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 
     @PatchMapping("/changePrivacy/{id}/{privacy}")

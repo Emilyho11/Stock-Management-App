@@ -10,6 +10,7 @@ import Friends from "./pages/Friends.jsx";
 import Logout from "./pages/Logout.jsx";
 import Login from "./pages/Login.jsx";
 import StockLists from "./pages/StockLists.jsx";
+import ManagePortfolio from "./pages/ManagePortfolio.jsx";
 import StocksManager from "./pages/StocksManager.jsx";
 import Signup from "./pages/Signup.jsx";
 import { AuthProvider } from "./components/AuthContext.jsx";
@@ -24,7 +25,8 @@ function App() {
 					<div className="flex-1 bg-gray-100 relative pt-4">
 						<Routes>
 							<Route path="/" element={<Stocks />} />
-							<Route path="/manage-my-stocks" element={<ManageStocks />} />
+							<Route path="/portfolio/:id" element={<ManagePortfolio />} />
+							<Route path="/stocklist/:id" element={<ManageStocks />} />
 							<Route path="/stock-manager" element={<StocksManager />} />
 							<Route path="/account" element={<Account />} />
 							<Route path="/friends" element={<Friends />} />

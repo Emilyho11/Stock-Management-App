@@ -318,7 +318,7 @@ public class Portfolio {
     public static ResultSet getStockLists(int portfolioId, Connection conn){
         try {
             PreparedStatement stmt;
-            stmt = conn.prepareStatement("SELECT stocklist_id FROM contains WHERE (portfolio_id = ?);");
+            stmt = conn.prepareStatement("SELECT stocklist_id, name, privacy FROM stock_list WHERE (stocklist_id IN (SELECT stocklist_id FROM contains WHERE portfolio_id = ?));");
             stmt.setInt(1, portfolioId);
             ResultSet rs = stmt.executeQuery();
             System.out.println("Retrieved stock lists in this portfolio successfully");
