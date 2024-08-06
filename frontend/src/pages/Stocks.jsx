@@ -51,7 +51,7 @@ const Stocks = () => {
   return (
     <div className="flex h-screen">
       <div className="w-1/6 p-4 overflow-y-auto bg-gray-100">
-        <h1>My Stocks</h1>
+        <h1>Stocks</h1>
         <div className="mt-1">
           <div className={showDatePickers ? 'p-4 rounded-lg' : ''}>
             <button

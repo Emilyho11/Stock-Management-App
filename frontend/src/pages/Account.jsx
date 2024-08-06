@@ -2,8 +2,12 @@ import React from "react";
 import Card from "../components/Card";
 import Button from "../components/Button";
 import { Link } from "react-router-dom";
+import { useAuth } from "../components/AuthContext";
 
 const Account = () => {
+	const { username } = useAuth();
+	console.log("username", username);
+
 	return (
 		<div className="mx-16 my-4">
 			<h1>Account</h1>
@@ -26,6 +30,7 @@ const Account = () => {
 			<Link to={"/logout"}>
 				<Button className="mt-4">Logout</Button>
 			</Link>
+			<p>Logged in as: {username}</p>
 		</div>
 	);
 };

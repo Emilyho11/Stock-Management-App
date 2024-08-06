@@ -1,7 +1,6 @@
 package stocks_api.stocks_api.logic;
 
 import java.sql.ResultSet;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import stocks_api.stocks_api.logic.src.DBHandler;
@@ -31,14 +30,20 @@ public class Main {
 			// ParserUtil.resultSetToJson(rs);
 			// print out result of parserUtil
 			System.out.println(ParserUtil.resultSetToJson(rs));
+
+			// clear stockdata table
+			// testingDB.executeUpdate("DELETE FROM stock_data;");
+
+			// String insertStockData = "COPY stock_data(timestamp, symbol, open, high, low, close, volume) FROM 'SP500History.csv' DELIMITER ',' CSV HEADER;";
+
+			// testingDB.executeUpdate(insertStockData);
+			// System.out.println("Inserted stock data into stocks_data table");
+
 		} catch (Exception e) {
 			e.printStackTrace();
 			System.err.println(e.getClass().getName() + ": " + e.getMessage());
 			System.exit(1);
 		}
-
-
-
 
 	}
 

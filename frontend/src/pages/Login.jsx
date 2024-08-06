@@ -22,7 +22,8 @@ const Login = () => {
             });
             if (response.data.message === "Logged in") {
                 setMessage("Login successful");
-				login();
+				console.log("Logged in as:", login(username));
+				login(username);
 				navigate("/");
             } else {
                 setMessage("Login failed");
