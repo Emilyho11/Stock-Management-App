@@ -1,30 +1,41 @@
-import React, { createContext, useState, useContext } from "react";
+import React, { createContext, useState, useContext, useEffect, useMemo } from "react";
+import { useNavigate } from "react-router-dom";
 
 const AuthContext = createContext();
-const UserContext = createContext();
 
 export const AuthProvider = ({ children }) => {
-    const [isLoggedIn, setIsLoggedIn] = useState(false);
-    const [username, setUsername] = useState("");
+	const navigate = useNavigate();
 
-    const login = (username) => {
-        setIsLoggedIn(true);
-        setUsername(username);
-    };
+	const login = (username) => {
+		console.log("username", username);
+		// Save in localstorage
+		localStorage.setItem("token", username);
+	};
 
-    const logout = () => {
-        setIsLoggedIn(false);
-        setUsername("");
-    };
+	const logout = () => {
+		localStorage.removeItem("token");
+		navigate("/login");
+		navigate(0);
+	};
 
-    return (
-        <AuthContext.Provider value={{ login, logout, isLoggedIn }}>
-            <UserContext.Provider value={{ username, setUsername }}>
-                {children}
-            </UserContext.Provider>
-        </AuthContext.Provider>
-    );
+	useEffect(() => {
+		const user = localStorage.getItem("token");
+		if (user) {
+			login(user);
+		}
+	}, []);
+
+	const isLoggedIn = () => {
+		return localStorage.getItem("token");
+	};
+
+	const getUsername = () => {
+		return localStorage.getItem("token");
+	};
+
+	const value = useMemo(() => ({ login, logout, isLoggedIn, getUsername }), []);
+
+	return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 };
 
 export const useAuth = () => useContext(AuthContext);
-export const useUser = () => useContext(UserContext);
