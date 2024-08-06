@@ -31,7 +31,7 @@ const ManageStocks = () => {
 					<PrivacyIcon privacy="private" />
 				</div>
 				<Card className="w-full h-full !items-start flex-col py-8 px-12">
-					<ReviewBoard />
+					<ReviewBoard stockListId={0} />
 				</Card>
 			</Card>
 			{/* <hr className="mb-2" /> */}
