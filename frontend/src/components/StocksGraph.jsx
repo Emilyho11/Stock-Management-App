@@ -36,46 +36,47 @@ const StocksGraph = ( {symbol, startDate, endDate} ) => {
     const data = {
         labels: stocks.map(stock => stock.timestamp),
         datasets: [
-            {
-                label: 'Open Price',
-                data: stocks.map(stock => stock.open),
-                fill: false,
-                backgroundColor: 'rgba(75,192,192,0.2)',
-                borderColor: 'rgba(75,192,192,1)',
-            },
+            // {
+            //     label: 'Open Price',
+            //     data: stocks.map(stock => stock.open),
+            //     fill: false,
+            //     backgroundColor: 'rgba(75,192,192,0.2)',
+            //     borderColor: 'rgba(75,192,192,1)',
+            // },
             {
                 label: 'Close Price',
                 data: stocks.map(stock => stock.close),
                 fill: false,
-                backgroundColor: 'rgba(153,102,255,0.2)',
-                borderColor: 'rgba(153,102,255,1)',
-            },
-            {
-                label: 'Low Price',
-                data: stocks.map(stock => stock.low),
-                fill: false,
-                backgroundColor: 'rgba(255,159,64,0.2)',
-                borderColor: 'rgba(255,159,64,1)',
-            },
-            {
-                label: 'High Price',
-                data: stocks.map(stock => stock.high),
-                fill: false,
-                backgroundColor: 'rgba(255,99,132,0.2)',
-                borderColor: 'rgba(255,99,132,1)',
-            },
-            {
-                label: 'Volume',
-                data: stocks.map(stock => stock.volume),
-                fill: false,
                 backgroundColor: 'rgba(54,162,235,0.2)',
                 borderColor: 'rgba(54,162,235,1)',
             },
+            // {
+            //     label: 'Low Price',
+            //     data: stocks.map(stock => stock.low),
+            //     fill: false,
+            //     backgroundColor: 'rgba(255,159,64,0.2)',
+            //     borderColor: 'rgba(255,159,64,1)',
+            // },
+            // {
+            //     label: 'High Price',
+            //     data: stocks.map(stock => stock.high),
+            //     fill: false,
+            //     backgroundColor: 'rgba(255,99,132,0.2)',
+            //     borderColor: 'rgba(255,99,132,1)',
+            // },
+            // {
+            //     label: 'Volume',
+            //     data: stocks.map(stock => stock.volume),
+            //     fill: false,
+            //     backgroundColor: 'rgba(54,162,235,0.2)',
+            //     borderColor: 'rgba(54,162,235,1)',
+            // },
         ],
     };
 
     const options = {
         responsive: true,
+        maintainAspectRatio: false,
         plugins: {
             legend: {
                 position: 'top',
@@ -83,22 +84,40 @@ const StocksGraph = ( {symbol, startDate, endDate} ) => {
             title: {
                 display: true,
                 text: `Stock Price Over Time for ${symbol}`,
+                font: {
+                    size: 24
+                }
             },
         },
 		scales: {
+            x: {
+                title: {
+                    display: true,
+                    text: 'Day',
+                    font: {
+                        size: 18
+                    }
+                }
+            },
 			y: {
 				title: {
 					display: true,
 					text: 'Price / Volume',
+                    font: {
+                        size: 18
+                    }
 				}
 			}
 		}
     };
 
     return (
-        <div>
-            <Line data={data} options={options} />
-        </div>
+        <>
+            <div className="relative h-[80vh] w-[110%]">
+                {!symbol && <h2>Click on a stock to view the graph</h2>}
+                <Line data={data} options={options} />
+            </div>
+        </>
     );
 };
 
