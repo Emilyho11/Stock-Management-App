@@ -41,6 +41,12 @@ const Stocks = () => {
 
     fetchSymbols();
   }, []);
+  console.log(symbolList);
+
+  // Format date to YYYY-MM-DD
+  const formatDate = (date) => {
+    return date ? date.toISOString().split('T')[0] : null;
+  };
 
   return (
     <div className="flex h-screen">
@@ -67,21 +73,21 @@ const Stocks = () => {
                     className="w-full p-2 border border-gray-300 rounded"
                   />
                 </div>
-                  <div className='flex'>
-                    <label className="block text-gray-700 font-bold">End Date: </label>
-                    <DatePicker
-                      selected={endDate}
-                      onChange={(date) => setEndDate(date)}
-                      dateFormat="yyyy/MM/dd"
-                      isClearable
-                      placeholderText="Select an end date"
-                      className="w-full p-2 border border-gray-300 rounded"
-                    />
-                  </div>
+                <div className='flex'>
+                  <label className="block text-gray-700 font-bold">End Date: </label>
+                  <DatePicker
+                    selected={endDate}
+                    onChange={(date) => setEndDate(date)}
+                    dateFormat="yyyy/MM/dd"
+                    isClearable
+                    placeholderText="Select an end date"
+                    className="w-full p-2 border border-gray-300 rounded"
+                  />
                 </div>
-              )}
-            </div>
+              </div>
+            )}
           </div>
+        </div>
         <input
           type="text"
           placeholder="Search for a stock symbol..."
@@ -99,7 +105,7 @@ const Stocks = () => {
         ))}
         </div>
         <div className="w-3/4 p-4">
-            <StocksGraph symbol={symbol} startDate={startDate} endDate={endDate}/>
+            <StocksGraph symbol={symbol} startDate={formatDate(startDate)} endDate={formatDate(endDate)}/>
         </div>
     </div>
   );
