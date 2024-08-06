@@ -18,8 +18,8 @@ import Stocks from "./pages/Stocks.jsx";
 
 function App() {
 	return (
-		<AuthProvider>
-			<BrowserRouter>
+		<BrowserRouter>
+			<AuthProvider>
 				<div className="min-h-screen flex flex-col">
 					<Navbar />
 					<div className="flex-1 bg-gray-100 relative pt-4">
@@ -38,8 +38,8 @@ function App() {
 					</div>
 					<Footer />
 				</div>
-			</BrowserRouter>
-		</AuthProvider>
+			</AuthProvider>
+		</BrowserRouter>
 	);
 }
 

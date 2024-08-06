@@ -1,18 +1,27 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { NavLink } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faBars, faHouse, faBoxesStacked, faUserFriends, faArrowTrendUp } from "@fortawesome/free-solid-svg-icons";
 import { useAuth } from "./AuthContext";
+import { useLocation } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 const Navbar = () => {
 	const [isOpen, setIsOpen] = useState(false);
-	const { isLoggedIn, logout } = useAuth();
+	const { isLoggedIn } = useAuth();
 
-    // if (!isLoggedIn) {
-	// 	// Don't render the Navbar if the user is not logged in
-    //     return null;
-    // }
+	const navigate = useNavigate();
+	const location = useLocation();
 
+	useEffect(() => {
+		if (location.pathname !== "/login" && !isLoggedIn()) {
+			navigate("/login");
+		}
+	}, []);
+
+	if (!isLoggedIn()) {
+		return <> </>;
+	}
 	const myLinks = [
 		{ to: "/", text: "Stocks", icon: faBoxesStacked },
 		{ to: "/stock-manager", text: "Manage My Stocks", icon: faHouse },

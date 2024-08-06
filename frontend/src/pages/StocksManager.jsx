@@ -16,48 +16,48 @@ import { useNavigate } from 'react-router-dom';
 
 const StocksManager = () => {
 	// StockList(stockListId, name, privacy)
-	const [portfolios, setPortfolios] = useState([])
-	const [stockLists, setStockLists] = useState([])
+	const [portfolios, setPortfolios] = useState([]);
+	const [stockLists, setStockLists] = useState([]);
 	const username = "mirihuang"; //replace with logged in user
 	const navigate = useNavigate();
 
 	useEffect(() => {
 		const getPortfolios = async () => {
-		  try {
-			const response = await AxiosClient.get('portfolio/get/'+username);
-			if (portfolios){
-				setPortfolios([]);
-			  }
-			if (response.data) {
-				setPortfolios(response.data);
-			} else {
-			  console.error("Unexpected data format:", response.data);
+			try {
+				const response = await AxiosClient.get("portfolio/get/" + username);
+				if (portfolios) {
+					setPortfolios([]);
+				}
+				if (response.data) {
+					setPortfolios(response.data);
+				} else {
+					console.error("Unexpected data format:", response.data);
+				}
+			} catch (error) {
+				console.error("Error fetching data:", error);
 			}
-		  } catch (error) {
-			console.error("Error fetching data:", error);
-		  }
 		};
 
 		const getStockLists = async () => {
 			try {
-			  const response = await AxiosClient.get("stocklist/get/"+username);
-			  if (stockLists){
-				setStockLists([]);
+				const response = await AxiosClient.get("stocklist/get/" + username);
+				if (stockLists) {
+					setStockLists([]);
 				}
-			  if (response.data) {
-				console.log(response.data);
-				setStockLists(response.data);
-			  } else {
-				console.error("Unexpected data format:", response.data);
-			  }
+				if (response.data) {
+					console.log(response.data);
+					setStockLists(response.data);
+				} else {
+					console.error("Unexpected data format:", response.data);
+				}
 			} catch (error) {
-			  console.error("Error fetching data:", error);
+				console.error("Error fetching data:", error);
 			}
-		  };
-	
+		};
+
 		getPortfolios();
 		getStockLists();
-	  }, []);
+	}, []);
 
 	const handleOpenPortfolio = (portfolio) => {
 		navigate(`/portfolio/${portfolio.id}`, { state: { portfolio: portfolio } });
@@ -72,10 +72,8 @@ const StocksManager = () => {
 			<div className="w-2/3 ml-auto mr-auto flex flex-col md:flex-row m-4 gap-4">
 				<div className="flex min-w-[20vw] flex-col gap-2">
 					<div className="flex">
-						<CreateButton username={username} type={"portfolio"} id={null}>
-						</CreateButton>
-						<CreateButton username={username} type={"stocklist"} id={null}>
-						</CreateButton>
+						<CreateButton username={username} type={"portfolio"} id={null}></CreateButton>
+						<CreateButton username={username} type={"stocklist"} id={null}></CreateButton>
 					</div>
 					<h1 className="text-base text-left w-fit text-gray-500 tracking-wide uppercase">Portfolios</h1>
 					{/* <DndProvider backend={HTML5Backend}> */}

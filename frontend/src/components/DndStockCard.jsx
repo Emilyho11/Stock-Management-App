@@ -1,10 +1,11 @@
 import React, { useRef } from "react";
 import { useDrop, useDrag } from "react-dnd";
-
+import { useNavigate } from "react-router-dom";
 const type = "StockCard"; // Need to pass which type element can be draggable, its a simple string or Symbol. This is like an Unique ID so that the library know what type of element is dragged or dropped on.
 
 const DndStockCard = (props) => {
 	const { itemData, children } = props;
+	const navigate = useNavigate();
 
 	const myType = itemData.type;
 
@@ -56,9 +57,13 @@ const DndStockCard = (props) => {
 		}),
 	}));
 
+	const gotoItem = (item) => {
+		navigate("/manage-my-stocks");
+	};
+
 	// Add the reference to the element
 	return (
-		<div
+		<button
 			ref={dragRef}
 			style={{
 				opacity: isDragging ? 0.2 : 1,
@@ -69,11 +74,12 @@ const DndStockCard = (props) => {
 				(droppedOn ? "scale-110 bg-green-300" : "") +
 				(isDragging ? " border-2 border-dashed border-gray-300 scale-75" : "")
 			}
+			onClick={() => gotoItem(itemData)}
 		>
 			<div ref={dropRef} className="w-full h-full">
 				{children}
 			</div>
-		</div>
+		</button>
 	);
 };
 

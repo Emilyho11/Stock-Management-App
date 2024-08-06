@@ -139,6 +139,16 @@ public class StockController {
         }
     }
 
+    // Calculates COV for all stocks from stock_data
+    // INSERT INTO stocks (symbol, cov)
+    // SELECT
+    //     symbol,
+    //     STDDEV(CAST(close AS numeric)) / AVG(CAST(close AS numeric)) AS cov
+    // FROM
+    //     stock_data
+    // GROUP BY
+    //     symbol;
+
     // ----- STOCK DATA -----
 
     // Get all stock data of a company by symbol
