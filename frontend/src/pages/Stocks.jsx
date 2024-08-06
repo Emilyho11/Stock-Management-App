@@ -18,7 +18,6 @@ const Stocks = () => {
     const [symbolList, setSymbolList] = useState([]);
     const [startDate, setStartDate] = useState(null);
     const [endDate, setEndDate] = useState(null);
-    const [showDatePickers, setShowDatePickers] = useState(false);
     const [search, setSearch] = useState("");
     const [viewType, setViewType] = useState("present"); // New state for view type
     const [rate, setRate] = useState(10.0); // New state for rate
@@ -137,75 +136,67 @@ const Stocks = () => {
                     <Button onClick={() => setViewType("present")}>View Historical/Present Stocks</Button>
                 </div>
                 <div className="mt-1">
-                    <div className={showDatePickers ? "p-4 rounded-lg" : ""}>
-                        <button
-                            onClick={() => setShowDatePickers(!showDatePickers)}
-                            className="text-dark_red hover:underline hover:text-blue-600 font-bold py-2 px-2 rounded w-full text-left"
-                        >
-                            {showDatePickers ? "Hide Date Range" : "Choose a Date Range"}
-                            <FontAwesomeIcon
-                                icon={showDatePickers ? faChevronUp : faChevronDown}
-                                className="ml-2 text-xl float-right"
-                            />
-                        </button>
-                        {showDatePickers && (
-                            <div className=" bg-white p-4 rounded-md shadow-md w-full">
-                                <div className="flex items-center mb-4 gap-4">
-                                    <label className="block text-gray-700 font-bold mr-2">Date Range: </label>
-                                    <DatePicker
-                                        selected={startDate}
-                                        onChange={(date) => setStartDate(date)}
-                                        dateFormat="yyyy/MM/dd"
-										minDate = {dateBounds.min}
-										maxDate={endDate ? endDate : dateBounds.max}
-                                        isClearable
-                                        placeholderText="Select a start date"
-                                        className="w-full p-2 border border-gray-300 rounded"
-                                    />
-									<p className="">-</p>
-                                    <DatePicker
-                                        selected={endDate}
-                                        onChange={(date) => setEndDate(date)}
-										minDate={startDate ? startDate : dateBounds.min}
-										maxDate={dateBounds.max}
-                                        dateFormat="yyyy/MM/dd"
-                                        isClearable
-                                        placeholderText="Select an end date"
-                                        className="w-full p-2 border border-gray-300 rounded"
-										/>
-                                <Button onClick={handleDateRangeSubmit}>Submit</Button>
+						<div className=" bg-white p-4 rounded-md w-full">
+							<div className="flex items-center mb-4 gap-4">
+							
+							{viewType == "present"
+								? (<>
+								<label className="block text-gray-700 font-bold mr-2">Date Range: </label>
+								<DatePicker
+									selected={startDate}
+									onChange={(date) => setStartDate(date)}
+									dateFormat="yyyy/MM/dd"
+									minDate = {dateBounds.min}
+									maxDate={endDate ? endDate : dateBounds.max}
+									isClearable
+									placeholderText="Select a start date"
+									className="w-full p-2 border border-gray-300 rounded"
+								/>
+								<p className="">-</p>
+								<DatePicker
+									selected={endDate}
+									onChange={(date) => setEndDate(date)}
+									minDate={startDate ? startDate : dateBounds.min}
+									maxDate={dateBounds.max}
+									dateFormat="yyyy/MM/dd"
+									isClearable
+									placeholderText="Select an end date"
+									className="w-full p-2 border border-gray-300 rounded"
+									/>
+							<Button onClick={handleDateRangeSubmit}>Submit</Button></>
+						)
+						: (<>
+										<div className="inline-flex items-center">
+											<label className="min-w-fit block text-gray-700 font-bold mb-2 mr-2">Rate (default 10%)</label>
+											<input
+												type="number"
+												step="1"
+												value={rate}
+												onChange={(e) => setRate(e.target.value)}
+												className="w-full p-2 border border-gray-300 rounded"
+												placeholder="Enter rate"
+											/>
 										</div>
-                            </div>
-                        )}
-                    </div>
+										<hr/>
+										<div className="inline-flex items-center">
+											<label className="min-w-fit block text-gray-700 font-bold mb-2 mr-2">Time in Years</label>
+											<input
+												type="number"
+												step="1"
+												value={time}
+												onChange={(e) => setTime(e.target.value)}
+												className="w-full p-2 border border-gray-300 rounded"
+												placeholder="Enter time"
+											/>
+										</div>
+										<Button onClick={handleFutureStocksSubmit}>Submit</Button>
+									</>)}
+							</div>
+						</div>
                 </div>
-                {viewType === "future" && (
-                    <div className="flex space-x-4 mb-4">
-                        <div>
-                            <label className="block text-gray-700 font-bold mb-2">Rate (default 10%):</label>
-                            <input
-                                type="number"
-                                step="1"
-                                value={rate}
-                                onChange={(e) => setRate(e.target.value)}
-                                className="w-full p-2 border border-gray-300 rounded"
-                                placeholder="Enter rate"
-                            />
-                        </div>
-                        <div>
-                            <label className="block text-gray-700 font-bold mb-2">Time in Years:</label>
-                            <input
-                                type="number"
-                                step="1"
-                                value={time}
-                                onChange={(e) => setTime(e.target.value)}
-                                className="w-full p-2 border border-gray-300 rounded"
-                                placeholder="Enter time"
-                            />
-                        </div>
-                        <Button onClick={handleFutureStocksSubmit}>Submit</Button>
-                    </div>
-                )}
+                {/* // {viewType === "future" && ( */}
+                    
+                {/* // )} */}
                 <StocksGraph
                     symbol={graphData.symbol}
                     startDate={graphData.startDate}

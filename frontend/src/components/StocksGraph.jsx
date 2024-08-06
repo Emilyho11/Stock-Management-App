@@ -15,13 +15,21 @@ const StocksGraph = ( { symbol, startDate, endDate, viewType, rate, time, setDat
     const fetchStocksData = async () => {
         try {
             let response;
-            if (symbol !== lastSymbol && symbol !== "") {
+            let data;
+
+            if (symbol !== lastSymbol && symbol !== "" || viewType !== "present") {
                 if (viewType === "future") {
                     if (startDate && endDate) {
                         response = await AxiosClient.get(`stocks/future/${symbol}/${rate}/${time}?start_date=${startDate}&end_date=${endDate}`);
                     } else {
                         response = await AxiosClient.get(`stocks/future/${symbol}/${rate}/${time}`);
                     }
+                    if (!(response.data && Array.isArray(response.data))) {
+                        console.error("Unexpected data format:", response.data);
+                        return;
+                    }
+                    data = response.data;
+
                     // // Assuming the future API returns an array of future stock prices
                     // if (response.data && Array.isArray(response.data)) {
                     //     setStocks(response.data);
@@ -34,17 +42,14 @@ const StocksGraph = ( { symbol, startDate, endDate, viewType, rate, time, setDat
                     } else {
                         response = await AxiosClient.get(`stocks/${symbol}/data`);
                     }
-                }
-                if (!(response.data && Array.isArray(response.data.value))) {
-                    console.error("Unexpected data format:", response.data);
-                    return;
-                }
-                setStocks(response.data.value);
-                if (lastSymbol !== symbol && symbol !== "") {
-                    console.log("Setting last symbol to:", symbol);
-                    setBackupStocks(response.data.value);
+
+                    if (!(response.data && Array.isArray(response.data.value))) {
+                        console.error("Unexpected data format:", response.data);
+                        return;
+                    }
+                    data = response.data.value;
                     // Set the date bounds
-                    if (response.data.value.length > 0) {
+                    if (data.length > 0) {
                         console.log("Setting date bounds:", {
                             min: new Date(response.data.minDate),
                             max: new Date(response.data.maxDate),
@@ -55,6 +60,11 @@ const StocksGraph = ( { symbol, startDate, endDate, viewType, rate, time, setDat
                             max: new Date(response.data.maxDate),
                         });
                     }
+                }
+                setStocks(data);
+                if (lastSymbol !== symbol && symbol !== "") {
+                    console.log("Setting last symbol to:", symbol);
+                    setBackupStocks(data);
                 }
             }
 
