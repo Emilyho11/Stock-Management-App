@@ -12,6 +12,7 @@ import { useEffect } from "react";
 import AxiosClient from "../api/AxiosClient";
 import CreateButton from "../components/CreateButton";
 import { useNavigate } from "react-router-dom";
+import PortfolioHistory from "../components/PortfolioHistory";
 
 const ManagePortfolio = () => {
 	const [showStocks, setShowStocks] = React.useState(null);
@@ -121,10 +122,15 @@ const ManagePortfolio = () => {
 				<div className="scale-75 ml-auto ">
 					<h1 className="text-left text-4xl">{portfolio.name}</h1>
 				</div>
-				<div className="w-full h-full !items-start flex-col py-8 px-12 bg-white rounded-lg">
-					<CreateButton username={username} type={"createlistin"} id={portfolio.id}/>
-					
+				<div className="bg-white w-full h-full rounded-lg flex-col">
+					<div className="w-full h-full !items-start flex-row py-8 px-12  rounded-lg">
+						<CreateButton username={username} type={"createlistin"} id={portfolio.id}/>
+					</div>
+					<div className="w-full h-full !items-start py-8 px-12 ">
+						<PortfolioHistory/>
+					</div>
 				</div>
+				
 			</Card>
 			{/* <hr className="mb-2" /> */}
 			<div className="flex flex-row  my-4  gap-4">
