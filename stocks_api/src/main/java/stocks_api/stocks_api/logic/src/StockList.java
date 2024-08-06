@@ -7,7 +7,7 @@ import java.sql.SQLException;
 
 public class StockList extends Table {
     private static final String TABLE_NAME = "stock_list";
-    private int id;
+    public int id;
     private String name;
     private String privacy;
 
@@ -90,7 +90,7 @@ public class StockList extends Table {
                 stmt1.setString(2, name);
                 stmt1.setString(3, privacy);
                 stmt1.executeUpdate();
-                System.out.println("Created a new stock list successfully");
+                System.out.println(newid);
                 return newid;
             } catch (Exception ex) {
                 System.out.println("Error creating a new stock list");

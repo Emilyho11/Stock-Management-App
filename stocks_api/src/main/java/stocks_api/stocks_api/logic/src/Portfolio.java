@@ -288,13 +288,13 @@ public class Portfolio {
             if (newid > -1){
                 PreparedStatement stmt;
                 stmt = conn.prepareStatement("INSERT INTO contains (stocklist_id, portfolio_id) VALUES (?, ?);");
-                stmt.setInt(1, portfolio_id);
-                stmt.setInt(2, newid);
+                stmt.setInt(1, newid);
+                stmt.setInt(2, portfolio_id);
                 stmt.executeUpdate();
-                System.out.println("Created a new portfolio successfully for this user");
+                System.out.println("Created a new stock list for this portfolio successfully for this user");
             }
         } catch (Exception ex) {
-            System.out.println("Error creating a new portfolio for this user");
+            System.out.println("Error creating a new stock list for this portfolio for this user");
             ex.printStackTrace();
         }
     }

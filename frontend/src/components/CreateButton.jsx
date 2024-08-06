@@ -25,17 +25,22 @@ const CreateButton = ({username, type, id}) => {
     }
     else if (type == "createlistin"){
       return (
-        <CreateListPopup toggle={toggleDisplay} username={username}/>
+        <CreateListPopup toggle={toggleDisplay} username={username} id={id}/>
       )
     }
   }
 
   const createType = () => {
-    if (type == "stocklist" || type == "stocklistin"){
+    if (type == "stocklist" || type == "createlistin"){
       return "Create Stock List"
     } else if (type == "portfolio") {
       return "Create Portfolio"
+    } else if (type == "addstock") {
+      return "Add Stock"
+    } else if (type == "buystock") {
+      return "Add Stock"
     }
+    
   }
 
   return (

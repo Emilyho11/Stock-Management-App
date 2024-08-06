@@ -11,6 +11,7 @@ import { useLocation } from "react-router-dom";
 import { useEffect } from "react";
 import AxiosClient from "../api/AxiosClient";
 import CreateButton from "../components/CreateButton";
+import { useNavigate } from "react-router-dom";
 
 const ManagePortfolio = () => {
 	const [showStocks, setShowStocks] = React.useState(true);
@@ -21,6 +22,7 @@ const ManagePortfolio = () => {
 	const [selectedStock, setSelectedStock] = React.useState([]);
 	const [selectedList, setSelectedList] = React.useState([]);
 	const username = "mirihuang" //replace with logged in user
+	const navigate = useNavigate();
 
 	useEffect(() => {
 		const getOwnedStocks = async () => {
@@ -53,6 +55,14 @@ const ManagePortfolio = () => {
 		getPortfolioStockLists();
 	  }, []);
 
+	const handleStockListDetails = () => {
+		//directs them to the stock list page
+		console.log(selectedList.id)
+		if (selectedList){
+			navigate(`/stocklist/${selectedList.id}`, { state: { stocklist: selectedList } });
+		}
+	}
+
 	const displayDetails = () => {
 		if (showStocks){
 			return (
@@ -62,7 +72,15 @@ const ManagePortfolio = () => {
 			
 			return (
 				<div className="flex flex-row  my-4  gap-4">
-					<div className="flex min-w-[10vw] flex-col gap-2">
+					<div className="flex min-w-[20vw] flex-col gap-2">
+						<Button className="h-1/7" onClick={() => handleStockListDetails()}>
+							View Details
+						</Button>
+						<CreateButton className="h-1/4" username={username} type={"addstock"} id={selectedList.id}/>
+					</div>
+					
+					<div className="flex min-w-[20vw] flex-col gap-2">
+					<h1 className="text-xl text-left">Stocks</h1>
 					{stocks.map((stock, index) => (
 					<button key={stock.symbol} onMouseDown={() => setSelectedStock(stock)}>
 						<Card
@@ -78,13 +96,6 @@ const ManagePortfolio = () => {
 					</button>
 					))}
 					
-					</div>
-					<div className="flex-1 flex flex-col gap-2 w-1/2">
-						<h1 className="text-xl text-left">Stock Information</h1>
-						<Card className="h-full "></Card>
-						<Card className="w-full h-full !items-start flex-col py-8 px-12 border-t-2 border-blue-300">
-							<ReviewBoard />
-						</Card>
 					</div>
 					
 				</div>
@@ -106,10 +117,10 @@ const ManagePortfolio = () => {
 				<div className="scale-75 ml-auto ">
 					<h1 className="text-left text-4xl">{portfolio.name}</h1>
 				</div>
-				<Card className="w-full h-full !items-start flex-col py-8 px-12 bg-white">
-					<CreateButton username={username} type={"stocklist"} id={portfolio.id}/>
+				<div className="w-full h-full !items-start flex-col py-8 px-12 bg-white rounded-lg">
+					<CreateButton username={username} type={"createlistin"} id={portfolio.id}/>
 					
-				</Card>
+				</div>
 			</Card>
 			{/* <hr className="mb-2" /> */}
 			<div className="flex flex-row  my-4  gap-4">
@@ -175,11 +186,10 @@ const ManagePortfolio = () => {
 						stocklists.map((list, index) => (
 							<button key={list.id} onMouseDown={() => setSelectedList(list)}>
 								<Card
-									className={ (!(selectedList.id == list.id) ? ("flex gap-4 items-center hover:scale-105 hover:shadow-xl transition-all bg-white") : (
+									className={ ((selectedList.id != list.id) ? ("flex gap-4 items-center hover:scale-105 hover:shadow-xl transition-all bg-white") : (
 										"flex gap-4 items-center hover:scale-105 hover:shadow-xl transition-all bg-blue-500 text-white"
 									))}
-								>
-									<div className="text-left">
+								>									<div className="text-left">
 										<h5 className="card-title">{list.name}</h5>
 										<PrivacyIcon privacy={list.privacy} />
 									</div>

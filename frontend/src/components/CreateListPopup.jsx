@@ -1,7 +1,7 @@
 import { useEffect, useState, useRef } from "react";
 import AxiosClient from "../api/AxiosClient";
 
-const CreateListPopup = ({ toggle, username}) => {
+const CreateListPopup = ({ toggle, username, id}) => {
   const [visible, setVisible] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [name, setName] = useState("");
@@ -41,12 +41,21 @@ const CreateListPopup = ({ toggle, username}) => {
     e.preventDefault();
     console.log(name)
     console.log(privacy)
-    try {
-			AxiosClient.post(`stocklist/${username}/${privacy}`);
-      toggle();
-		} catch (error) {
-			console.error(error);
-		}
+    if (!id){
+      try {
+        AxiosClient.post(`stocklist/${username}/${name}/${privacy}`);
+        toggle();
+      } catch (error) {
+        console.error(error);
+      }
+    } else {
+      try {
+        AxiosClient.post(`stocklist/${username}/${id}/${name}/${privacy}`);
+        toggle();
+      } catch (error) {
+        console.error(error);
+      }
+    }
   };
 
   return (
@@ -56,7 +65,8 @@ const CreateListPopup = ({ toggle, username}) => {
       }`}
       onClick={handleToggle}
     >
-      <div className="absolute inset-0 bg-black bg-opacity-40"></div>
+      {id ? (<div></div>): ( <div className="absolute inset-0 bg-black bg-opacity-40"></div>)}
+     
       <div
         className="relative flex flex-col bg-white shadow-lg rounded-lg p-2 z-10"
         onClick={handlePopupClick}
