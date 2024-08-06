@@ -2,6 +2,8 @@ package stocks_api.stocks_api.routes;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.springframework.boot.autoconfigure.security.SecurityProperties;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -24,7 +26,7 @@ import stocks_api.stocks_api.logic.src.StockData;
 import stocks_api.stocks_api.logic.src.User;
 import stocks_api.stocks_api.logic.src.DBHandler;
 import stocks_api.stocks_api.logic.src.ParserUtil;
-import stocks_api.stocks_api.utils.BasicResponse;
+import stocks_api.stocks_api.utils.*;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.lang.StringBuilder;
@@ -154,7 +156,7 @@ public class StockController {
     // Get all stock data of a company by symbol
     @GetMapping("/{symbol}/data")
     @ResponseBody
-    public ArrayList<StockData> getStockData(@PathVariable String symbol,
+    public DateListResponse getStockData(@PathVariable String symbol,
         @RequestParam(required = false) String start_date, 
         @RequestParam(required = false) String end_date) {
         try {
@@ -167,6 +169,18 @@ public class StockController {
             if (end_date != null) {
                 sqlQuery.append("AND timestamp <= '" + end_date + "' ");
             }
+
+            // SELECT MIN(timestamp), MAX(timestamp) FROM stock_data WHERE symbol = 'VFC'
+            String sqlMinMax = "SELECT MIN(timestamp) AS min, MAX(timestamp) AS max FROM stock_data WHERE symbol = ?";
+            PreparedStatement preparedStatementMinMax = DBHandler.getInstance().getConnection().prepareStatement(sqlMinMax);
+            preparedStatementMinMax.setString(1, symbol);
+            ResultSet rsMinMax = preparedStatementMinMax.executeQuery();
+            String min = "";
+            String max = "";
+            while (rsMinMax.next()) {
+                min = rsMinMax.getString("min");
+                max = rsMinMax.getString("max");
+            }
             
             PreparedStatement preparedStatement = DBHandler.getInstance().getConnection().prepareStatement(sqlQuery.toString());
             preparedStatement.setString(1, symbol);
@@ -174,7 +188,7 @@ public class StockController {
             ArrayList<StockData> stockData = new ArrayList<StockData>();
             while (rs.next()) {
                 StockData stock = new StockData();
-                stock.f_symbol = rs.getString("symbol");
+                // stock.f_symbol = rs.getString("symbol");
                 stock.f_timestamp = rs.getString("timestamp");
                 stock.f_open = rs.getDouble("open");
                 stock.f_close = rs.getDouble("close");
@@ -183,7 +197,7 @@ public class StockController {
                 stock.f_volume = rs.getDouble("volume");
                 stockData.add(stock);
             }
-            return stockData;
+            return new DateListResponse<>("Success", stockData, min, max);
             
         } catch (Exception e) {
             e.printStackTrace();
@@ -280,16 +294,100 @@ public class StockController {
         }
     }
 
-    @GetMapping("/future/{close}/{rate}/{time}")
+    // @GetMapping("/future/{close}/{rate}/{time}")
+    // @ResponseBody
+    // public BasicResponse getFutureValue(@PathVariable double close, @PathVariable double rate, @PathVariable double time) {
+    //     try {
+    //         double futureValue = close * Math.pow(1 + rate, time);
+    //         return BasicResponse.ok("Future value: " + futureValue);
+    //     } catch (Exception e) {
+    //         e.printStackTrace();
+    //         // output error message
+    //         return BasicResponse.ok("Failed.");
+    //     }
+    // }
+
+    // @GetMapping("/future/{symbol}/{rate}/{time}")
+    // @ResponseBody
+    // public ArrayList<Double> getFutureValue(@PathVariable String symbol, @PathVariable double rate, @PathVariable double time) {
+    //     ArrayList<Double> futureValues = new ArrayList<>();
+    //     String sqlQuery = "SELECT close, low, high, open FROM stock_data WHERE symbol = ?";
+    //     String sqlQueryCOV = "SELECT cov FROM stocks WHERE symbol = ?";
+    
+    //     try (PreparedStatement preparedStatement = DBHandler.getInstance().getConnection().prepareStatement(sqlQuery);
+    //          PreparedStatement preparedStatementCOV = DBHandler.getInstance().getConnection().prepareStatement(sqlQueryCOV)) {
+    
+    //         preparedStatement.setString(1, symbol);
+    //         preparedStatementCOV.setString(1, symbol);
+    
+    //         try (ResultSet rs = preparedStatement.executeQuery();
+    //              ResultSet rsCOV = preparedStatementCOV.executeQuery()) {
+    
+    //             if (rsCOV.next()) {
+    //                 double cov = rsCOV.getDouble("cov");
+    
+    //                 while (rs.next()) {
+    //                     double averagePrice = (rs.getDouble("low") + rs.getDouble("high") + rs.getDouble("open") + rs.getDouble("close")) / 4.0;
+    //                     // Calculate future value using the growth rate and time
+    //                     double futureValue = averagePrice * Math.pow(1 + cov, time);
+    //                     futureValues.add(futureValue);
+    //                 }
+    //             }
+    //         }
+    //     } catch (Exception e) {
+    //         e.printStackTrace();
+    //         // Return an empty list instead of null to avoid potential NullPointerException
+    //         return new ArrayList<>();
+    //     }
+    
+    //     return futureValues;
+    // }
+
+    @GetMapping("/future/{symbol}/{rate}/{time}")
     @ResponseBody
-    public BasicResponse getFutureValue(@PathVariable double close, @PathVariable double rate, @PathVariable double time) {
-        try {
-            double futureValue = close * Math.pow(1 + rate, time);
-            return BasicResponse.ok("Future value: " + futureValue);
+    public ArrayList<Double> getFutureValue(@PathVariable String symbol, 
+                                            @PathVariable double rate, 
+                                            @PathVariable double time,
+                                            @RequestParam(required = false) String start_date, 
+                                            @RequestParam(required = false) String end_date) {
+        ArrayList<Double> futureValues = new ArrayList<>();
+        StringBuilder sqlQuery = new StringBuilder("SELECT close, low, high, open FROM stock_data WHERE symbol = ? ");
+        String sqlQueryCOV = "SELECT cov FROM stocks WHERE symbol = ?";
+
+        if (start_date != null) {
+            sqlQuery.append("AND timestamp >= '").append(start_date).append("' ");
+        }
+
+        if (end_date != null) {
+            sqlQuery.append("AND timestamp <= '").append(end_date).append("' ");
+        }
+
+        try (PreparedStatement preparedStatement = DBHandler.getInstance().getConnection().prepareStatement(sqlQuery.toString());
+            PreparedStatement preparedStatementCOV = DBHandler.getInstance().getConnection().prepareStatement(sqlQueryCOV)) {
+
+            preparedStatement.setString(1, symbol);
+            preparedStatementCOV.setString(1, symbol);
+
+            try (ResultSet rs = preparedStatement.executeQuery();
+                ResultSet rsCOV = preparedStatementCOV.executeQuery()) {
+
+                if (rsCOV.next()) {
+                    double cov = rsCOV.getDouble("cov");
+
+                    while (rs.next()) {
+                        double averagePrice = (rs.getDouble("low") + rs.getDouble("high") + rs.getDouble("open") + rs.getDouble("close")) / 4.0;
+                        // Calculate future value using the growth rate and time
+                        double futureValue = averagePrice * Math.pow(1 + cov, time);
+                        futureValues.add(futureValue);
+                    }
+                }
+            }
         } catch (Exception e) {
             e.printStackTrace();
-            // output error message
-            return BasicResponse.ok("Failed.");
+            // Return an empty list instead of null to avoid potential NullPointerException
+            return new ArrayList<>();
         }
-    } 
+
+        return futureValues;
+    }
 }
