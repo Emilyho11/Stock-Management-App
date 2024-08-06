@@ -4,73 +4,106 @@ import { Chart as ChartJS, CategoryScale, LinearScale, PointElement, LineElement
 import { useAuth } from "../components/AuthContext";
 import AxiosClient from "../api/AxiosClient";
 
-const StocksGraph = ( {symbol, startDate, endDate} ) => {
+const StocksGraph = ( { symbol, startDate, endDate, viewType, rate, time, setDateBounds } ) => {
 	ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend);
 	
 	// Get stocks data from api
+    const [backupStocks, setBackupStocks] = useState([]);
 	const [stocks, setStocks] = useState([]);
+    const [lastSymbol, setLastSymbol] = useState("");
 
-	useEffect(() => {
-		const fetchStocksData = async () => {
-            try {
-                let response;
-                if (startDate && endDate) {
-                    response = await AxiosClient.get(`stocks/${symbol}/data?start_date=${startDate}&end_date=${endDate}`);
+    const fetchStocksData = async () => {
+        try {
+            let response;
+            if (symbol !== lastSymbol && symbol !== "") {
+                if (viewType === "future") {
+                    if (startDate && endDate) {
+                        response = await AxiosClient.get(`stocks/future/${symbol}/${rate}/${time}?start_date=${startDate}&end_date=${endDate}`);
+                    } else {
+                        response = await AxiosClient.get(`stocks/future/${symbol}/${rate}/${time}`);
+                    }
+                    // // Assuming the future API returns an array of future stock prices
+                    // if (response.data && Array.isArray(response.data)) {
+                    //     setStocks(response.data);
+                    // } else {
+                    //     console.error("Unexpected data format:", response.data);
+                    // }
                 } else {
-				    response = await AxiosClient.get(`stocks/${symbol}/data`);
+                    if (startDate && endDate) {
+                        response = await AxiosClient.get(`stocks/${symbol}/data?start_date=${startDate}&end_date=${endDate}`);
+                    } else {
+                        response = await AxiosClient.get(`stocks/${symbol}/data`);
+                    }
                 }
-                if (response.data && Array.isArray(response.data)) {
-					setStocks(response.data);
-				} else {
-					console.error("Unexpected data format:", response.data);
-				}
-			} catch (error) {
-				console.error("Error fetching stock data:", error);
-			}
-		};
+                if (!(response.data && Array.isArray(response.data.value))) {
+                    console.error("Unexpected data format:", response.data);
+                    return;
+                }
+                setStocks(response.data.value);
+                if (lastSymbol !== symbol && symbol !== "") {
+                    console.log("Setting last symbol to:", symbol);
+                    setBackupStocks(response.data.value);
+                    // Set the date bounds
+                    if (response.data.value.length > 0) {
+                        console.log("Setting date bounds:", {
+                            min: new Date(response.data.minDate),
+                            max: new Date(response.data.maxDate),
+                        });
+                        
+                        setDateBounds({
+                            min: new Date(response.data.minDate),
+                            max: new Date(response.data.maxDate),
+                        });
+                    }
+                }
+            }
 
-		fetchStocksData();
-	}, [symbol]);
 
+        } catch (error) {
+            console.error("Error fetching stock data:", error);
+        }
+    };
+
+
+    useEffect(() => {
+        fetchStocksData();
+        
+        if (lastSymbol !== symbol) {
+            setLastSymbol(symbol);
+        }
+    }, [symbol, viewType]);
+
+    useEffect(() => {
+        console.log("Date bounds changed:", { startDate, endDate });
+        // Filter the stocks based on the date range
+        const newStocksArray = backupStocks.filter(stock => {
+            const timestamp = new Date(stock.timestamp);
+            if (startDate && timestamp < new Date(startDate)) {
+                return false;
+            }
+            if (endDate && timestamp > new Date(endDate)) {
+                return false;
+            }
+            return true;
+        });
+
+        setStocks(newStocksArray);
+    
+        fetchStocksData();
+    }, [endDate, startDate]);
+
+    console.log(stocks);    
 
     const data = {
-        labels: stocks.map(stock => stock.timestamp),
+        labels: viewType === "future" ? stocks.map((_, index) => `Day ${index + 1}`) : stocks.map(stock => stock.timestamp),
         datasets: [
-            // {
-            //     label: 'Open Price',
-            //     data: stocks.map(stock => stock.open),
-            //     fill: false,
-            //     backgroundColor: 'rgba(75,192,192,0.2)',
-            //     borderColor: 'rgba(75,192,192,1)',
-            // },
             {
-                label: 'Close Price',
-                data: stocks.map(stock => stock.close),
+                label: viewType === "future" ? 'Predicted Close Price' : 'Close Price',
+                data: viewType === "future" ? stocks : stocks.map(stock => stock.close),
                 fill: false,
                 backgroundColor: 'rgba(54,162,235,0.2)',
                 borderColor: 'rgba(54,162,235,1)',
             },
-            // {
-            //     label: 'Low Price',
-            //     data: stocks.map(stock => stock.low),
-            //     fill: false,
-            //     backgroundColor: 'rgba(255,159,64,0.2)',
-            //     borderColor: 'rgba(255,159,64,1)',
-            // },
-            // {
-            //     label: 'High Price',
-            //     data: stocks.map(stock => stock.high),
-            //     fill: false,
-            //     backgroundColor: 'rgba(255,99,132,0.2)',
-            //     borderColor: 'rgba(255,99,132,1)',
-            // },
-            // {
-            //     label: 'Volume',
-            //     data: stocks.map(stock => stock.volume),
-            //     fill: false,
-            //     backgroundColor: 'rgba(54,162,235,0.2)',
-            //     borderColor: 'rgba(54,162,235,1)',
-            // },
         ],
     };
 
@@ -112,12 +145,10 @@ const StocksGraph = ( {symbol, startDate, endDate} ) => {
     };
 
     return (
-        <>
-            <div className="relative h-[80vh] w-[110%]">
+            <div className="relative max-h-[80vh] w-[110%]">
                 {!symbol && <h2>Click on a stock to view the graph</h2>}
                 <Line data={data} options={options} />
             </div>
-        </>
     );
 };
 
