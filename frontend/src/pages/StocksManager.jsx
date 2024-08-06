@@ -62,6 +62,9 @@ const StocksManager = () => {
 	const handleOpenPortfolio = (portfolio) => {
 		navigate(`/portfolio/${portfolio.id}`, { state: { portfolio: portfolio } });
 	}
+	const handleOpenStockList = (stocklist) => {
+		navigate(`/stocklist/${stocklist.id}`, { state: { stocklist: stocklist } });
+	}
 
 	return (
 		<>
@@ -100,11 +103,25 @@ const StocksManager = () => {
 						</div>
 					{/* </DndProvider> */}
 					<h1 className="text-base text-left w-fit text-gray-500 tracking-wide uppercase">Stock Lists</h1>
-					<DndProvider backend={HTML5Backend}>
+					<div className="flex gap-4 flex-wrap w-full">
+							{stockLists
+								.map((list) => (
+									<div className="flex gap-4 items-center px-8 hover:!bg-white transition-all bg-white p-2 rounded-md w-72 min-h-3 hover:shadow-lg " onClick={() => handleOpenStockList(list)}>
+										<p className="uppercase text-sm bg-gray-100  w-fit rounded-md px-2 py-1 ml-auto mr-auto">
+											Stock List
+										</p>
+										<h1 className="text-xl font-normal">{list.name}</h1>
+										<span className="scale-75 ml-auto ">
+											<PrivacyIcon privacy={list.privacy} />
+										</span>
+									</div>
+								))}
+						</div>
+					{/* <DndProvider backend={HTML5Backend}>
 						<div className="flex gap-4 flex-wrap w-full">
 							{stockLists
 								.map((list) => (
-									<DndStockCard
+									<DndStockCard 
 										key={list.id}
 										className="flex gap-4 items-center px-8 hover:!bg-white"
 										itemData={list}
@@ -119,7 +136,7 @@ const StocksManager = () => {
 									</DndStockCard>
 								))}
 						</div>
-					</DndProvider>
+					</DndProvider> */}
 					
 				</div>
 			</div>

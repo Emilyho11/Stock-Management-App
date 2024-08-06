@@ -1,6 +1,6 @@
 import "./App.css";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import ManageStocks from "./pages/ManageStocks";
+import ManageStocks from "./pages/ManageStockList.jsx";
 import Account from "./pages/Account";
 import Navbar from "./components/Navbar.jsx";
 import Footer from "./components/Footer.jsx";

@@ -64,7 +64,7 @@ public class PortfolioController {
     }
 
     @GetMapping("/getStocks/{id}")
-    public ArrayList<Object> getUserPortfolios(@PathVariable int id) {
+    public ArrayList<Object> getUserPortfolioStocks(@PathVariable int id) {
         try {
             ResultSet rs = Portfolio.getStocks(id, conn);
             ArrayList<Object> stocks = new ArrayList<Object>();

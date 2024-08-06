@@ -14,7 +14,7 @@ import CreateButton from "../components/CreateButton";
 import { useNavigate } from "react-router-dom";
 
 const ManagePortfolio = () => {
-	const [showStocks, setShowStocks] = React.useState(true);
+	const [showStocks, setShowStocks] = React.useState(null);
 	const { state } = useLocation();
     const { portfolio } = state;
 	const [stocks, setStocks] = React.useState([])
@@ -57,9 +57,8 @@ const ManagePortfolio = () => {
 
 	const handleStockListDetails = () => {
 		//directs them to the stock list page
-		console.log(selectedList.id)
 		if (selectedList){
-			navigate(`/stocklist/${selectedList.id}`, { state: { stocklist: selectedList } });
+			navigate(`/stocklist/${selectedList.id}`, { state: { stocklist: selectedList, portfolio: portfolio}});
 		}
 	}
 
@@ -68,7 +67,7 @@ const ManagePortfolio = () => {
 			return (
 				<p>temporary info, need to fill with stock stuff</p>
 			)
-		} else {
+		} else if (showStocks == false){
 			
 			return (
 				<div className="flex flex-row  my-4  gap-4">
@@ -102,6 +101,11 @@ const ManagePortfolio = () => {
 				
 				
 			)
+		} else if (showStocks == null) {
+			return (
+				<div className="flex flex-row  my-4  gap-4">
+						<h1 className="text-sm text-gray-500 text-left">Nothing selected</h1>					
+				</div>)
 		}
 	}
 
@@ -147,7 +151,7 @@ const ManagePortfolio = () => {
 									onClick={() => setShowStocks(true)}
 									className={
 										"inline-block w-full p-2 px-4 bg-gray-400/50 border-r border-gray-200 hover:bg-gray-300 rounded-s-lg active focus:outline-none  " +
-										(showStocks ? "!bg-dark_red/80 !text-white font-bold shadow" : "shadow-inner")
+										((showStocks == true || showStocks == null) ? "!bg-dark_red/80 !text-white font-bold shadow" : "shadow-inner")
 									}
 									aria-current="page"
 								>
@@ -159,7 +163,7 @@ const ManagePortfolio = () => {
 									onClick={() => setShowStocks(false)}
 									className={
 										"inline-block w-full p-2 px-4  bg-gray-400/50 border-s-0 border-gray-200 rounded-e-lg hover:text-gray-700 hover:bg-gray-300 focus:outline-none " +
-										(!showStocks ? "!bg-dark_red/80 !text-white shadow" : "shadow-inner")
+										((showStocks == false) ? "!bg-dark_red/80 !text-white shadow" : "shadow-inner")
 									}
 								>
 									Lists
@@ -167,7 +171,7 @@ const ManagePortfolio = () => {
 							</li>
 						</ul>
 					</div>
-					{showStocks ? (
+					{(showStocks == true || showStocks == null) ? (
 						stocks.map((stock, index) => (
 							<button key={stock.symbol} onMouseDown={() => setSelectedStock(stock)}>
 								<Card

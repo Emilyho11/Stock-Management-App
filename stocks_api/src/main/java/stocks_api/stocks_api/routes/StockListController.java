@@ -68,6 +68,24 @@ public class StockListController {
         }
     }
 
+    @GetMapping("/getStocks/{id}")
+    public ArrayList<Object> getStockListStocks(@PathVariable int id) {
+        try {
+            ResultSet rs = StockList.getStocks(id, conn);
+            ArrayList<Object> stocks = new ArrayList<Object>();
+            while (rs.next()){
+                ArrayList<Object> stock = new ArrayList<Object>();
+                stock.add(rs.getString("symbol"));
+                stock.add(rs.getInt("quantity"));
+                stocks.add(stock);
+            }
+            return stocks; 
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
     @PatchMapping("/changePrivacy/{id}/{privacy}")
     public void changePrivacy(@PathVariable int id, @PathVariable String privacy) {
         StockList.changePrivacy(id, privacy, conn);

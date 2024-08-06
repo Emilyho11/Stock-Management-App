@@ -157,6 +157,23 @@ public class StockList extends Table {
         }
     }
 
+    // Gets the all the stocks in a list
+    public static ResultSet getStocks(int id, Connection conn) {
+        try {
+            PreparedStatement stmt;
+            stmt = conn.prepareStatement("SELECT symbol, quantity FROM lists "
+                    + "WHERE (stocklist_id = ?);");
+            stmt.setInt(1, id);
+            ResultSet rs = stmt.executeQuery();
+            System.out.println("Retrieved this user's stock list stocks");
+            return rs;
+        } catch (SQLException ex) {
+            System.out.println("Error finding this user's stock list stocks: ");
+            ex.printStackTrace();
+            return null;
+        }
+    }
+
     //creates a new lists tuple
     private static void createListStock(int stocklist_id, String symbol, int total, Connection conn){
         try {
