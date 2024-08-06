@@ -280,25 +280,16 @@ public class StockController {
         }
     }
 
-    @GetMapping("/future-value")
+    @GetMapping("/future/{close}/{rate}/{time}")
     @ResponseBody
-    public BasicResponse getFutureValue(@RequestParam String symbol, @RequestParam String timestamp) {
+    public BasicResponse getFutureValue(@PathVariable double close, @PathVariable double rate, @PathVariable double time) {
         try {
-            String sqlQuery = "SELECT * FROM stock_data WHERE symbol = ? AND timestamp = ?";
-            PreparedStatement preparedStatement = DBHandler.getInstance().getConnection().prepareStatement(sqlQuery);
-            preparedStatement.setString(1, symbol);
-            preparedStatement.setString(2, timestamp);
-            ResultSet rs = preparedStatement.executeQuery();
-            String result = ParserUtil.resultSetToJson(rs);
-            System.out.println("ResultSet");
-            System.out.println(result);
-            return BasicResponse.ok(result);            
+            double futureValue = close * Math.pow(1 + rate, time);
+            return BasicResponse.ok("Future value: " + futureValue);
         } catch (Exception e) {
             e.printStackTrace();
             // output error message
-            return BasicResponse.ok("Failed");
+            return BasicResponse.ok("Failed.");
         }
-    }
-
-    
+    } 
 }
