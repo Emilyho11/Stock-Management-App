@@ -248,8 +248,8 @@ const ManagePortfolio = () => {
 											<td>{item.stock}</td>
 										</tr>
 									))}
-								</tbody>
-                <Button onClick={() => { setShowMatrix(false); setMatrixData([]); }}>
+								</tbody> */
+                			<Button onClick={() => { setShowMatrix(false); setMatrixData([]); }}>
 								Close
 							</Button>}
 						</div>
