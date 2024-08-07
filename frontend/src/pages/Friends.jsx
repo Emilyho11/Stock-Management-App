@@ -4,7 +4,7 @@ import { useAuth } from "../components/AuthContext";
 import { useEffect } from "react";
 import AxiosClient from "../api/AxiosClient";
 import SendFriendRequestButton from "../components/SendFriendRequestButton";
-import { faCircleCheck, faCircleXmark } from "@fortawesome/free-solid-svg-icons";
+import { faCircleCheck, faCircleXmark, faSquareMinus } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useNavigate } from "react-router-dom";
 
@@ -72,6 +72,11 @@ const Friends = () => {
 		navigate(0);
 	}
 
+	const handleDeleteFriend = (targ) => {
+		AxiosClient.delete(`friends/delete/${user}/${targ}`);
+		navigate(0);
+	}
+
 	return (
 		<div>
 			<h1>Friends</h1>
@@ -120,6 +125,7 @@ const Friends = () => {
 									/>
 									<h1 className="text-xl">{friendship.username}</h1>
 									{friendship.status == "pending" && <p className="ml-auto">{friendship.status}...</p>}
+									<FontAwesomeIcon icon={faSquareMinus} className="text-red-500 text-2xl ml-auto" onClick={(e) => handleDeleteFriend(friendship.username)}/>
 								</Card>
 							))}
 					</div>

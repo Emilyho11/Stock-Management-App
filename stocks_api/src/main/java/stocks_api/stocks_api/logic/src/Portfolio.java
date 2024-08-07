@@ -280,8 +280,11 @@ public class Portfolio {
         int totalStock = getTotalStock(portfolioId, symbol, conn);
         if (type.equals("buy") && totalStock == -1 && stockprice > -1 && quantity > -1){ 
             Transaction.buyStockTransaction(portfolioId, symbol, quantity, conn);   
-            CashHistory.performCashTransaction(portfolioId, "withdraw", totalCost, conn);
-            createStockBought(portfolioId, symbol, quantity, conn);
+            double newbal = CashHistory.performCashTransaction(portfolioId, "withdraw", totalCost, conn);
+            if(newbal >= 0){
+                Transaction.buyStockTransaction(portfolioId, symbol, quantity, conn);
+                createStockBought(portfolioId, symbol, quantity, conn);
+            }
         }
     }
 
