@@ -68,6 +68,44 @@ public class StockListController {
         }
     }
 
+    @GetMapping("/getFriends/{username}")
+    public ArrayList<Object> getFriendStockLists(@PathVariable String username) {
+        try {
+            ResultSet rs = User.getFriendStockLists(username, conn);
+            ArrayList<Object> lists = new ArrayList<Object>();
+            while (rs.next() == true){
+                ArrayList<Object> listnName = new ArrayList<Object>();
+                StockList list = new StockList(rs.getInt("stocklist_id"), rs.getString("name"), "friends");
+                listnName.add(rs.getString("username"));
+                listnName.add(list);
+                lists.add(listnName);
+            }
+            return lists;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    @GetMapping("/getPublic/{username}")
+    public ArrayList<Object> getOtherPublicStockLists(@PathVariable String username) {
+        try {
+            ResultSet rs = StockList.getOtherPublicStockLists(username, conn);
+            ArrayList<Object> lists = new ArrayList<Object>();
+            while (rs.next()){
+                ArrayList<Object> listnName = new ArrayList<Object>();
+                StockList list = new StockList(rs.getInt("stocklist_id"), rs.getString("name"), "public");
+                listnName.add(rs.getString("username"));
+                listnName.add(list);
+                lists.add(listnName);
+            }
+            return lists;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
     @GetMapping("/getStocks/{id}")
     public ArrayList<Object> getStockListStocks(@PathVariable int id) {
         try {

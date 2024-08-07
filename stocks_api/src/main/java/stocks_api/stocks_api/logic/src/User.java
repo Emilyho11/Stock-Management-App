@@ -140,4 +140,27 @@ public class User extends Table {
             return null;
         }
     }
+
+    // Returns all stock lists shared with the user
+    public static ResultSet getFriendStockLists(String username, Connection conn) {
+        try {
+            PreparedStatement stmt;
+            stmt = conn.prepareStatement("SELECT s.stocklist_id, s.name, c.username"
+            + " FROM stock_list s"
+            + " INNER JOIN created c ON s.stocklist_id = c.stocklist_id"
+            + " WHERE s.privacy = 'friends'"
+            + " AND c.username IN ("
+                + " SELECT target"
+                + " FROM friendship"
+                + " WHERE username = ?"
+                + " AND status = 'Accepted');");
+            stmt.setString(1, username);
+            ResultSet rs = stmt.executeQuery();
+            return rs;
+        } catch (Exception ex) {
+            System.out.println("Error getting friend stock lists for this user");
+            ex.printStackTrace();
+            return null;
+        }
+    }
 }

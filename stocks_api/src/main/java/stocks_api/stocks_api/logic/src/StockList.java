@@ -136,6 +136,24 @@ public class StockList extends Table {
         }
     }
 
+     // Returns all public stock lists, not including users
+     public static ResultSet getOtherPublicStockLists(String username, Connection conn) {
+        try {
+            PreparedStatement stmt;
+            stmt = conn.prepareStatement("SELECT c.stocklist_id, s.name, c.username" +
+                                " FROM created c" + 
+                                " INNER JOIN stock_list s ON c.stocklist_id = s.stocklist_id" +
+                                " WHERE s.privacy = 'public' AND c.username != ?;");
+            stmt.setString(1, username);
+            ResultSet rs = stmt.executeQuery();
+            return rs;
+        } catch (Exception ex) {
+            System.out.println("Error getting other public stock lists");
+            ex.printStackTrace();
+            return null;
+        }
+    }
+
     // Gets the current total of a stock in a list
     public static int getTotalStock(int id, String symbol, Connection conn) {
         try {
