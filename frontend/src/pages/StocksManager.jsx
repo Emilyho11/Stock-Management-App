@@ -12,19 +12,23 @@ import CreateStockListModal from "../components/CreateStockListModal";
 import AxiosClient from "../api/AxiosClient";
 import CreateButton from "../components/CreateButton";
 import { useNavigate } from 'react-router-dom';
-
+import { useAuth } from "../components/AuthContext";
 
 const StocksManager = () => {
-	// StockList(stockListId, name, privacy)
 	const [portfolios, setPortfolios] = useState([]);
 	const [stockLists, setStockLists] = useState([]);
-	const username = "mirihuang"; //replace with logged in user
+	const { getUsername, isLoggedIn } = useAuth();
+	const username = getUsername();
 	const navigate = useNavigate();
 
 	useEffect(() => {
+		if (!isLoggedIn()) {
+			navigate("/login");
+			navigate(0);
+		}
 		const getPortfolios = async () => {
 			try {
-				const response = await AxiosClient.get("portfolio/get/" + username);
+				const response = await AxiosClient.get(`portfolio/get/${username}`);
 				if (portfolios) {
 					setPortfolios([]);
 				}
@@ -57,7 +61,7 @@ const StocksManager = () => {
 
 		getPortfolios();
 		getStockLists();
-	}, []);
+	}, [isLoggedIn]);
 
 	const handleOpenPortfolio = (portfolio) => {
 		navigate(`/portfolio/${portfolio.id}`, { state: { portfolio: portfolio } });
@@ -80,7 +84,7 @@ const StocksManager = () => {
 						<div className="flex gap-4 flex-wrap w-full">
 							{portfolios
 								.map((portfolio) => (
-									<div className="flex gap-4 items-center px-8 hover:!bg-white transition-all bg-white p-2 rounded-md w-72 min-h-3 hover:shadow-lg " onClick={() => handleOpenPortfolio(portfolio)}>
+									<div key={portfolio.id} className="flex gap-4 items-center px-8 hover:!bg-white transition-all bg-white p-2 rounded-md w-72 min-h-3 hover:shadow-lg flex-col" onClick={() => handleOpenPortfolio(portfolio)}>
 										<p className="uppercase text-sm bg-gray-100  w-fit rounded-md px-2 py-1 ml-auto mr-auto">
 											Portfolio
 										</p>
@@ -104,13 +108,14 @@ const StocksManager = () => {
 					<div className="flex gap-4 flex-wrap w-full">
 							{stockLists
 								.map((list) => (
-									<div className="flex gap-4 items-center px-8 hover:!bg-white transition-all bg-white p-2 rounded-md w-72 min-h-3 hover:shadow-lg " onClick={() => handleOpenStockList(list)}>
+									<div key={list.id} className="flex gap-4 items-center px-8 hover:!bg-white transition-all bg-white p-2 rounded-md w-72 min-h-3 hover:shadow-lg flex-col" onClick={() => handleOpenStockList(list)}>
 										<p className="uppercase text-sm bg-gray-100  w-fit rounded-md px-2 py-1 ml-auto mr-auto">
 											Stock List
 										</p>
 										<h1 className="text-xl font-normal">{list.name}</h1>
+										<PrivacyIcon privacy={list.privacy} />
 										<span className="scale-75 ml-auto ">
-											<PrivacyIcon privacy={list.privacy} />
+											
 										</span>
 									</div>
 								))}
