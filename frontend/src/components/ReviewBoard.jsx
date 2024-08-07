@@ -10,39 +10,40 @@ const ReviewBoard = (props) => {
 	const { getUsername } = useAuth();
 	const [newReview, setNewReview] = useState({
 		f_username: getUsername(),
-		f_stockListId: stockListId,
+		f_stock_list_id: stockListId,
 		f_content: "",
 	});
 	const [reviews, setReviews] = useState([{ username: "", stockListId: 0, content: "", expanded: false }]);
 	const [alreadyReviewed, setAlreadyReviewed] = useState(false);
-	useEffect(() => {
-		const fetchReviews = async () => {
-			try {
-				const response = await AxiosClient.get("reviews/" + stockListId);
+	const fetchReviews = async () => {
+		try {
+			const response = await AxiosClient.get("reviews/" + stockListId);
 
-				if (response.data && Array.isArray(response.data.value)) {
-					// setReviews(response.data);
-					const parsedReviews = response.data.value.map((item, index) => ({
-						id: index,
-						username: item.f_username.trim(),
-						stockListId: item.f_stock_list_id,
-						content: item.f_content.trim(),
-						expanded: false,
-					}));
+			if (response.data && Array.isArray(response.data.value)) {
+				// setReviews(response.data);
+				const parsedReviews = response.data.value.map((item, index) => ({
+					id: index,
+					username: item.f_username.trim(),
+					stockListId: item.f_stock_list_id,
+					content: item.f_content.trim(),
+					expanded: false,
+					myReview: item.f_username.trim() === getUsername(),
+				}));
 
-					setAlreadyReviewed(
-						response.data.message === "Reviewed" ||
-							parsedReviews.some((review) => review.username === getUsername())
-					);
+				setAlreadyReviewed(
+					response.data.message === "Reviewed" ||
+						parsedReviews.some((review) => review.username === getUsername())
+				);
 
-					setReviews(parsedReviews);
-				} else {
-					console.error("Unexpected data format:", response.data);
-				}
-			} catch (error) {
-				console.error("Error fetching data:", error);
+				setReviews(parsedReviews);
+			} else {
+				console.error("Unexpected data format:", response.data);
 			}
-		};
+		} catch (error) {
+			console.error("Error fetching data:", error);
+		}
+	};
+	useEffect(() => {
 
 		fetchReviews();
 	}, []);
@@ -57,6 +58,8 @@ const ReviewBoard = (props) => {
 		try {
 			const response = await AxiosClient.post("reviews/", newReview);
 			console.log(response.data);
+			fetchReviews();
+
 		} catch (error) {
 			console.error("Error submitting review:", error);
 		}
@@ -88,7 +91,8 @@ const ReviewBoard = (props) => {
 			{ReviewBox()}
 			<h2 className="text-xl">{reviews.length} REVIEWS</h2>
 			<div className="flex flex-col gap-12">
-				{reviews.map((review, index) => (
+				{reviews.sort( (a, b) => a.myReview ? -1 : 1 || a.id - b.id)
+				.map((review, index) => (
 					<Review
 						key={review.id}
 						data={review}

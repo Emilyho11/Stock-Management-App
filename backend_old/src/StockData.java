@@ -105,9 +105,10 @@ public class StockData extends Table<StockData> {
     // t = time in years
     // For example, if the present value of a stock is $1000, the rate of interest is 10% and the time is 5 years,
     // the future value of the stock would be:
-    // FV = 1000 * (1 + 0.1)^5 = 1000 * 1.61 = 1610
-    public static double calculateFutureValue(double presentValue, double rate, int time) {
-        return presentValue * Math.pow(1 + rate, time);
+    // FV = 1000 * (1 + 0.1)^5 = 1000 * 1.61 = 1610 
+    // Create (or use) a tool that predicts the future value (close price) of a stock from its past.
+    public static double calculateFutureValue(double closePrice, double rate, double time) {
+        return closePrice * Math.pow(1 + rate, time);
     }
 
     /*
