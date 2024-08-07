@@ -3,6 +3,8 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.HashMap;
+import java.util.Map;
 
 public class Stocks extends Table<Stocks> {
     public static final String TABLE_NAME = "stocks";
@@ -163,7 +165,8 @@ public class Stocks extends Table<Stocks> {
     }
 
     // Gets the COV for a specific stock sample based on bought and stock_data tables
-    public static void calculatePortfolioCOV(int portfolioId) {
+    public static Map<String, Double> calculatePortfolioCOV(int portfolioId) {
+        Map<String, Double> covMap = new HashMap<>();
         try {
             String sqlQuery = "SELECT " +
                               "stock_data.symbol, " +
@@ -178,18 +181,20 @@ public class Stocks extends Table<Stocks> {
             while (rs.next()) {
                 String symbol = rs.getString("symbol");
                 Double COV = rs.getDouble("cov");
-                System.out.println(symbol + ", " + COV);
+                covMap.put(symbol, COV);
             }
+            return covMap;  
         } catch (Exception e) {
             e.printStackTrace();
         }
+        return covMap;
     }
 
     // Calculate correlation function:
     // Calculating the population covariance between stock_data1.close and stock_data2.close.
     // Dividing the covariance by the product of the population standard deviations of stock_data1.close and stock_data2.close.
     // Using an INNER JOIN on the timestamp to align the closing prices of the two stocks.
-    public static void calculateCorrelation(String symbol1, String symbol2) {
+    public static double calculateCorrelation(String symbol1, String symbol2) {
         try {
             String sqlQuery = "SELECT " +
                             "(COVAR_POP(CAST(stock_data1.close AS numeric), CAST(stock_data2.close AS numeric)) / " +
@@ -203,13 +208,16 @@ public class Stocks extends Table<Stocks> {
             preparedStatement.setString(1, symbol1);
             preparedStatement.setString(2, symbol2);
             ResultSet rs = preparedStatement.executeQuery();
+            double correlation = 0;
             if (rs.next()) {
-                Double correlation = rs.getDouble("correlation");
+                correlation = rs.getDouble("correlation");
                 System.out.println("Correlation between " + symbol1 + " and " + symbol2 + ": " + correlation);
             }
+            return correlation;
         } catch (Exception e) {
             e.printStackTrace();
         }
+        return -1;
     }
 
     // COV calculation between two symbols

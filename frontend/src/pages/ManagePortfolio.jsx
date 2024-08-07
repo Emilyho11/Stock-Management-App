@@ -27,9 +27,13 @@ const ManagePortfolio = () => {
 	const [selectedList, setSelectedList] = React.useState([]);
 	const [stockPrice, setStockPrice] = React.useState(0);
 	const [stockCov, setStockCov] = React.useState(0);
+	const [showMatrix, setShowMatrix] = React.useState(false);
+    const [matrixData, setMatrixData] = React.useState([]);
 	const { getUsername, isLoggedIn } = useAuth();
 	const username = getUsername();
 	const navigate = useNavigate();
+	const [symbol1, setSymbol1] = React.useState("");
+	const [symbol2, setSymbol2] = React.useState("");
 
 	useEffect(() => {
 		const getOwnedStocks = async () => {
@@ -167,6 +171,32 @@ const ManagePortfolio = () => {
 		}
 	}
 
+	const handleCalculateCOV = async () => {
+		try {
+			const response = await AxiosClient.get(`portfolio/calculatePortfolioCOV/${portfolio.id}`);
+			const data = response.data;
+			console.log(data);
+            const parsedData = Object.keys(data).map((key) => ({
+                stock: key.trim(),
+                value: data[key],
+            }));
+            setMatrixData(parsedData);
+        } catch (error) {
+            console.error("Error calculating COV:", error);
+        }
+    };
+
+	const handleCalculateCorrelation = async () => {
+		try {
+			const response = await AxiosClient.get(`portfolio/calculateCorrelation/AAPL/O`);
+			const correlationValue = response.data; // Assuming data is a double
+			console.log(correlationValue);
+			// Use the correlationValue as needed in your application
+		} catch (error) {
+			console.error("Error calculating statistics:", error);
+		}
+	};
+
 	return (
 		<div className="md:w-2/3 ml-auto mr-auto flex flex-col gap-2">
 			<Link to="/stock-manager">
@@ -184,15 +214,49 @@ const ManagePortfolio = () => {
 						<CreateButton className='bg-blue-50'username={username} type={"createlistin"} id={portfolio.id}/>
 						<CashflowButton className="bg-green-500 hover:bg-green-800" type={"cash"} id={portfolio.id}></CashflowButton>
 						<CashflowButton className='bg-red-500 hover:bg-red-800' type={"stock"} id={portfolio.id}></CashflowButton>
-						<Button className='bg-gray-800 hover:bg-black'> <FontAwesomeIcon icon={faChartSimple} /> Statistics </Button>
+						<Button onClick={() => setShowMatrix(true)} className='bg-gray-800 hover:bg-black'> <FontAwesomeIcon icon={faChartSimple}/> Statistics </Button>
 					</div>
 					<div className="w-full h-full !items-start py-8 px-12 ">
 						<PortfolioHistory id={portfolio.id}/>
 					</div>
+					{showMatrix && (
+						<div className="modal">
+
+							<Button onClick={handleCalculateCOV}>Calculate COV of each stock</Button>
+							{matrixData.map((item, rowIndex) => (
+								<tr key={rowIndex} >
+									<td>{item.stock}</td>
+									<td>{item.value}</td>
+								</tr>
+							))}
+							{/* <h2>Statistics Matrix</h2>
+							<div>
+								<Button onClick={handleCalculateCOV}>Calculate COV of 2 Stocks</Button>
+								<Button onClick={handleCalculateCorrelation}>Calculate Correlation</Button>
+							</div>
+							<table>
+								<thead>
+									{matrixData.map((item, rowIndex) => (
+										<th key={rowIndex}>
+											<th>{item.stock}</th>
+										</th>
+									))}
+								</thead>
+								<tbody>
+									{matrixData.map((item, rowIndex) => (
+										<tr key={rowIndex}>
+											<td>{item.stock}</td>
+										</tr>
+									))}
+								</tbody>
+							</table>
+							<button onClick={() => { setShowMatrix(false); setMatrixData([]); }}>
+								Close
+							</button> */}
+						</div>
+					)}
 				</div>
-				
 			</Card>
-			{/* <hr className="mb-2" /> */}
 			<div className="flex flex-row  my-4  gap-4">
 				<div className="flex min-w-[20vw] flex-col gap-2 overflow-y-scroll">
 					<div className="flex gap-4 items-center justify-between">
