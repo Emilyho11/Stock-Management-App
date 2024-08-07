@@ -46,7 +46,7 @@ const CreateListPopup = ({ toggle, username, id}) => {
       try {
         AxiosClient.post(`stocklist/${username}/${name}/${privacy}`);
         toggle();
-        navigate(0);
+        navigate(0); // Refresh the page
       } catch (error) {
         console.error(error);
       }
@@ -54,7 +54,7 @@ const CreateListPopup = ({ toggle, username, id}) => {
       try {
         AxiosClient.post(`stocklist/${username}/${id}/${name}/${privacy}`);
         toggle();
-        navigate(0);
+        navigate(0); // Refresh the page
       } catch (error) {
         console.error(error);
       }

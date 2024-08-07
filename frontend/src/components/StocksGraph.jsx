@@ -3,7 +3,6 @@ import { Line } from 'react-chartjs-2';
 import { Chart as ChartJS, CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend } from 'chart.js';
 import { useAuth } from "../components/AuthContext";
 import AxiosClient from "../api/AxiosClient";
-import { set } from "date-fns";
 
 const StocksGraph = ( { symbol, startDate, endDate, viewType, time, setDateBounds } ) => {
 	ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend);
@@ -13,12 +12,12 @@ const StocksGraph = ( { symbol, startDate, endDate, viewType, time, setDateBound
 	const [stocks, setStocks] = useState([]);
     const [lastSymbol, setLastSymbol] = useState("");
 
-    const fetchStocksData = async () => {
+    const fetchStocksData = async (viewTypeChanged=false) => {
         try {
             let response = "";
             let data = "";
 
-            if ( (symbol !== lastSymbol && symbol !== "") || viewType !== "present") {
+            if ( (symbol !== lastSymbol && symbol !== "") || viewTypeChanged) {
                 if (viewType === "future") {
                     response = await AxiosClient.get(`stocks/future/${symbol}/${time}`);
                     if (!(response.data && Array.isArray(response.data))) {
@@ -58,20 +57,23 @@ const StocksGraph = ( { symbol, startDate, endDate, viewType, time, setDateBound
                 }
             }
 
-
         } catch (error) {
             console.error("Error fetching stock data:", error);
         }
     };
 
+    useEffect(() => {
+        console.log("View type changed:", viewType);
+        fetchStocksData(true);
+    }, [viewType, time]);
 
     useEffect(() => {
         fetchStocksData();
         
         if (lastSymbol !== symbol) {
             setLastSymbol(symbol);
-        }
-    }, [symbol, viewType, time]);
+        } 
+    }, [symbol, time]);
 
     useEffect(() => {
         console.log("Date bounds changed:", { startDate, endDate });

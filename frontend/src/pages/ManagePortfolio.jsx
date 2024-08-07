@@ -15,6 +15,7 @@ import CashflowButton from "../components/CashflowButton";
 import { useNavigate } from "react-router-dom";
 import PortfolioHistory from "../components/PortfolioHistory";
 import { useAuth } from "../components/AuthContext";
+import { useAuth } from "../components/AuthContext";
 
 const ManagePortfolio = () => {
 	const [showStocks, setShowStocks] = React.useState(null);

@@ -13,12 +13,15 @@ import { useEffect } from "react";
 import CreateButton from "../components/CreateButton";
 import AxiosClient from "../api/AxiosClient";
 import { useAuth } from "../components/AuthContext";
+import { useAuth } from "../components/AuthContext";
 
 const ManageStockList = () => {
+	const { getUsername } = useAuth();
 	const { state } = useLocation();
-    const { stocklist, portfolio } = state;
+  const { stocklist, portfolio } = state;
 	const [stocks, setStocks] = React.useState([])
 	const [selectedStock, setSelectedStock] = React.useState([]);
+	const username = getUsername();
 	const { getUsername, isLoggedIn } = useAuth();
 	const username = getUsername();
 	const navigate = useNavigate();
@@ -52,8 +55,6 @@ const ManageStockList = () => {
 					</div>
 					
 				</div>
-				
-				
 			)
 		} else {
 			return (
@@ -66,23 +67,30 @@ const ManageStockList = () => {
 	const goBack = (e) => {
 		e.preventDefault();
 		return (portfolio ? (navigate(`/portfolio/${portfolio.id}`, { state: { portfolio: portfolio } })) : (navigate("/stock-manager")))
+		return (portfolio ? (navigate(`/portfolio/${portfolio.id}`, { state: { portfolio: portfolio } })) : (navigate("/stock-manager")))
 	}
 	return (
 		<div className="md:w-2/3 ml-auto mr-auto flex flex-col gap-2">
 			<Link to={goBack} onClick={(e) => goBack(e)}>
-				{console.log(portfolio)}
 				<Button className="flex items-center gap-4" variant={ButtonVariants.TRANSPARENT}>
 					<FontAwesomeIcon icon={faArrowLeft} />
+					<p className="font-semibold uppercase tracking-wide">Return</p>
 					<p className="font-semibold uppercase tracking-wide">Return</p>
 				</Button>
 			</Link>
 			<Card className="min-h-[50vh] !bg-transparent !items-start !p-0 max-lg:flex-col">
 				<div className="scale-75 ml-auto flex flex-col ">
+				<div className="scale-75 ml-auto flex flex-col ">
 					<h1 className="text-left text-4xl">{stocklist.name}</h1>
 					<PrivacyIcon privacy={stocklist.privacy} />
 					
+					
 				</div>
 				<Card className="w-full h-full !items-start flex-col py-8 px-12 bg-white">
+					<div className="flex flex-row">
+						<CreateButton className=" bg-green-500 hover:bg-green-800" username={username} type={"add"} id={stocklist.id}/>
+						<CreateButton className=" bg-red-500 hover:bg-red-800" username={username} type={"remove"} id={stocklist.id}/>
+					</div>
 					<div className="flex flex-row">
 						<CreateButton className=" bg-green-500 hover:bg-green-800" username={username} type={"add"} id={stocklist.id}/>
 						<CreateButton className=" bg-red-500 hover:bg-red-800" username={username} type={"remove"} id={stocklist.id}/>
@@ -94,8 +102,12 @@ const ManageStockList = () => {
 			<div className="flex flex-row  my-4  gap-4">
 				<div className="flex min-w-[20vw] flex-col gap-2">
 					<div className="flex gap-4 items-center justify-between">
+						
 						<h1 className="text-xl text-left w-fit">Stocks</h1>
-
+						<Button className="flex items-center gap-4" 
+							onClick={() => navigate(`/stocklist/${stocklist.id}/add`)}> 
+							Add Stocks
+						</Button>
 					</div>
 					{
 						stocks.map((stock, index) => (
