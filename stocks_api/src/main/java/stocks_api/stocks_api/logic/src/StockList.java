@@ -261,18 +261,17 @@ public class StockList extends Table {
     public static void deleteStockListGlobal(int stocklist_id, Connection conn) {
         try {
             StockList.deleteStockList(stocklist_id, conn);
-                deleteStockList(stocklist_id, conn);
-                PreparedStatement stmt;
-                stmt = conn.prepareStatement("DELETE FROM contains "
-                        + "WHERE (stocklist_id = ?);");
-                stmt.setInt(1, stocklist_id);
-                stmt.executeUpdate();
-                PreparedStatement stmt2;
-                stmt2 = conn.prepareStatement("DELETE FROM created"
-                        + "WHERE (stocklist_id = ?);");
-                stmt2.setInt(1, stocklist_id);
-                stmt2.executeUpdate();
-                System.out.println("Deleted stock list globally successfully");
+            PreparedStatement stmt;
+            stmt = conn.prepareStatement("DELETE FROM contains "
+                    + "WHERE (stocklist_id = ?);");
+            stmt.setInt(1, stocklist_id);
+            stmt.executeUpdate();
+            PreparedStatement stmt2;
+            stmt2 = conn.prepareStatement("DELETE FROM created "
+                    + "WHERE (stocklist_id = ?);");
+            stmt2.setInt(1, stocklist_id);
+            stmt2.executeUpdate();
+            System.out.println("Deleted stock list globally successfully");
             } catch (SQLException ex) {
                 System.out.println("Error deleting stock list globally: " + ex.getMessage());
             }

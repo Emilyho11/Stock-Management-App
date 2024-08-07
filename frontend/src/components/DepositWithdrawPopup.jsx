@@ -1,5 +1,6 @@
 import { useEffect, useState, useRef } from "react";
 import AxiosClient from "../api/AxiosClient";
+import { useNavigate } from "react-router-dom";
 
 const DepositWithdrawPopup = ({ toggle, id}) => {
   const [visible, setVisible] = useState(false);
@@ -8,6 +9,7 @@ const DepositWithdrawPopup = ({ toggle, id}) => {
   const [type, setType] = useState("");
   const [isButtonDisabled, setIsButtonDisabled] = useState(true);
   const formRef = useRef(null);
+  const navigate = useNavigate();
 
   useEffect(() => {
     // Check form validity on initial render
@@ -25,6 +27,7 @@ const DepositWithdrawPopup = ({ toggle, id}) => {
 
   const handleToggle = () => {
     toggle();
+    navigate(0);
   };
 
   const handleFormChange = () => {
