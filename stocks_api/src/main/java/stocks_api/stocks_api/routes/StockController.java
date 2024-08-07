@@ -314,6 +314,16 @@ public class StockController {
         }
     }
 
+    // Calculate the future value of a stock
+    // Use the formula for compound interest: FV = PV * (1 + r)^t
+    // Where:
+    // FV = Future Value
+    // PV = Present Value
+    // r = rate of interest
+    // t = time in years
+    // For example, if the present value of a stock is $1000, the rate of interest is 10% and the time is 5 years,
+    // the future value of the stock would be:
+    // FV = 1000 * (1 + 0.1)^5 = 1000 * 1.61 = 1610
     @GetMapping("/future/{symbol}/{time}")
     @ResponseBody
     public ArrayList<Double> getFutureValue(@PathVariable String symbol,
