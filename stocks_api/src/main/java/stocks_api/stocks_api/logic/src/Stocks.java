@@ -1,6 +1,7 @@
 package stocks_api.stocks_api.logic.src;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.sql.Statement;
 
 public class Stocks extends Table<Stocks> {
@@ -162,16 +163,17 @@ public class Stocks extends Table<Stocks> {
     }
 
     // Gets the COV for a specific stock sample based on bought and stock_data tables
-    public static void calculatePortfolioCOV(String username) {
+    public static void calculatePortfolioCOV(int portfolioId) {
         try {
-            String sqlQuery = "SELECT stock_data.symbol, " +
+            String sqlQuery = "SELECT " +
+                              "stock_data.symbol, " +
                               "(STDDEV_SAMP(CAST(stock_data.close AS numeric)) / AVG(CAST(stock_data.close AS numeric))) * 100 AS cov " +
                               "FROM bought " +
                               "INNER JOIN stock_data ON bought.symbol = stock_data.symbol " +
-                              "WHERE bought.username = ? " +
+                              "WHERE portfolio_id = ? " +
                               "GROUP BY stock_data.symbol;";
             PreparedStatement preparedStatement = DBHandler.getInstance().getConnection().prepareStatement(sqlQuery);
-            preparedStatement.setString(1, username);
+            preparedStatement.setInt(1, portfolioId);
             ResultSet rs = preparedStatement.executeQuery();
             while (rs.next()) {
                 String symbol = rs.getString("symbol");
@@ -204,6 +206,40 @@ public class Stocks extends Table<Stocks> {
             if (rs.next()) {
                 Double correlation = rs.getDouble("correlation");
                 System.out.println("Correlation between " + symbol1 + " and " + symbol2 + ": " + correlation);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    // COV calculation between two symbols
+    public static void calculateCOVBetweenTwoStocks(String symbol1, String symbol2) {
+        try {
+            // Query to calculate the COV for each stock
+            String sqlQuery = "WITH stock1_stats AS (" +
+                              "SELECT AVG(CAST(close AS numeric)) AS mean1, " +
+                              "STDDEV_POP(CAST(close AS numeric)) AS stddev1 " +
+                              "FROM stock_data " +
+                              "WHERE symbol = ?), " +
+                              "stock2_stats AS (" +
+                              "SELECT AVG(CAST(close AS numeric)) AS mean2, " +
+                              "STDDEV_POP(CAST(close AS numeric)) AS stddev2 " +
+                              "FROM stock_data " +
+                              "WHERE symbol = ?) " +
+                              "SELECT (stddev1 / mean1) AS cov1, " +
+                              "(stddev2 / mean2) AS cov2 " +
+                              "FROM stock1_stats, stock2_stats;";
+            
+            PreparedStatement preparedStatement = DBHandler.getInstance().getConnection().prepareStatement(sqlQuery);
+            preparedStatement.setString(1, symbol1);
+            preparedStatement.setString(2, symbol2);
+            ResultSet rs = preparedStatement.executeQuery();
+            
+            if (rs.next()) {
+                Double cov1 = rs.getDouble("cov1");
+                Double cov2 = rs.getDouble("cov2");
+                System.out.println("Coefficient of Variation for " + symbol1 + ": " + cov1);
+                System.out.println("Coefficient of Variation for " + symbol2 + ": " + cov2);
             }
         } catch (Exception e) {
             e.printStackTrace();
