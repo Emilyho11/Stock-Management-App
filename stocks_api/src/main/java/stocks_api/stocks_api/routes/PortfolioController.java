@@ -126,9 +126,8 @@ public class PortfolioController {
     }
 
     @GetMapping("/estimateValue/{id}")
-    public String estimateValue(@PathVariable int id) {
-        double result = Portfolio.estimatePortfolioValue(id, conn);
-        return "'{'content': " + result + "}'";
+    public double estimateValue(@PathVariable int id) {
+        return Portfolio.estimatePortfolioValue(id, conn);
     }
 
     @GetMapping("/getTransactions/{id}")

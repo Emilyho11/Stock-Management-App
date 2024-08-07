@@ -5,6 +5,7 @@ import Button from "./Button";
 
 const PortfolioHistory = ({id}) => {
 	const [balance, setBalance] = useState(0);
+	const [value, setValue] = useState(0);
 	const [cashData, setCashData] = useState([]);
 	const [transactionData, setTransactionData] = useState();
 
@@ -22,7 +23,21 @@ const PortfolioHistory = ({id}) => {
 			}
 		};
 
+		const getValue = async () => {
+			try {
+				const response = await AxiosClient.get(`portfolio/estimateValue/${id}`);
+				if (response.data) {
+					setValue(response.data);
+				} else {
+					console.error("Unexpected data format:", response.data);
+				}
+			} catch (error) {
+				console.error("Error fetching data:", error);
+			}
+		};
+
 		getBalance();
+		getValue();
 	}, []);
 
     const getCashHistory = () => {
@@ -38,6 +53,7 @@ const PortfolioHistory = ({id}) => {
 			<h2 className="text-xl border-t-2">Cash and Transaction History</h2>
 			<div className="flex flex-row gap-12 text-lg text-green-500 justify-items-center align-middle content-evenly">
 				<div><span className="text-black">Balance:</span> ${balance}</div>
+				<div><span className="text-black">Estimated Vlaue:</span> ${value}</div>
 				<Button className="bg-gray-800"> Display Cash History</Button>
 				<Button className="bg-gray-800"> Display Transaction History</Button>
 			</div>
