@@ -370,6 +370,11 @@ public class Portfolio {
                     + "WHERE (portfolio_id = ?);");
             stmt2.setInt(1, portfolio_id);
             stmt2.executeUpdate();
+            PreparedStatement stmt3;
+            stmt3 = conn.prepareStatement("DELETE FROM contains "
+                    + "WHERE (portfolio_id = ?);");
+            stmt3.setInt(1, portfolio_id);
+            stmt3.executeUpdate();
             System.out.println("Deleted portfolio successfully");            
         } catch (SQLException ex) {
             System.out.println("Error deleting portfolio: " + ex.getMessage());
