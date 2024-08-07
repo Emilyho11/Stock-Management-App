@@ -25,9 +25,7 @@ const PortfolioHistory = ({id}) => {
 
 		const getValue = async () => {
 			try {
-				console.log(id)
 				const response = await AxiosClient.get(`portfolio/estimateValue/${id}`);
-				console.log(response)
 				if (response.data) {
 					setValue(response.data);
 				} else {
@@ -52,12 +50,12 @@ const PortfolioHistory = ({id}) => {
 
 	return (
 		<>
-			<h2 className="text-xl border-t-2">Cash and Transaction History</h2>
+			<h1 className="text-xl border-t-2">Cash Account</h1>
 			<div className="flex flex-row gap-12 text-lg text-green-500 justify-items-center align-middle content-evenly">
 				<div><span className="text-black">Balance:</span> ${balance}</div>
 				<div><span className="text-black">Estimated Vlaue:</span> ${value}</div>
-				<Button className="bg-gray-800"> Display Cash History</Button>
-				<Button className="bg-gray-800"> Display Transaction History</Button>
+				{/* <Button className="bg-gray-800"> Display Cash History</Button>
+				<Button className="bg-gray-800"> Display Transaction History</Button> */}
 			</div>
 			{/* <div className="flex flex-col gap-12">
 				{balance.map((bal, index) => (
