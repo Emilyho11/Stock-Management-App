@@ -12,19 +12,23 @@ import CreateStockListModal from "../components/CreateStockListModal";
 import AxiosClient from "../api/AxiosClient";
 import CreateButton from "../components/CreateButton";
 import { useNavigate } from 'react-router-dom';
-
+import { useAuth } from "../components/AuthContext";
 
 const StocksManager = () => {
-	// StockList(stockListId, name, privacy)
 	const [portfolios, setPortfolios] = useState([]);
 	const [stockLists, setStockLists] = useState([]);
-	const username = "mirihuang"; //replace with logged in user
+	const { getUsername, isLoggedIn } = useAuth();
+	const username = getUsername();
 	const navigate = useNavigate();
 
 	useEffect(() => {
+		if (!isLoggedIn()) {
+			navigate("/login");
+			navigate(0);
+		}
 		const getPortfolios = async () => {
 			try {
-				const response = await AxiosClient.get("portfolio/get/" + username);
+				const response = await AxiosClient.get(`portfolio/get/${username}`);
 				if (portfolios) {
 					setPortfolios([]);
 				}
@@ -57,7 +61,7 @@ const StocksManager = () => {
 
 		getPortfolios();
 		getStockLists();
-	}, []);
+	}, [isLoggedIn]);
 
 	const handleOpenPortfolio = (portfolio) => {
 		navigate(`/portfolio/${portfolio.id}`, { state: { portfolio: portfolio } });

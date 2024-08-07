@@ -82,9 +82,9 @@ public class PortfolioController {
     }
 
     @GetMapping("/getBalance/{id}")
-    public String getBalance(@PathVariable int id) {
-        Double bal = Portfolio.getBalance(id, conn);
-        return "'{'content': " + bal + "}'";
+    public double getBalance(@PathVariable int id) {
+        double bal = Portfolio.getBalance(id, conn);
+        return bal;
     }
 
     @GetMapping("/getCashHistory/{id}")
@@ -105,7 +105,7 @@ public class PortfolioController {
     }
 
     @GetMapping("/check/{id}/{symbol}")
-    public int getIfBought(@PathVariable int id, @PathVariable String symbol, @PathVariable int quantity) {
+    public int getIfBought(@PathVariable int id, @PathVariable String symbol) {
         return Portfolio.getTotalStock(id, symbol, conn);
     }
 

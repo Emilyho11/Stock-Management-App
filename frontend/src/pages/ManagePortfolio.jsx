@@ -2,7 +2,7 @@ import React from "react";
 import StockCard from "../components/StockCard";
 import Card from "../components/Card";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faArrowLeft } from "@fortawesome/free-solid-svg-icons";
+import { faArrowLeft, faMoneyBillTransfer, faCreditCard, faChartSimple } from "@fortawesome/free-solid-svg-icons";
 import Button, { ButtonVariants } from "../components/Button";
 import { Link } from "react-router-dom";
 import ReviewBoard from "../components/ReviewBoard";
@@ -11,6 +11,7 @@ import { useLocation } from "react-router-dom";
 import { useEffect } from "react";
 import AxiosClient from "../api/AxiosClient";
 import CreateButton from "../components/CreateButton";
+import CashflowButton from "../components/CashflowButton";
 import { useNavigate } from "react-router-dom";
 import PortfolioHistory from "../components/PortfolioHistory";
 
@@ -64,12 +65,12 @@ const ManagePortfolio = () => {
 	}
 
 	const displayDetails = () => {
-		if (showStocks){
+		if ((showStocks || showStocks == null)  && selectedStock.length > 0){
 			return (
 				<p>temporary info, need to fill with stock stuff</p>
 			)
-		} else if (showStocks == false){
-			
+		} else if (showStocks == false && !Array.isArray(selectedList)){
+			console.log(selectedList)
 			return (
 				<div className="flex flex-row  my-4  gap-4">
 					<div className="flex min-w-[20vw] flex-col gap-2">
@@ -102,7 +103,7 @@ const ManagePortfolio = () => {
 				
 				
 			)
-		} else if (showStocks == null) {
+		} else if (selectedStock.length == 0 || selectedList.length == 0) {
 			return (
 				<div className="flex flex-row  my-4  gap-4">
 						<h1 className="text-sm text-gray-500 text-left">Nothing selected</h1>					
@@ -123,11 +124,14 @@ const ManagePortfolio = () => {
 					<h1 className="text-left text-4xl">{portfolio.name}</h1>
 				</div>
 				<div className="bg-white w-full h-full rounded-lg flex-col">
-					<div className="w-full h-full !items-start flex-row py-8 px-12  rounded-lg">
-						<CreateButton username={username} type={"createlistin"} id={portfolio.id}/>
+					<div className="w-full h-full !items-start flex flex-row py-8 px-12  rounded-lg">
+						<CreateButton className='bg-blue-50'username={username} type={"createlistin"} id={portfolio.id}/>
+						<CashflowButton className="bg-green-500 hover:bg-green-800" type={"cash"} id={portfolio.id}></CashflowButton>
+						<CashflowButton className='bg-red-500 hover:bg-red-800' type={"stock"} id={portfolio.id}></CashflowButton>
+						<Button className='bg-gray-800 hover:bg-black'> <FontAwesomeIcon icon={faChartSimple} /> Statistics </Button>
 					</div>
 					<div className="w-full h-full !items-start py-8 px-12 ">
-						<PortfolioHistory/>
+						<PortfolioHistory id={portfolio.id}/>
 					</div>
 				</div>
 				

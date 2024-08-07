@@ -254,11 +254,15 @@ public class Portfolio {
 
     //creates a buy stock transaction, and also updates the cash history, and the bought table
     public static void tradeStocksUpdate(int portfolioId, String symbol, String type, int quantity, Connection conn){
-        double totalCost = Transaction.buyStockTransaction(portfolioId, symbol, quantity, conn);
+        double stockprice = Stocks.getCurrentStockPrice(symbol);
+        double totalCost = stockprice*quantity;
         int totalStock = getTotalStock(portfolioId, symbol, conn);
         if (type.equals("buy") && totalStock > -1 && totalCost > -1){    
-            CashHistory.performCashTransaction(portfolioId, "withdraw", totalCost, conn);
-            updateStockBought(portfolioId, symbol, totalStock+quantity, conn);
+            double newbal = CashHistory.performCashTransaction(portfolioId, "withdraw", totalCost, conn);
+            if(newbal >= 0){
+                Transaction.buyStockTransaction(portfolioId, symbol, quantity, conn);
+                updateStockBought(portfolioId, symbol, totalStock+quantity, conn);
+            }
         }
         else if (type.equals("sell") && totalStock > -1 && totalCost > -1){
             CashHistory.performCashTransaction(portfolioId, "deposit", totalCost, conn);
@@ -268,9 +272,11 @@ public class Portfolio {
 
     //creates a buy stock transaction, and also updates the cash history, and the bought table
     public static void tradeStocksCreate(int portfolioId, String symbol, String type, int quantity, Connection conn){
-        double totalCost = Transaction.buyStockTransaction(portfolioId, symbol, quantity, conn);
+        double stockprice = Stocks.getCurrentStockPrice(symbol);
+        double totalCost = stockprice*quantity;
         int totalStock = getTotalStock(portfolioId, symbol, conn);
-        if (type.equals("buy") && totalStock == -1 && totalCost > -1){    
+        if (type.equals("buy") && totalStock == -1 && stockprice > -1 && quantity > -1){ 
+            Transaction.buyStockTransaction(portfolioId, symbol, quantity, conn);   
             CashHistory.performCashTransaction(portfolioId, "withdraw", totalCost, conn);
             createStockBought(portfolioId, symbol, quantity, conn);
         }
