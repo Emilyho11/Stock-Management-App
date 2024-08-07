@@ -3,8 +3,9 @@ import { Line } from 'react-chartjs-2';
 import { Chart as ChartJS, CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend } from 'chart.js';
 import { useAuth } from "../components/AuthContext";
 import AxiosClient from "../api/AxiosClient";
+import { set } from "date-fns";
 
-const StocksGraph = ( { symbol, startDate, endDate, viewType, rate, time, setDateBounds } ) => {
+const StocksGraph = ( { symbol, startDate, endDate, viewType, time, setDateBounds } ) => {
 	ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend);
 	
 	// Get stocks data from api
@@ -14,28 +15,17 @@ const StocksGraph = ( { symbol, startDate, endDate, viewType, rate, time, setDat
 
     const fetchStocksData = async () => {
         try {
-            let response;
-            let data;
+            let response = "";
+            let data = "";
 
-            if (symbol !== lastSymbol && symbol !== "" || viewType !== "present") {
+            if ( (symbol !== lastSymbol && symbol !== "") || viewType !== "present") {
                 if (viewType === "future") {
-                    if (startDate && endDate) {
-                        response = await AxiosClient.get(`stocks/future/${symbol}/${rate}/${time}?start_date=${startDate}&end_date=${endDate}`);
-                    } else {
-                        response = await AxiosClient.get(`stocks/future/${symbol}/${rate}/${time}`);
-                    }
+                    response = await AxiosClient.get(`stocks/future/${symbol}/${time}`);
                     if (!(response.data && Array.isArray(response.data))) {
                         console.error("Unexpected data format:", response.data);
                         return;
                     }
                     data = response.data;
-
-                    // // Assuming the future API returns an array of future stock prices
-                    // if (response.data && Array.isArray(response.data)) {
-                    //     setStocks(response.data);
-                    // } else {
-                    //     console.error("Unexpected data format:", response.data);
-                    // }
                 } else {
                     if (startDate && endDate) {
                         response = await AxiosClient.get(`stocks/${symbol}/data?start_date=${startDate}&end_date=${endDate}`);
@@ -81,7 +71,7 @@ const StocksGraph = ( { symbol, startDate, endDate, viewType, rate, time, setDat
         if (lastSymbol !== symbol) {
             setLastSymbol(symbol);
         }
-    }, [symbol, viewType]);
+    }, [symbol, viewType, time]);
 
     useEffect(() => {
         console.log("Date bounds changed:", { startDate, endDate });
@@ -102,7 +92,7 @@ const StocksGraph = ( { symbol, startDate, endDate, viewType, rate, time, setDat
         fetchStocksData();
     }, [endDate, startDate]);
 
-    console.log(stocks);    
+    console.log("HEHEH", stocks);    
 
     const data = {
         labels: viewType === "future" ? stocks.map((_, index) => `Day ${index + 1}`) : stocks.map(stock => stock.timestamp),
@@ -155,10 +145,13 @@ const StocksGraph = ( { symbol, startDate, endDate, viewType, rate, time, setDat
     };
 
     return (
-            <div className="relative h-[80vh] w-[110%] ">
-                {!symbol && <h2>Click on a stock to view the graph</h2>}
+        <div className="relative h-[80vh] w-[110%]">
+            {!symbol ? (
+                <h2>Click on a stock to view the graph</h2>
+            ) : (
                 <Line data={data} options={options} width={"100%"} height={"100%"}/>
-            </div>
+            )}
+        </div>
     );
 };
 

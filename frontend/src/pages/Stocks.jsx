@@ -20,11 +20,8 @@ const Stocks = () => {
     const [endDate, setEndDate] = useState(null);
     const [search, setSearch] = useState("");
     const [viewType, setViewType] = useState("present"); // New state for view type
-    const [rate, setRate] = useState(10.0); // New state for rate
     const [time, setTime] = useState(1); // New state for time
     const [graphData, setGraphData] = useState({}); // State for graph data
-    const decimalRate = rate / 100;
-    const navigate = useNavigate();
 
     // Filtered symbols based on search
     const filteredSymbols = symbolList.filter((symbolItem) =>
@@ -69,7 +66,6 @@ const Stocks = () => {
             startDate: formatDate(startDate),
             endDate: formatDate(endDate),
             viewType,
-            rate: decimalRate,
             time,
         });
     };
@@ -85,13 +81,11 @@ const Stocks = () => {
     // Handle submit for future stocks
     const handleFutureStocksSubmit = () => {
         // Log the current state values
-        console.log("Future stocks submitted:", { rate, time });
         setGraphData({
             symbol,
             startDate: formatDate(startDate),
             endDate: formatDate(endDate),
             viewType,
-            rate: decimalRate,
             time,
         });
     };
@@ -104,7 +98,6 @@ const Stocks = () => {
             startDate: formatDate(startDate),
             endDate: formatDate(endDate),
             viewType,
-            rate: decimalRate,
             time,
         });
     };
@@ -133,7 +126,7 @@ const Stocks = () => {
             <div className="w-3/4 p-4 h-fit">
                 <div className="flex space-x-2 mb-4">
                     <Button onClick={() => setViewType("future")}>View Future Stocks</Button>
-                    <Button onClick={() => setViewType("present")}>View Historical/Present Stocks</Button>
+                    <Button onClick={() => { setViewType("present"); handleDateRangeSubmit(); }}>View Historical/Present Stocks</Button>
                 </div>
                 <div className="mt-1">
 						<div className=" bg-white p-4 rounded-md w-full">
@@ -162,37 +155,25 @@ const Stocks = () => {
 									isClearable
 									placeholderText="Select an end date"
 									className="w-full p-2 border border-gray-300 rounded"
-									/>
+								/>
 							<Button onClick={handleDateRangeSubmit}>Submit</Button></>
-						)
-						: (<>
-										<div className="inline-flex items-center">
-											<label className="min-w-fit block text-gray-700 font-bold mb-2 mr-2">Rate (default 10%)</label>
-											<input
-												type="number"
-												step="1"
-												value={rate}
-												onChange={(e) => setRate(e.target.value)}
-												className="w-full p-2 border border-gray-300 rounded"
-												placeholder="Enter rate"
-											/>
-										</div>
-										<hr/>
-										<div className="inline-flex items-center">
-											<label className="min-w-fit block text-gray-700 font-bold mb-2 mr-2">Time in Years</label>
-											<input
-												type="number"
-												step="1"
-												value={time}
-												onChange={(e) => setTime(e.target.value)}
-												className="w-full p-2 border border-gray-300 rounded"
-												placeholder="Enter time"
-											/>
-										</div>
-										<Button onClick={handleFutureStocksSubmit}>Submit</Button>
-									</>)}
-							</div>
-						</div>
+                        )
+                        : (<>
+                            <div className="inline-flex items-center">
+                                <label className="min-w-fit block text-gray-700 font-bold mb-2 mr-2">Time in Years</label>
+                                <input
+                                    type="number"
+                                    step="1"
+                                    value={time}
+                                    onChange={(e) => setTime(e.target.value)}
+                                    className="w-full p-2 border border-gray-300 rounded"
+                                    placeholder="Enter time"
+                                />
+                            </div>
+                            <Button onClick={handleFutureStocksSubmit}>Submit</Button>
+                            </>)}
+                        </div>
+                    </div>
                 </div>
                 {/* // {viewType === "future" && ( */}
                     
@@ -202,7 +183,6 @@ const Stocks = () => {
                     startDate={graphData.startDate}
                     endDate={graphData.endDate}
                     viewType={graphData.viewType}
-                    rate={graphData.rate}
                     time={graphData.time}
 					setDateBounds={setDateBounds}
                 />
