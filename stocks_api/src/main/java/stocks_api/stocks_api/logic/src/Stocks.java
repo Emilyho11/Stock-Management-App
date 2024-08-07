@@ -1,6 +1,7 @@
 package stocks_api.stocks_api.logic.src;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.sql.Statement;
 
 public class Stocks extends Table<Stocks> {
@@ -205,6 +206,40 @@ public class Stocks extends Table<Stocks> {
             if (rs.next()) {
                 Double correlation = rs.getDouble("correlation");
                 System.out.println("Correlation between " + symbol1 + " and " + symbol2 + ": " + correlation);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    // COV calculation between two symbols
+    public static void calculateCOVBetweenTwoStocks(String symbol1, String symbol2) {
+        try {
+            // Query to calculate the COV for each stock
+            String sqlQuery = "WITH stock1_stats AS (" +
+                              "SELECT AVG(CAST(close AS numeric)) AS mean1, " +
+                              "STDDEV_POP(CAST(close AS numeric)) AS stddev1 " +
+                              "FROM stock_data " +
+                              "WHERE symbol = ?), " +
+                              "stock2_stats AS (" +
+                              "SELECT AVG(CAST(close AS numeric)) AS mean2, " +
+                              "STDDEV_POP(CAST(close AS numeric)) AS stddev2 " +
+                              "FROM stock_data " +
+                              "WHERE symbol = ?) " +
+                              "SELECT (stddev1 / mean1) AS cov1, " +
+                              "(stddev2 / mean2) AS cov2 " +
+                              "FROM stock1_stats, stock2_stats;";
+            
+            PreparedStatement preparedStatement = DBHandler.getInstance().getConnection().prepareStatement(sqlQuery);
+            preparedStatement.setString(1, symbol1);
+            preparedStatement.setString(2, symbol2);
+            ResultSet rs = preparedStatement.executeQuery();
+            
+            if (rs.next()) {
+                Double cov1 = rs.getDouble("cov1");
+                Double cov2 = rs.getDouble("cov2");
+                System.out.println("Coefficient of Variation for " + symbol1 + ": " + cov1);
+                System.out.println("Coefficient of Variation for " + symbol2 + ": " + cov2);
             }
         } catch (Exception e) {
             e.printStackTrace();
