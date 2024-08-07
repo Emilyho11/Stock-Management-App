@@ -52,7 +52,7 @@ public class Friendship {
     }
 
     //checks if a user can send a friend request to target
-    private static String checkRequestable(String username, String target, Connection conn) {
+    private static boolean checkRequestable(String username, String target, Connection conn) {
         try {
             PreparedStatement stmt;
             stmt = conn.prepareStatement("SELECT * FROM friendship WHERE ((username = ? AND target = ?) OR (username = ? AND target = ?));");
@@ -65,47 +65,48 @@ public class Friendship {
                 String friendstatus = rs.getString("status");
                 //if there is an existing friend req, dont let them
                 if (friendstatus.equals("Accepted") || friendstatus.equals("Pending")){
-                    return "No";
+                    return false;
                 }
                 //if there is a rejection already, check if the time has elapsed
                 else if (friendstatus.equals("Rejected")){
                     if (checkRejectionTime(rs)){
-                        return "Update";
+                        return true;
                     }
-                    return "No";
+                    return false;
                 }
-                return "Update";
+                return true;
             }
             System.out.println("Checked for this friendship requestability successfully");
-            return "Yes";
+            return true;
         } catch (SQLException ex) {
             System.out.println("Error finding this friendship's requestability: " + ex.getMessage());
-            return "No";
+            return false;
         }
     }
 
     //adds a pending friendship into the friendship table, with username username and target target
     public static void sendFriendRequest(String username, String target, Connection conn) {
         try {
-            String requestable = checkRequestable(username, target, conn);
-            if (requestable.equals("Yes")){
+            boolean requestable = checkRequestable(username, target, conn);
+            if (requestable){
                 PreparedStatement stmt;
                 stmt = conn.prepareStatement("INSERT INTO friendship (username, target, status, rejected) "
-                        + "VALUES (? , ?, 'Pending', ?);");
+                        + "VALUES (? , ?, 'Pending', ?) ON CONFLICT (username, target) DO UPDATE SET status = EXCLUDED.status;");
                 stmt.setString(1, username);
                 stmt.setString(2, target);
                 stmt.setDate(3, null);
                 stmt.executeUpdate();
                 System.out.println("Friend request sent successfully");
-            } else if (requestable.equals("Update")){
-                PreparedStatement stmt;
-                stmt = conn.prepareStatement("UPDATE friendship "
-                        + "SET status = 'Pending' "
-                        + "WHERE (username = ? AND target = ?);");
-                stmt.setString(1, username);
-                stmt.setString(2, target);
-                stmt.executeUpdate();
             }
+            // } else if (requestable.equals("Update")){
+            //     PreparedStatement stmt;
+            //     stmt = conn.prepareStatement("UPDATE friendship "
+            //             + "SET status = 'Pending' "
+            //             + "WHERE (username = ? AND target = ?);");
+            //     stmt.setString(1, username);
+            //     stmt.setString(2, target);
+            //     stmt.executeUpdate();
+            // }
         } catch (SQLException ex) {
             System.out.println("Error sending friend request: " + ex.getMessage());
         }
