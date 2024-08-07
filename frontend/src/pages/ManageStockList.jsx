@@ -69,7 +69,6 @@ const ManageStockList = () => {
 	return (
 		<div className="md:w-2/3 ml-auto mr-auto flex flex-col gap-2">
 			<Link to={goBack} onClick={(e) => goBack(e)}>
-				{console.log(portfolio)}
 				<Button className="flex items-center gap-4" variant={ButtonVariants.TRANSPARENT}>
 					<FontAwesomeIcon icon={faArrowLeft} />
 					<p className="font-semibold uppercase tracking-wide">Return to Portfolio</p>
@@ -88,8 +87,12 @@ const ManageStockList = () => {
 			<div className="flex flex-row  my-4  gap-4">
 				<div className="flex min-w-[20vw] flex-col gap-2">
 					<div className="flex gap-4 items-center justify-between">
+						
 						<h1 className="text-xl text-left w-fit">Stocks</h1>
-
+						<Button className="flex items-center gap-4" 
+							onClick={() => navigate(`/stocklist/${stocklist.id}/add`)}> 
+							Add Stocks
+						</Button>
 					</div>
 					{
 						stocks.map((stock, index) => (
