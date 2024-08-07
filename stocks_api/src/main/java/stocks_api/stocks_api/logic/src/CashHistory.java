@@ -32,6 +32,7 @@ public class CashHistory{
             ResultSet rs = stmt.executeQuery();
             System.out.println("Retrieved the latest balance of the portfolio");
             if (rs.next()){
+                System.out.println(rs.getDouble(1));
                 return rs.getDouble(1);
             }
             return 0;
@@ -94,7 +95,7 @@ public class CashHistory{
 
     //creates a new cash transaction and changes cash from a portfolio
     //assumes the id given is a valid id (handled by portfolio class)
-    public static void performCashTransaction(int id, String type, double amount, Connection conn){
+    public static double performCashTransaction(int id, String type, double amount, Connection conn){
         double newbal = getBalance(id, conn);
         if ("withdraw".equals(type)){
             newbal = newbal - amount;
@@ -104,13 +105,14 @@ public class CashHistory{
             else {
                 System.out.println("Error invalid amount of cash in account to withdraw.");
             }
-            return;
+            return newbal;
         }
         else if ("deposit".equals(type)){
             newbal = newbal + amount;
             depositCash(id, amount, newbal, conn);
-            return;
+            return newbal;
         }
         System.out.println("Error invalid cash transaction type.");
+        return -1;
     }
 }

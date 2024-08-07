@@ -1,22 +1,19 @@
 import React, { useEffect, useState } from "react";
 import Review from "./Review";
 import AxiosClient from "../api/AxiosClient";
+import Button from "./Button";
 
-const PortfolioHistory = (id) => {
-	const [balance, setBalance] = useState([]);
+const PortfolioHistory = () => {
+	const [balance, setBalance] = useState(0);
+	const [cashData, setCashData] = useState([]);
+	const [transactionData, setTransactionData] = useState();
 
 	useEffect(() => {
 		const getBalance = async () => {
 			try {
-				const response = await AxiosClient.get("reviews/");
-				if (response.data && Array.isArray(response.data)) {
-					// setReviews(response.data);
-					const parsedReviews = response.data.map((item) => ({
-                        username: item.f_username.trim(),
-                        stockListId: item.f_stock_list_id,
-                        content: item.f_content.trim(),
-                    }));
-					setBalance([]);
+				const response = await AxiosClient.get(`portfolio/getBalance/${1}`);
+				if (response.data) {
+					setBalance(response.data);
 				} else {
 					console.error("Unexpected data format:", response.data);
 				}
@@ -38,12 +35,17 @@ const PortfolioHistory = (id) => {
 
 	return (
 		<>
-			<h2 className="text-xl">Cash and Transaction History</h2>
-			<div className="flex flex-col gap-12">
+			<h2 className="text-xl border-t-2">Cash and Transaction History</h2>
+			<div className="flex flex-row gap-12 text-lg text-green-500 justify-items-center align-middle content-evenly">
+				<div><span className="text-black">Balance:</span> ${balance}</div>
+				<Button className="bg-gray-800"> Display Cash History</Button>
+				<Button className="bg-gray-800"> Display Transaction History</Button>
+			</div>
+			{/* <div className="flex flex-col gap-12">
 				{balance.map((bal, index) => (
 					<Review key={index} data={bal} />
 				))}
-			</div>
+			</div> */}
 	  </>
 	);
 };
