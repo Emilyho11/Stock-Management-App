@@ -12,13 +12,15 @@ import { useNavigate } from "react-router-dom";
 import { useEffect } from "react";
 import CreateButton from "../components/CreateButton";
 import AxiosClient from "../api/AxiosClient";
+import { useAuth } from "../components/AuthContext";
 
 const ManageStockList = () => {
+	const { getUsername } = useAuth();
 	const { state } = useLocation();
     const { stocklist, portfolio } = state;
 	const [stocks, setStocks] = React.useState([])
 	const [selectedStock, setSelectedStock] = React.useState([]);
-	const username = "mirihuang" //replace with logged in user
+	const username = getUsername(); //replace with logged in user
 	const navigate = useNavigate();
 
 	useEffect(() => {
