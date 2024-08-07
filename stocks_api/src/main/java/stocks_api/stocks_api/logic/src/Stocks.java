@@ -1,8 +1,6 @@
 package stocks_api.stocks_api.logic.src;
-import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.sql.Statement;
 
 public class Stocks extends Table<Stocks> {
@@ -163,8 +161,52 @@ public class Stocks extends Table<Stocks> {
         }
     }
 
-    // When stock_data is being created in database, we must take the symbol,
-    // and check if it exists already in the stocks table. If it does not exist,
-    // we must create a new entry in the stocks table, along with its COV calculation.
-    // Method to insert a new stock entry into the database
+    // Gets the COV for a specific stock sample based on bought and stock_data tables
+    public static void calculatePortfolioCOV(String username) {
+        try {
+            String sqlQuery = "SELECT stock_data.symbol, " +
+                              "(STDDEV_SAMP(CAST(stock_data.close AS numeric)) / AVG(CAST(stock_data.close AS numeric))) * 100 AS cov " +
+                              "FROM bought " +
+                              "INNER JOIN stock_data ON bought.symbol = stock_data.symbol " +
+                              "WHERE bought.username = ? " +
+                              "GROUP BY stock_data.symbol;";
+            PreparedStatement preparedStatement = DBHandler.getInstance().getConnection().prepareStatement(sqlQuery);
+            preparedStatement.setString(1, username);
+            ResultSet rs = preparedStatement.executeQuery();
+            while (rs.next()) {
+                String symbol = rs.getString("symbol");
+                Double COV = rs.getDouble("cov");
+                System.out.println(symbol + ", " + COV);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    // Calculate correlation function:
+    // Calculating the population covariance between stock_data1.close and stock_data2.close.
+    // Dividing the covariance by the product of the population standard deviations of stock_data1.close and stock_data2.close.
+    // Using an INNER JOIN on the timestamp to align the closing prices of the two stocks.
+    public static void calculateCorrelation(String symbol1, String symbol2) {
+        try {
+            String sqlQuery = "SELECT " +
+                            "(COVAR_POP(CAST(stock_data1.close AS numeric), CAST(stock_data2.close AS numeric)) / " +
+                            "(STDDEV_POP(CAST(stock_data1.close AS numeric)) * STDDEV_POP(CAST(stock_data2.close AS numeric)))) AS correlation " +
+                            "FROM stock_data stock_data1 " +
+                            "INNER JOIN stock_data stock_data2 " +
+                            "ON stock_data1.timestamp = stock_data2.timestamp " +
+                            "WHERE stock_data1.symbol = ? " +
+                            "AND stock_data2.symbol = ?;";
+            PreparedStatement preparedStatement = DBHandler.getInstance().getConnection().prepareStatement(sqlQuery);
+            preparedStatement.setString(1, symbol1);
+            preparedStatement.setString(2, symbol2);
+            ResultSet rs = preparedStatement.executeQuery();
+            if (rs.next()) {
+                Double correlation = rs.getDouble("correlation");
+                System.out.println("Correlation between " + symbol1 + " and " + symbol2 + ": " + correlation);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 }
