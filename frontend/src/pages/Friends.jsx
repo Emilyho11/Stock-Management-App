@@ -82,7 +82,7 @@ const Friends = () => {
 						id="targetname"
 						name="targetname"
 						required
-						className="border-2 p-2 rounded-full mr-auto "
+						className="border-2 p-2 rounded-full mr-auto border-gray-500"
 						value={targetname}
 						onChange={(e) => setTargetname(e.target.value)}></input>
 			</div>
