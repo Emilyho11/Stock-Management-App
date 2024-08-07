@@ -24,11 +24,15 @@ const Account = () => {
 	// Delete account api
 	const deleteAccount = async () => {
 		try {
-			const response = await AxiosClient.delete("account/");
-			if (response.status === 204) {
-				navigate("/logout");
+			const user = {
+				username: getUsername(),
+			};
+			const response = await AxiosClient.delete("account/", { data: user });
+			if (response.data.message === "User deleted successfully") {
+				console.log("Account deleted successfully");
+				navigate("/login");
 			} else {
-				console.error("Unexpected response:", response);
+				console.error("Failed to delete account:", response.data.message);
 			}
 		} catch (error) {
 			console.error("Error deleting account:", error);
@@ -56,7 +60,7 @@ const Account = () => {
 			<Link to={"/logout"}>
 				<Button className="mt-4">Logout</Button>
 			</Link>
-			<Button className="bg-red-700">Delete Account</Button>
+			<Button className="bg-red-700" onClick={deleteAccount}>Delete Account</Button>
 		</div>
 	);
 };
