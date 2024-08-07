@@ -120,39 +120,4 @@ public class StockData extends Table<StockData> {
     public static double calculateBeta(double covariance, double variance) {
         return covariance / variance;
     }
-
-    public static double calculateCovariance(double[] stockReturns, double[] marketReturns) {
-        double covariance = 0;
-        double stockMean = calculateMean(stockReturns);
-        double marketMean = calculateMean(marketReturns);
-        for (int i = 0; i < stockReturns.length; i++) {
-            covariance += (stockReturns[i] - stockMean) * (marketReturns[i] - marketMean);
-        }
-        return covariance / stockReturns.length;
-    }
-
-    public static double calculateVariance(double[] returns) {
-        double variance = 0;
-        double mean = calculateMean(returns);
-        for (double ret : returns) {
-            variance += Math.pow(ret - mean, 2);
-        }
-        return variance / returns.length;
-    }
-
-    public static double calculateMean(double[] returns) {
-        double sum = 0;
-        for (double ret : returns) {
-            sum += ret;
-        }
-        return sum / returns.length;
-    }
-
-    public static double calculateVolatility(double[] returns) {
-        return Math.sqrt(calculateVariance(returns));
-    }
-
-    public static double calculateReturn(double presentValue, double futureValue) {
-        return (futureValue - presentValue) / presentValue;
-    }
 }

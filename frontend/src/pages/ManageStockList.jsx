@@ -16,7 +16,7 @@ import { useAuth } from "../components/AuthContext";
 
 const ManageStockList = () => {
 	const { state } = useLocation();
-  	const { stocklist, portfolio } = state;
+  const { stocklist, portfolio } = state;
 	const [stocks, setStocks] = React.useState([])
 	const [selectedStock, setSelectedStock] = React.useState([]);
 	const { getUsername, isLoggedIn } = useAuth();
