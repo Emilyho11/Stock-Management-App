@@ -8,7 +8,6 @@ const CreateListPopup = ({ toggle, username, id}) => {
   const [privacy, setPrivacy] = useState("");
   const [isButtonDisabled, setIsButtonDisabled] = useState(true);
   const formRef = useRef(null);
-  //const username = "mirihuang"
 
   useEffect(() => {
     // Check form validity on initial render

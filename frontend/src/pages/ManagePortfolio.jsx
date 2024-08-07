@@ -14,6 +14,7 @@ import CreateButton from "../components/CreateButton";
 import CashflowButton from "../components/CashflowButton";
 import { useNavigate } from "react-router-dom";
 import PortfolioHistory from "../components/PortfolioHistory";
+import { useAuth } from "../components/AuthContext";
 
 const ManagePortfolio = () => {
 	const [showStocks, setShowStocks] = React.useState(null);
@@ -23,7 +24,8 @@ const ManagePortfolio = () => {
 	const [stocklists, setStockLists] = React.useState([])
 	const [selectedStock, setSelectedStock] = React.useState([]);
 	const [selectedList, setSelectedList] = React.useState([]);
-	const username = "mirihuang" //replace with logged in user
+	const { getUsername, isLoggedIn } = useAuth();
+	const username = getUsername();
 	const navigate = useNavigate();
 
 	useEffect(() => {
@@ -55,7 +57,7 @@ const ManagePortfolio = () => {
 	
 		getOwnedStocks();
 		getPortfolioStockLists();
-	  }, []);
+	  }, [isLoggedIn]);
 
 	const handleStockListDetails = () => {
 		//directs them to the stock list page
