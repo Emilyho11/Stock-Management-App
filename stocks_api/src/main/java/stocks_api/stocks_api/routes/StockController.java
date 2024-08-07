@@ -329,7 +329,7 @@ public class StockController {
     public ArrayList<Double> getFutureValue(@PathVariable String symbol,
                                             @PathVariable double time) {
         ArrayList<Double> futureValues = new ArrayList<>();
-        StringBuilder sqlQuery = new StringBuilder("SELECT close, low, high, open FROM stock_data WHERE symbol = ?");
+        StringBuilder sqlQuery = new StringBuilder("SELECT close FROM stock_data WHERE symbol = ?");
         // StringBuilder sqlQuery = new StringBuilder("SELECT close, low, high, open FROM stock_data WHERE symbol = ? LIMIT ?");
         String sqlQueryCOV = "SELECT cov FROM stocks WHERE symbol = ?";
 
@@ -347,7 +347,8 @@ public class StockController {
                     double cov = rsCOV.getDouble("cov");
 
                     while (rs.next()) {
-                        double averagePrice = (rs.getDouble("low") + rs.getDouble("high") + rs.getDouble("open") + rs.getDouble("close")) / 4.0;
+                        double averagePrice = rs.getDouble("close");
+                        // double averagePrice = (rs.getDouble("low") + rs.getDouble("high") + rs.getDouble("open") + rs.getDouble("close")) / 4.0;
                         // Calculate future value using the growth rate (cov) and time
                         double futureValue = averagePrice * Math.pow(1 + cov, time);
                         futureValues.add(futureValue);
