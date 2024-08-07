@@ -91,7 +91,7 @@ const ManageStockList = () => {
 	
 	const goBack = (e) => {
 		e.preventDefault();
-		return (portfolio ? (navigate(`/portfolio/${portfolio.id}`, { state: { portfolio: portfolio } })) : (navigate("/stock-manager")));
+		return (portfolio ? (navigate(`/portfolio/${portfolio.id}`, { state: { portfolio: portfolio } })) : (navigate("/")));
 	}
 
 	return (

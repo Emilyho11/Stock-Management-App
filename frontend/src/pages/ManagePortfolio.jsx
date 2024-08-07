@@ -199,7 +199,7 @@ const ManagePortfolio = () => {
 
 	return (
 		<div className="md:w-2/3 ml-auto mr-auto flex flex-col gap-2">
-			<Link to="/stock-manager">
+			<Link to="/">
 				<Button className="flex items-center gap-4" variant={ButtonVariants.TRANSPARENT}>
 					<FontAwesomeIcon icon={faArrowLeft} />
 					<p className="font-semibold uppercase tracking-wide">Home</p>
