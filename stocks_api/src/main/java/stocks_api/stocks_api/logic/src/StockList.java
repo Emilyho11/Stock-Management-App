@@ -264,9 +264,11 @@ public class StockList extends Table {
     public static boolean isPrivate(int stocklist_id, Connection conn) {
         try {
             PreparedStatement stmt;
+            System.out.println("Checking if id " + stocklist_id + " is private");
             stmt = conn.prepareStatement("SELECT privacy FROM stock_list"
                     + "WHERE (stocklist_id = ?);");
             stmt.setInt(1, stocklist_id);
+
             ResultSet rs = stmt.executeQuery();
             if (rs.next()) {
                 // return privacy value, which is a boolean
