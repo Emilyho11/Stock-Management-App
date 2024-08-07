@@ -1,6 +1,8 @@
 package stocks_api.stocks_api.logic.src;
+import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.sql.Statement;
 
 public class Stocks extends Table<Stocks> {
@@ -83,25 +85,86 @@ public class Stocks extends Table<Stocks> {
         }
     }
 
-    // public void updateCOV(Statement stmt, Double COV) {
-    //     this.COV = COV;
-    //     String sqlUpdate = "UPDATE stocks SET cov = '" + COV + "' WHERE symbol = '" + f_symbol + "';";
-    //     try {
-    //         stmt.executeUpdate(sqlUpdate);
-    //         System.out.println("Stocks updated successfully");
-    //     } catch (Exception e) {
-    //         System.out.println("Error updating Stocks: " + e.getMessage());
-    //     }
-    // }
+    // Check if symbol exists in the stocks table
+    public static boolean symbolExists(String symbol) {
+        try {
+            String sqlQuery = "SELECT symbol FROM stocks WHERE symbol = ?";
+            PreparedStatement preparedStatement = DBHandler.getInstance().getConnection().prepareStatement(sqlQuery);
+            preparedStatement.setString(1, symbol);
+            ResultSet rs = preparedStatement.executeQuery();
+            return rs.next();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
 
-    // public void updateSymbol(Statement stmt, String f_symbol) {
-    //     String sqlUpdate = "UPDATE stocks SET f_symbol = '" + symbol + "' WHERE symbol = '" + this.symbol + "';";
-    //     try {
-    //         this.symbol = symbol;
-    //         stmt.executeUpdate(sqlUpdate);
-    //         System.out.println("Stocks updated successfully");
-    //     } catch (Exception e) {
-    //         System.out.println("Error updating Stocks: " + e.getMessage());
-    //     }
-    // }
+    // Calculates COV for all stocks from stock_data
+    // INSERT INTO stocks (symbol, cov)
+    // SELECT
+    //     symbol,
+    //     STDDEV(CAST(close AS numeric)) / AVG(CAST(close AS numeric)) AS cov
+    // FROM
+    //     stock_data
+    // GROUP BY
+    //     symbol;
+    public static void insertStock(String symbol) {
+        // Check if symbol exists in the stocks table
+        if (symbolExists(symbol)) {
+            return;
+        }
+        try {
+            String sqlQuery = "INSERT INTO stocks (symbol, cov) SELECT symbol, STDDEV(CAST(close AS numeric)) / AVG(CAST(close AS numeric)) AS cov FROM stock_data WHERE symbol = ?;";
+            PreparedStatement preparedStatement = DBHandler.getInstance().getConnection().prepareStatement(sqlQuery);
+            preparedStatement.setString(1, symbol);
+            preparedStatement.executeUpdate();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    // Update COV for a specific stock
+    public static void updateCOV(String symbol) {
+        if (!symbolExists(symbol)) {
+            return;
+        }
+        try {
+            String sqlQuery = "UPDATE stocks SET cov = STDDEV(CAST(close AS numeric)) / AVG(CAST(close AS numeric)) FROM stock_data WHERE symbol = ?;";
+            PreparedStatement preparedStatement = DBHandler.getInstance().getConnection().prepareStatement(sqlQuery);
+            preparedStatement.setString(1, symbol);
+            preparedStatement.executeUpdate();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    // Function to insert and udpate stock into stocks table
+    // INSERT INTO stocks (symbol, cov)
+    // VALUES (
+    //     ?,
+    //     (SELECT STDDEV_POP(CAST(close AS numeric)) / AVG(CAST(close AS numeric)) * 100
+    //      FROM stock_data
+    //      WHERE symbol = ?)
+    // )
+    // ON CONFLICT (symbol)
+    // DO UPDATE SET cov = EXCLUDED.cov;
+    public static void insertAndUpdateStock(String symbol) {
+        try {
+            String sqlQuery = "INSERT INTO stocks (symbol, cov) " +
+                              "VALUES (?, (SELECT STDDEV_POP(CAST(close AS numeric)) / AVG(CAST(close AS numeric)) * 100 " +
+                              "FROM stock_data WHERE symbol = ?)) " +
+                              "ON CONFLICT (symbol) DO UPDATE SET cov = EXCLUDED.cov;";
+            PreparedStatement preparedStatement = DBHandler.getInstance().getConnection().prepareStatement(sqlQuery);
+            preparedStatement.setString(1, symbol);
+            preparedStatement.setString(2, symbol);
+            preparedStatement.executeUpdate();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    // When stock_data is being created in database, we must take the symbol,
+    // and check if it exists already in the stocks table. If it does not exist,
+    // we must create a new entry in the stocks table, along with its COV calculation.
+    // Method to insert a new stock entry into the database
 }

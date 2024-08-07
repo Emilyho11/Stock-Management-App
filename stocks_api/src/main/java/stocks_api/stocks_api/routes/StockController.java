@@ -78,16 +78,12 @@ public class StockController {
         }
     }
 
+    // This function inserts a stock into stocks table, but updates cov if the symbol already exists
     @PostMapping("/")
     @ResponseBody
-    public BasicResponse createStock(@RequestBody Stocks user) {
+    public BasicResponse insertStock(@RequestBody Stocks stock) {
         try {
-            // INSERT INTO stocks (symbol, cov) VALUES ('AAPL', 0.5);
-            String sqlInsert = "INSERT INTO stocks (symbol, cov) VALUES (?, ?)";
-            PreparedStatement preparedStatement = DBHandler.getInstance().getConnection().prepareStatement(sqlInsert);
-            preparedStatement.setString(1, user.getSymbol());
-            preparedStatement.setDouble(2, user.getCOV());
-            preparedStatement.executeUpdate();
+            Stocks.insertAndUpdateStock(stock.getSymbol());
             return BasicResponse.ok("Stock created successfully");
         } catch (Exception e) {
             e.printStackTrace();
@@ -96,28 +92,13 @@ public class StockController {
         }
     }
 
-    @PatchMapping("/{symbol}")
+    // Update COV of stocks table based on symbol
+    @PatchMapping("/")
     @ResponseBody
-    public BasicResponse updateStock(@PathVariable String symbol, @RequestBody Stocks stock) {
+    public BasicResponse updateStock(@RequestBody Stocks stock) {
         try {
-            StringBuilder fields = new StringBuilder("");
-
-            if (stock.getCOV() != null) {
-                fields.append("cov = " + stock.getCOV());
-            }
-
-            if (fields.length() == 0) {
-                return BasicResponse.ok("No fields to update");
-            }
-
-            String sqlUpdate = "UPDATE stocks SET " + fields.toString() + " WHERE symbol = ?";
-            
-            PreparedStatement preparedStatement = DBHandler.getInstance().getConnection().prepareStatement(sqlUpdate);
-            preparedStatement.setString(1, symbol);
-
-            preparedStatement.executeUpdate();
-            
-            return BasicResponse.ok("Updated Successfully!");
+            Stocks.updateCOV(stock.getSymbol());
+            return BasicResponse.ok("Updated COV Successfully!");
         } catch (Exception e) {
             e.printStackTrace();
             // output error message
@@ -141,15 +122,20 @@ public class StockController {
         }
     }
 
-    // Calculates COV for all stocks from stock_data
-    // INSERT INTO stocks (symbol, cov)
-    // SELECT
-    //     symbol,
-    //     STDDEV(CAST(close AS numeric)) / AVG(CAST(close AS numeric)) AS cov
-    // FROM
-    //     stock_data
-    // GROUP BY
-    //     symbol;
+    
+    // Api that checks if a stock exists
+    @GetMapping("/exists/{symbol}")
+    public Boolean stockExists(@PathVariable String symbol) {
+        try {
+            if (Stocks.symbolExists(symbol)) {
+                return true;
+            }
+            return false;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
 
     // ----- STOCK DATA -----
 
@@ -206,27 +192,28 @@ public class StockController {
         }
     }
 
-    // Insert stock data
-    @PostMapping("/{symbol}/data")
+    // Insert stock data into stock_data table
+    @PostMapping("/data")
     @ResponseBody
-    public BasicResponse createStockData(@PathVariable String symbol, @RequestBody StockData stock) {
+    public BasicResponse createStockData(@RequestBody StockData stock) {
         try {
             // Ensure all fields are present
-            if (stock.f_symbol == null || stock.f_timestamp == null) {
+            if (stock.f_symbol == null) {
                 return BasicResponse.ok("Missing fields");
             }
 
-            String sqlInsert = "INSERT INTO stock_data (symbol, timestamp, open, close, high, low, volume) VALUES (?, ?, ?, ?, ?, ?, ?)";
+            // Insert data into stock_data table
+            String sqlInsert = "INSERT INTO stock_data (symbol, timestamp, open, close, high, low, volume) VALUES (?, CURRENT_TIMESTAMP, ?, ?, ?, ?, ?)";
             PreparedStatement preparedStatement = DBHandler.getInstance().getConnection().prepareStatement(sqlInsert);
-            preparedStatement.setString(1, symbol);
-            preparedStatement.setString(2, stock.f_timestamp);
-            preparedStatement.setDouble(3, stock.f_open);
-            preparedStatement.setDouble(4, stock.f_close);
-            preparedStatement.setDouble(5, stock.f_high);
-            preparedStatement.setDouble(6, stock.f_low);
-            preparedStatement.setDouble(7, stock.f_volume);
+            preparedStatement.setString(1, stock.f_symbol);
+            preparedStatement.setDouble(2, stock.f_open);
+            preparedStatement.setDouble(3, stock.f_close);
+            preparedStatement.setDouble(4, stock.f_high);
+            preparedStatement.setDouble(5, stock.f_low);
+            preparedStatement.setDouble(6, stock.f_volume);
             preparedStatement.executeUpdate();
             return BasicResponse.ok("Stock data created successfully");
+
         } catch (Exception e) {
             e.printStackTrace();
             // output error message
