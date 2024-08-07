@@ -25,7 +25,9 @@ const PortfolioHistory = ({id}) => {
 
 		const getValue = async () => {
 			try {
+				console.log(id)
 				const response = await AxiosClient.get(`portfolio/estimateValue/${id}`);
+				console.log(response)
 				if (response.data) {
 					setValue(response.data);
 				} else {

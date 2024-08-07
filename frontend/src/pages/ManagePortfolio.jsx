@@ -105,17 +105,16 @@ const ManagePortfolio = () => {
 						
 					</div>
 					
-					<div className="flex min-w-[20vw] flex-col gap-2">
+					<div className="flex w-full flex-col gap-2 overflow-y-scroll h-full w-full">
 					<h1 className="text-xl text-left">Stocks</h1>
 					{listStocks.map((liststock, index) => (
-						<button key={liststock[0]} className="px-4 py-4 rounded-lg flex gap-4 items-center hover:scale-105 hover:shadow-xl transition-all bg-gray-800 text-white border-e-2 border-gray-300">
+						<button key={liststock[0]} className="min-w-[20vw] px-4 py-4 rounded-lg flex gap-4 items-center hover:shadow-xl transition-all bg-gray-800 text-white border-e-2 border-gray-300">
 								<div className="text-left">
 									<h5 className="card-title">{liststock[0]}</h5>
 									<p className="card-text">Quantity: {liststock[1]}</p>
 								</div>
 						</button>
 					))}
-					
 					</div>
 					
 				</div>
@@ -157,7 +156,7 @@ const ManagePortfolio = () => {
 			</Card>
 			{/* <hr className="mb-2" /> */}
 			<div className="flex flex-row  my-4  gap-4">
-				<div className="flex min-w-[20vw] flex-col gap-2">
+				<div className="flex min-w-[20vw] flex-col gap-2 overflow-y-scroll">
 					<div className="flex gap-4 items-center justify-between">
 						<h1 className="text-xl text-left w-fit">Stocks and Lists</h1>
 
@@ -204,8 +203,8 @@ const ManagePortfolio = () => {
 						stocks.map((stock, index) => (
 							<button key={stock.symbol} onMouseDown={() => setSelectedStock(stock)}>
 								<Card
-									className={ (!(selectedStock[0] == stock[0]) ? ("flex gap-4 items-center hover:scale-105 hover:shadow-xl transition-all bg-white") : (
-										"flex gap-4 items-center hover:scale-105 hover:shadow-xl transition-all bg-blue-500 text-white"
+									className={ (!(selectedStock[0] == stock[0]) ? ("flex gap-4 items-center scale-95 hover:shadow-xl transition-all bg-white") : (
+										"flex gap-4 items-center hover:scale-100 hover:shadow-xl transition-all bg-blue-500 text-white"
 									))}
 								>
 									<div className="text-left">
@@ -219,8 +218,8 @@ const ManagePortfolio = () => {
 						stocklists.map((list, index) => (
 							<button key={list.id} onMouseDown={() => setSelectedList(list)}>
 								<Card
-									className={ ((selectedList.id != list.id) ? ("flex gap-4 items-center hover:scale-105 hover:shadow-xl transition-all bg-white") : (
-										"flex gap-4 items-center hover:scale-105 hover:shadow-xl transition-all bg-blue-500 text-white"
+									className={ ((selectedList.id != list.id) ? ("flex gap-4 items-center scale-95 hover:scale-100 hover:shadow-xl transition-all bg-white") : (
+										"flex gap-4 items-center hover:scale-100 hover:shadow-xl transition-all bg-blue-500 text-white"
 									))}
 								>									<div className="text-left">
 										<h5 className="card-title">{list.name}</h5>

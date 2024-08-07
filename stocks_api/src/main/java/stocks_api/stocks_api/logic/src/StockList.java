@@ -65,11 +65,11 @@ public class StockList extends Table {
     private static int getNewId(Connection conn){
         try {
             PreparedStatement stmt;
-            stmt = conn.prepareStatement("SELECT MAX(stocklist_id) FROM created;");
+            stmt = conn.prepareStatement("SELECT MAX(stocklist_id) FROM stock_list;");
             ResultSet rs = stmt.executeQuery();
             System.out.println("Generated a new stock list id successfully");
             if (rs.next()){
-                return rs.getInt(1) + 1;
+                return (rs.getInt(1) + 1);
             }
             return 0;
         } catch (SQLException ex) {

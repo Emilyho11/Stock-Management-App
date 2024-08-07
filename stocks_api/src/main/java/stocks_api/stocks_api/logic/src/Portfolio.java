@@ -200,8 +200,9 @@ public class Portfolio {
                                                     +         "GROUP BY symbol"
                                                     +")"
                                                     +")s "
-                                                    +"ON b.symbol = s.symbol;");
-
+                                                    +"ON b.symbol = s.symbol"
+                                                    +"WHERE b.portfolio_id = ?;");
+            stmt.setInt(1, id);
             ResultSet rs = stmt.executeQuery();
             System.out.println("Retrieved this user's portfolio stocks estimate");
             if (rs.next()){
@@ -217,7 +218,13 @@ public class Portfolio {
 
     // Gets the all the stocks in a portfolio
     public static double estimatePortfolioValue(int id, Connection conn) {
-        return getBalance(id, conn) + estimateStockValue(id, conn);
+        double bal = getBalance(id, conn);
+        double val = estimateStockValue(id, conn);
+        if (bal + val < 0){
+            return 0;
+        } else {
+            return bal + val;
+        }
     }
 
     //creates a new bought tuple

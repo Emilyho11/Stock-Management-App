@@ -15,11 +15,11 @@ import AxiosClient from "../api/AxiosClient";
 import { useAuth } from "../components/AuthContext";
 
 const ManageStockList = () => {
-	const { getUsername, isLoggedIn } = useAuth();
 	const { state } = useLocation();
   const { stocklist, portfolio } = state;
 	const [stocks, setStocks] = React.useState([])
 	const [selectedStock, setSelectedStock] = React.useState([]);
+	const { getUsername, isLoggedIn } = useAuth();
 	const username = getUsername();
 	const navigate = useNavigate();
 
@@ -63,13 +63,15 @@ const ManageStockList = () => {
 	
 	const goBack = (e) => {
 		e.preventDefault();
-		return (portfolio ? (navigate(`/portfolio/${portfolio.id}`, { state: { portfolio: portfolio } })) : (navigate("/stock-manager")))
+		return (portfolio ? (navigate(`/portfolio/${portfolio.id}`, { state: { portfolio: portfolio } })) : (navigate("/stock-manager")));
 	}
+
 	return (
 		<div className="md:w-2/3 ml-auto mr-auto flex flex-col gap-2">
 			<Link to={goBack} onClick={(e) => goBack(e)}>
 				<Button className="flex items-center gap-4" variant={ButtonVariants.TRANSPARENT}>
 					<FontAwesomeIcon icon={faArrowLeft} />
+					<p className="font-semibold uppercase tracking-wide">Return</p>
 					<p className="font-semibold uppercase tracking-wide">Return</p>
 				</Button>
 			</Link>
@@ -78,8 +80,13 @@ const ManageStockList = () => {
 					<h1 className="text-left text-4xl">{stocklist.name}</h1>
 					<PrivacyIcon privacy={stocklist.privacy} />
 					
+					
 				</div>
 				<Card className="w-full h-full !items-start flex-col py-8 px-12 bg-white">
+					<div className="flex flex-row">
+						<CreateButton className=" bg-green-500 hover:bg-green-800" username={username} type={"add"} id={stocklist.id}/>
+						<CreateButton className=" bg-red-500 hover:bg-red-800" username={username} type={"remove"} id={stocklist.id}/>
+					</div>
 					<div className="flex flex-row">
 						<CreateButton className=" bg-green-500 hover:bg-green-800" username={username} type={"add"} id={stocklist.id}/>
 						<CreateButton className=" bg-red-500 hover:bg-red-800" username={username} type={"remove"} id={stocklist.id}/>

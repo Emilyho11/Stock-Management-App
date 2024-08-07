@@ -12,16 +12,15 @@ import java.util.Date;
 public class Friendship {
 
     private String username;
-    private String targetFriendUsername;
+    private String target;
     private String status;
-    private Date timeRejected;
+    private Date rejected;
 
-    public Friendship() {
-        //String username, String target, String status, Date rejection
-        // this.username = username;
-        // this.targetFriendUsername = target;
-        // this.status = status;
-        // this.timeRejected = rejection;
+    public Friendship(String username, String target, String status, Date rejected) {
+        this.username = username;
+        this.target = target;
+        this.status = status;
+        this.rejected = rejected;
     }
 
     public String getUsername() {
@@ -29,7 +28,7 @@ public class Friendship {
     }
 
     public String getTargetFriend() {
-        return this.targetFriendUsername;
+        return this.target;
     }
 
     public String getStatus() {
@@ -59,6 +58,8 @@ public class Friendship {
             stmt = conn.prepareStatement("SELECT * FROM friendship WHERE ((username = ? AND target = ?) OR (username = ? AND target = ?));");
             stmt.setString(1, username);
             stmt.setString(2, target);
+            stmt.setString(3, target);
+            stmt.setString(4, username);
             ResultSet rs = stmt.executeQuery();
             if (rs.next()){
                 String friendstatus = rs.getString("status");
@@ -167,7 +168,7 @@ public class Friendship {
         try {
             //get friendships from database
             PreparedStatement stmt;
-            stmt = conn.prepareStatement("SELECT target FROM friendship "
+            stmt = conn.prepareStatement("SELECT username FROM friendship "
                     + "WHERE (target = ? AND status = 'Pending');");
             stmt.setString(1, myuser);
             ResultSet rs = stmt.executeQuery();
@@ -185,9 +186,8 @@ public class Friendship {
             //get friendships from database
             PreparedStatement stmt;
             stmt = conn.prepareStatement("(SELECT target FROM friendship "
-                    + "WHERE (username = ? AND status = 'Accepted')) UNION ALL (SELECT target FROM friendship WHERE (target = ? AND status = 'Accepted'));");
+                    + "WHERE (username = ? AND status = 'Accepted'));");
             stmt.setString(1, myuser);
-            stmt.setString(2, myuser);
             ResultSet rs = stmt.executeQuery();
             System.out.println("Retrieved friends successfully");
             return rs;
