@@ -162,16 +162,17 @@ public class Stocks extends Table<Stocks> {
     }
 
     // Gets the COV for a specific stock sample based on bought and stock_data tables
-    public static void calculatePortfolioCOV(String username) {
+    public static void calculatePortfolioCOV(int portfolioId) {
         try {
-            String sqlQuery = "SELECT stock_data.symbol, " +
+            String sqlQuery = "SELECT " +
+                              "stock_data.symbol, " +
                               "(STDDEV_SAMP(CAST(stock_data.close AS numeric)) / AVG(CAST(stock_data.close AS numeric))) * 100 AS cov " +
                               "FROM bought " +
                               "INNER JOIN stock_data ON bought.symbol = stock_data.symbol " +
-                              "WHERE bought.username = ? " +
+                              "WHERE portfolio_id = ? " +
                               "GROUP BY stock_data.symbol;";
             PreparedStatement preparedStatement = DBHandler.getInstance().getConnection().prepareStatement(sqlQuery);
-            preparedStatement.setString(1, username);
+            preparedStatement.setInt(1, portfolioId);
             ResultSet rs = preparedStatement.executeQuery();
             while (rs.next()) {
                 String symbol = rs.getString("symbol");
