@@ -249,8 +249,7 @@ const ManagePortfolio = () => {
 										</tr>
 									))}
 								</tbody>
-							</table>*/
-							<Button onClick={() => { setShowMatrix(false); setMatrixData([]); }}>
+                <Button onClick={() => { setShowMatrix(false); setMatrixData([]); }}>
 								Close
 							</Button>}
 						</div>

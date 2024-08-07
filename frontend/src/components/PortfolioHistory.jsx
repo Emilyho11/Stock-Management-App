@@ -53,7 +53,7 @@ const PortfolioHistory = ({id}) => {
 			<h1 className="text-xl border-t-2">Cash Account</h1>
 			<div className="flex flex-row gap-12 text-lg text-green-500 justify-items-center align-middle content-evenly">
 				<div><span className="text-black">Balance:</span> ${balance}</div>
-				<div><span className="text-black">Estimated Vlaue:</span> ${value}</div>
+				<div><span className="text-black">Estimated Value:</span> ${value}</div>
 				{/* <Button className="bg-gray-800"> Display Cash History</Button>
 				<Button className="bg-gray-800"> Display Transaction History</Button> */}
 			</div>
