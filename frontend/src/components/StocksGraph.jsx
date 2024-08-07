@@ -92,9 +92,7 @@ const StocksGraph = ( { symbol, startDate, endDate, viewType, time, setDateBound
         setStocks(newStocksArray);
     
         fetchStocksData();
-    }, [endDate, startDate]);
-
-    console.log("HEHEH", stocks);    
+    }, [endDate, startDate]); 
 
     const data = {
         labels: viewType === "future" ? stocks.map((_, index) => `Day ${index + 1}`) : stocks.map(stock => stock.timestamp),
@@ -137,7 +135,7 @@ const StocksGraph = ( { symbol, startDate, endDate, viewType, time, setDateBound
 			y: {
 				title: {
 					display: true,
-					text: 'Price / Volume',
+					text: 'Price',
                     font: {
                         size: 18
                     }

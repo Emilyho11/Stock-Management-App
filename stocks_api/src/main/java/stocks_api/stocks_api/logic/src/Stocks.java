@@ -101,14 +101,6 @@ public class Stocks extends Table<Stocks> {
     }
 
     // Calculates COV for all stocks from stock_data
-    // INSERT INTO stocks (symbol, cov)
-    // SELECT
-    //     symbol,
-    //     STDDEV(CAST(close AS numeric)) / AVG(CAST(close AS numeric)) AS cov
-    // FROM
-    //     stock_data
-    // GROUP BY
-    //     symbol;
     public static void insertStock(String symbol) {
         // Check if symbol exists in the stocks table
         if (symbolExists(symbol)) {
@@ -140,19 +132,12 @@ public class Stocks extends Table<Stocks> {
     }
 
     // Function to insert and udpate stock into stocks table
-    // INSERT INTO stocks (symbol, cov)
-    // VALUES (
-    //     ?,
-    //     (SELECT STDDEV_POP(CAST(close AS numeric)) / AVG(CAST(close AS numeric)) * 100
-    //      FROM stock_data
-    //      WHERE symbol = ?)
-    // )
-    // ON CONFLICT (symbol)
-    // DO UPDATE SET cov = EXCLUDED.cov;
+    // Calculates the COV based on stock_data table and either updates
+    // the COV if the stock already exists in the table or inserts a new stock
     public static void insertAndUpdateStock(String symbol) {
         try {
             String sqlQuery = "INSERT INTO stocks (symbol, cov) " +
-                              "VALUES (?, (SELECT STDDEV_POP(CAST(close AS numeric)) / AVG(CAST(close AS numeric)) * 100 " +
+                              "VALUES (?, (SELECT STDDEV_POP(CAST(close AS numeric)) / AVG(CAST(close AS numeric))" +
                               "FROM stock_data WHERE symbol = ?)) " +
                               "ON CONFLICT (symbol) DO UPDATE SET cov = EXCLUDED.cov;";
             PreparedStatement preparedStatement = DBHandler.getInstance().getConnection().prepareStatement(sqlQuery);
@@ -170,7 +155,7 @@ public class Stocks extends Table<Stocks> {
         try {
             String sqlQuery = "SELECT " +
                               "stock_data.symbol, " +
-                              "(STDDEV_SAMP(CAST(stock_data.close AS numeric)) / AVG(CAST(stock_data.close AS numeric))) * 100 AS cov " +
+                              "(STDDEV_SAMP(CAST(stock_data.close AS numeric)) / AVG(CAST(stock_data.close AS numeric))) AS cov " +
                               "FROM bought " +
                               "INNER JOIN stock_data ON bought.symbol = stock_data.symbol " +
                               "WHERE portfolio_id = ? " +

@@ -15,9 +15,11 @@ const Review = (props) => {
 	}
 
 	const deleteReview = async () => {
-		console.log("Deleting review", data);
+		if (!myReview) {
+			console.error("User not logged in");
+		}
 		try {
-			const response = await AxiosClient.delete("reviews/"+ getUsername() + "/" + stockListId);
+			const response = await AxiosClient.delete("reviews/"+ data.username + "/" + stockListId);
 			console.log(response.data);
 			if (response.data.message === "Review deleted successfully") {
 				navigate(0);
@@ -33,8 +35,8 @@ const Review = (props) => {
 	return (
 		<div className="grid grid-cols-3 grid-rows-1 gap-12 w-full text-left">
 			<h4 className="text-base font-semibold">
-				{myReview && <FontAwesomeIcon icon={faX} className="mr-2 text-red-700 scale-75 hover:scale-100 cursor-pointer"
-				onClick={deleteReview} />}
+				<FontAwesomeIcon icon={faX} className="mr-2 text-red-700 scale-75 hover:scale-100 cursor-pointer"
+				onClick={deleteReview} />
 				{data.username}</h4>
 			<p className="col-span-2">
 				{content}{" "}

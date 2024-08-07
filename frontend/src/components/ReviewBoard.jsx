@@ -70,6 +70,9 @@ const ReviewBoard = (props) => {
 	};
 
 	const ReviewBox = () => {
+		if (isOwner) {
+			return <p className="text-sm text-gray-300">You cannot review your own stock list.</p>;
+		}
 		if (alreadyReviewed) {
 			return <p className="text-sm text-gray-300">You have already reviewed this stock list.</p>;
 		} else {
@@ -114,8 +117,6 @@ const ReviewBoard = (props) => {
 	}
 
 	const displayReviews = () => {
-		console.log(privacy)
-		console.log(isOwner)
 		if (privacy == "public" || isOwner){
 			return (reviews.sort( (a, b) => a.myReview ? -1 : 1 || a.id - b.id)
 				.map((review, index) => (
