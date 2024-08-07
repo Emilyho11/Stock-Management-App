@@ -70,6 +70,9 @@ const ReviewBoard = (props) => {
 	};
 
 	const ReviewBox = () => {
+		if (isOwner) {
+			return <p className="text-sm text-gray-300">You cannot review your own stock list.</p>;
+		}
 		if (alreadyReviewed) {
 			return <p className="text-sm text-gray-300">You have already reviewed this stock list.</p>;
 		} else {

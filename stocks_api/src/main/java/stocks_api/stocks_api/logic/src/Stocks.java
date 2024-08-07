@@ -152,7 +152,7 @@ public class Stocks extends Table<Stocks> {
     public static void insertAndUpdateStock(String symbol) {
         try {
             String sqlQuery = "INSERT INTO stocks (symbol, cov) " +
-                              "VALUES (?, (SELECT STDDEV_POP(CAST(close AS numeric)) / AVG(CAST(close AS numeric)) * 100 " +
+                              "VALUES (?, (SELECT STDDEV_POP(CAST(close AS numeric)) / AVG(CAST(close AS numeric))" +
                               "FROM stock_data WHERE symbol = ?)) " +
                               "ON CONFLICT (symbol) DO UPDATE SET cov = EXCLUDED.cov;";
             PreparedStatement preparedStatement = DBHandler.getInstance().getConnection().prepareStatement(sqlQuery);
@@ -170,7 +170,7 @@ public class Stocks extends Table<Stocks> {
         try {
             String sqlQuery = "SELECT " +
                               "stock_data.symbol, " +
-                              "(STDDEV_SAMP(CAST(stock_data.close AS numeric)) / AVG(CAST(stock_data.close AS numeric))) * 100 AS cov " +
+                              "(STDDEV_SAMP(CAST(stock_data.close AS numeric)) / AVG(CAST(stock_data.close AS numeric))) AS cov " +
                               "FROM bought " +
                               "INNER JOIN stock_data ON bought.symbol = stock_data.symbol " +
                               "WHERE portfolio_id = ? " +

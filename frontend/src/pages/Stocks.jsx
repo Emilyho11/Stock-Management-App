@@ -21,7 +21,7 @@ const Stocks = () => {
     const [endDate, setEndDate] = useState(null);
     const [search, setSearch] = useState("");
     const [viewType, setViewType] = useState("present"); // New state for view type
-    const [time, setTime] = useState(1); // New state for time
+    const [time, setTime] = useState(0.1); // New state for time
     const [graphData, setGraphData] = useState({}); // State for graph data
     const [clickedSymbol, setClickedSymbol] = useState(null);
     const [clickedButton, setClickedButton] = useState(null); // New state for clicked button
@@ -215,9 +215,14 @@ const Stocks = () => {
                                                 <label className="min-w-fit block text-gray-700 font-bold mb-2 mr-2">Time in Years</label>
                                                 <input
                                                     type="number"
-                                                    step="1"
+                                                    step="0.1"
                                                     value={time}
-                                                    onChange={(e) => setTime(e.target.value)}
+                                                    onChange={(e) => {
+                                                        const value = e.target.value;
+                                                        if (value > 0) {
+                                                            setTime(value);
+                                                        }
+                                                    }}
                                                     className="w-full p-2 border border-gray-300 rounded"
                                                     placeholder="Enter time"
                                                 />
