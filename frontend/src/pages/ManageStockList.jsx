@@ -13,15 +13,12 @@ import { useEffect } from "react";
 import CreateButton from "../components/CreateButton";
 import AxiosClient from "../api/AxiosClient";
 import { useAuth } from "../components/AuthContext";
-import { useAuth } from "../components/AuthContext";
 
 const ManageStockList = () => {
-	const { getUsername } = useAuth();
 	const { state } = useLocation();
-  const { stocklist, portfolio } = state;
+  	const { stocklist, portfolio } = state;
 	const [stocks, setStocks] = React.useState([])
 	const [selectedStock, setSelectedStock] = React.useState([]);
-	const username = getUsername();
 	const { getUsername, isLoggedIn } = useAuth();
 	const username = getUsername();
 	const navigate = useNavigate();
@@ -66,9 +63,9 @@ const ManageStockList = () => {
 	
 	const goBack = (e) => {
 		e.preventDefault();
-		return (portfolio ? (navigate(`/portfolio/${portfolio.id}`, { state: { portfolio: portfolio } })) : (navigate("/stock-manager")))
-		return (portfolio ? (navigate(`/portfolio/${portfolio.id}`, { state: { portfolio: portfolio } })) : (navigate("/stock-manager")))
+		return (portfolio ? (navigate(`/portfolio/${portfolio.id}`, { state: { portfolio: portfolio } })) : (navigate("/stock-manager")));
 	}
+
 	return (
 		<div className="md:w-2/3 ml-auto mr-auto flex flex-col gap-2">
 			<Link to={goBack} onClick={(e) => goBack(e)}>
@@ -79,7 +76,6 @@ const ManageStockList = () => {
 				</Button>
 			</Link>
 			<Card className="min-h-[50vh] !bg-transparent !items-start !p-0 max-lg:flex-col">
-				<div className="scale-75 ml-auto flex flex-col ">
 				<div className="scale-75 ml-auto flex flex-col ">
 					<h1 className="text-left text-4xl">{stocklist.name}</h1>
 					<PrivacyIcon privacy={stocklist.privacy} />
