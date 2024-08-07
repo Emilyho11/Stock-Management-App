@@ -104,7 +104,7 @@ const StocksManager = () => {
 								))}
 						</div>
 					{/* </DndProvider> */}
-					<h1 className="text-base text-left w-fit text-gray-500 tracking-wide uppercase">Stock Lists</h1>
+					<h1 className="text-base text-left w-fit text-gray-500 tracking-wide uppercase">My Stock Lists</h1>
 					<div className="flex gap-4 flex-wrap w-full">
 							{stockLists
 								.map((list) => (
@@ -140,7 +140,38 @@ const StocksManager = () => {
 								))}
 						</div>
 					</DndProvider> */}
-					
+					<h1 className="text-base text-left w-fit text-gray-500 tracking-wide uppercase">Friends' Stock Lists</h1>
+					<div className="flex gap-4 flex-wrap w-full">
+							{stockLists
+								.map((list) => (
+									<div key={list.id} className="flex gap-4 items-center px-8 hover:!bg-white transition-all bg-white p-2 rounded-md w-72 min-h-3 hover:shadow-lg flex-col" onClick={() => handleOpenStockList(list)}>
+										<p className="uppercase text-sm bg-gray-100  w-fit rounded-md px-2 py-1 ml-auto mr-auto">
+											Stock List
+										</p>
+										<h1 className="text-xl font-normal">{list.name}</h1>
+										<PrivacyIcon privacy={list.privacy} />
+										<span className="scale-75 ml-auto ">
+											
+										</span>
+									</div>
+								))}
+						</div>
+						<h1 className="text-base text-left w-fit text-gray-500 tracking-wide uppercase">Public Stock Lists</h1>
+					<div className="flex gap-4 flex-wrap w-full">
+							{stockLists
+								.map((list) => (
+									<div key={list.id} className="flex gap-4 items-center px-8 hover:!bg-white transition-all bg-white p-2 rounded-md w-72 min-h-3 hover:shadow-lg flex-col" onClick={() => handleOpenStockList(list)}>
+										<p className="uppercase text-sm bg-gray-100  w-fit rounded-md px-2 py-1 ml-auto mr-auto">
+											Stock List
+										</p>
+										<h1 className="text-xl font-normal">{list.name}</h1>
+										<PrivacyIcon privacy={list.privacy} />
+										<span className="scale-75 ml-auto ">
+											
+										</span>
+									</div>
+								))}
+						</div>
 				</div>
 			</div>
 		</>
