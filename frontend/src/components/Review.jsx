@@ -7,7 +7,7 @@ import { useNavigate } from "react-router-dom";
 const Review = (props) => {
 	const navigate = useNavigate();
 	const { data, expanded, expand } = props;
-	const {stockListId, myReview, } = data;
+	const {stockListId, myReview } = data;
 	const minExpand = 250;
 
 	if (!data || !data.username || !data.content) {
@@ -16,8 +16,13 @@ const Review = (props) => {
 
 	const deleteReview = async () => {
 		console.log("Deleting review", data);
+		console.log("username", myReview);
+		console.log("stockListId", stockListId);
+		if (!myReview) {
+			console.error("User not logged in");
+		}
 		try {
-			const response = await AxiosClient.delete("reviews/"+ getUsername() + "/" + stockListId);
+			const response = await AxiosClient.delete("reviews/"+ data.username + "/" + stockListId);
 			console.log(response.data);
 			if (response.data.message === "Review deleted successfully") {
 				navigate(0);

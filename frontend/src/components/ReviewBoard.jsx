@@ -117,8 +117,6 @@ const ReviewBoard = (props) => {
 	}
 
 	const displayReviews = () => {
-		console.log(privacy)
-		console.log(isOwner)
 		if (privacy == "public" || isOwner){
 			return (reviews.sort( (a, b) => a.myReview ? -1 : 1 || a.id - b.id)
 				.map((review, index) => (
