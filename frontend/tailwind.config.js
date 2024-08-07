@@ -6,6 +6,7 @@ export default {
 			colors: {
 				dark_red: "#380510",
 				stock_color: "#238c3a",
+				link: "#1a237e",
 			},
 			width: {
 				"1/8": "12.5%",
