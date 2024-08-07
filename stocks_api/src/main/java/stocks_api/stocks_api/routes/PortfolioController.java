@@ -3,6 +3,8 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -140,5 +142,19 @@ public class PortfolioController {
     @DeleteMapping("/delete/{id}")
     public void deletePortfolio(@PathVariable int id) {
         Portfolio.deletePortfolio(id, conn);
+    }
+
+    // Create an api for the above function calculatePortfolioCOV
+    @GetMapping("/calculatePortfolioCOV/{id}")
+    public Map<String, Double> calculatePortfolioCOV(@PathVariable int id) {
+        Map<String, Double> covMap = Stocks.calculatePortfolioCOV(id);
+        return covMap;
+    }
+
+    // Calculate correlation
+    @GetMapping("/calculateCorrelation/{symbol1}/{symbol2}")
+    public double calculateCorrelation(@PathVariable String symbol1, @PathVariable String symbol2) {
+        double correlation = Stocks.calculateCorrelation(symbol1, symbol2);
+        return correlation;
     }
 }
