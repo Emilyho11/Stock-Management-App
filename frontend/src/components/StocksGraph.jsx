@@ -155,9 +155,9 @@ const StocksGraph = ( { symbol, startDate, endDate, viewType, rate, time, setDat
     };
 
     return (
-            <div className="relative max-h-[80vh] w-[110%]">
+            <div className="relative h-[80vh] w-[110%] ">
                 {!symbol && <h2>Click on a stock to view the graph</h2>}
-                <Line data={data} options={options} />
+                <Line data={data} options={options} width={"100%"} height={"100%"}/>
             </div>
     );
 };
