@@ -15,9 +15,6 @@ const Review = (props) => {
 	}
 
 	const deleteReview = async () => {
-		console.log("Deleting review", data);
-		console.log("username", myReview);
-		console.log("stockListId", stockListId);
 		if (!myReview) {
 			console.error("User not logged in");
 		}
