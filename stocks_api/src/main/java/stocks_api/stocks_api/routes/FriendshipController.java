@@ -1,6 +1,7 @@
 package stocks_api.stocks_api.routes;
 import java.sql.Connection;
 import java.sql.ResultSet;
+import java.util.ArrayList;
 
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 import stocks_api.stocks_api.logic.src.DBHandler;
 import stocks_api.stocks_api.logic.src.Friendship;
 import stocks_api.stocks_api.logic.src.ParserUtil;
+import stocks_api.stocks_api.logic.src.Portfolio;
 
 @CrossOrigin(origins = "*", allowedHeaders = "*")
 @RestController
@@ -39,24 +41,69 @@ public class FriendshipController {
     }
 
     @GetMapping("/viewFriends/{username}")
-    public String viewFriends(@PathVariable String username) {
-        ResultSet rs = Friendship.viewFriends(username, conn);
-        String result = ParserUtil.resultSetToJson(rs);
-        return "'{'content': " + result + "}'";
+    public ArrayList<Friendship> viewFriends(@PathVariable String username) {
+        try {
+            ResultSet rs = Friendship.viewFriends(username, conn);
+            ArrayList<Friendship> friends = new ArrayList<Friendship>();
+            while (rs.next()){
+                Friendship friend = new Friendship(rs.getString("target"), username, "Accepted", null);
+                friends.add(friend);
+            }
+            return friends; 
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 
     @GetMapping("/viewSent/{username}")
-    public String viewSentFriendRequests(@PathVariable String username) {
-        ResultSet rs = Friendship.viewSentFriendRequests(username, conn);
-        String result = ParserUtil.resultSetToJson(rs);
-        return "'{'content': " + result + "}'";
+    public ArrayList<Friendship> viewSentFriendRequests(@PathVariable String username) {
+        try {
+            ResultSet rs = Friendship.viewSentFriendRequests(username, conn);
+            ArrayList<Friendship> friends = new ArrayList<Friendship>();
+            while (rs.next()){
+                Friendship friend = new Friendship(rs.getString("target"), username, "Pending", null);
+                friends.add(friend);
+            }
+            return friends; 
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    @GetMapping("/getStocks/{id}")
+    public ArrayList<Object> getUserPortfolioStocks(@PathVariable int id) {
+        try {
+            ResultSet rs = Portfolio.getStocks(id, conn);
+            ArrayList<Object> stocks = new ArrayList<Object>();
+            while (rs.next()){
+                ArrayList<Object> stock = new ArrayList<Object>();
+                stock.add(rs.getString("symbol"));
+                stock.add(rs.getInt("total"));
+                stocks.add(stock);
+            }
+            return stocks; 
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 
     @GetMapping("/viewIncoming/{username}")
-    public String viewIncomingFriendRequests(@PathVariable String username) {
-        ResultSet rs = Friendship.viewIncomingFriendRequests(username, conn);
-        String result = ParserUtil.resultSetToJson(rs);
-        return "'{'content': " + result + "}'";
+    public ArrayList<Friendship> viewIncomingFriendRequests(@PathVariable String username) {
+        try {
+            ResultSet rs = Friendship.viewIncomingFriendRequests(username, conn);
+            ArrayList<Friendship> friends = new ArrayList<Friendship>();
+            while (rs.next()){
+                Friendship friend = new Friendship(rs.getString("username"), username, "Pending", null);
+                friends.add(friend);
+            }
+            return friends; 
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 
     @DeleteMapping("/delete/{username}/{target}")
