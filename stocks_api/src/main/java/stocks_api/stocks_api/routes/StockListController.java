@@ -68,6 +68,44 @@ public class StockListController {
         }
     }
 
+    @GetMapping("/getFriends/{username}")
+    public ArrayList<Object> getFriendStockLists(@PathVariable String username) {
+        try {
+            ResultSet rs = User.getFriendStockLists(username, conn);
+            ArrayList<Object> lists = new ArrayList<Object>();
+            while (rs.next() == true){
+                ArrayList<Object> listnName = new ArrayList<Object>();
+                StockList list = new StockList(rs.getInt("stocklist_id"), rs.getString("name"), "friends");
+                listnName.add(rs.getString("username"));
+                listnName.add(list);
+                lists.add(listnName);
+            }
+            return lists;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    @GetMapping("/getPublic/{username}")
+    public ArrayList<Object> getOtherPublicStockLists(@PathVariable String username) {
+        try {
+            ResultSet rs = StockList.getOtherPublicStockLists(username, conn);
+            ArrayList<Object> lists = new ArrayList<Object>();
+            while (rs.next()){
+                ArrayList<Object> listnName = new ArrayList<Object>();
+                StockList list = new StockList(rs.getInt("stocklist_id"), rs.getString("name"), "public");
+                listnName.add(rs.getString("username"));
+                listnName.add(list);
+                lists.add(listnName);
+            }
+            return lists;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
     @GetMapping("/getStocks/{id}")
     public ArrayList<Object> getStockListStocks(@PathVariable int id) {
         try {
@@ -97,13 +135,13 @@ public class StockListController {
     }
 
     @GetMapping("/check/{id}/{symbol}")
-    public int getTotalStock(@PathVariable int id, @PathVariable String symbol, @PathVariable int quantity) {
+    public int getTotalStock(@PathVariable int id, @PathVariable String symbol) {
         return StockList.getTotalStock(id, symbol, conn);
     }
 
-    @PostMapping("/list/{id}/{symbol}/{quantity}/{type}")
-    public void listStocksCreate(@PathVariable int id, @PathVariable String symbol, @PathVariable int quantity, @PathVariable String type) {
-        StockList.listStocksCreate(id, symbol, type, quantity, conn);
+    @PostMapping("/list/{id}/{symbol}/{amount}/{type}")
+    public void listStocksCreate(@PathVariable int id, @PathVariable String symbol, @PathVariable int amount, @PathVariable String type) {
+        StockList.listStocksCreate(id, symbol, type, amount, conn);
     }
 
     @PatchMapping("/list/{id}/{symbol}/{amount}/{type}")

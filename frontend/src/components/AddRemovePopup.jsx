@@ -1,14 +1,15 @@
 import { useEffect, useState, useRef } from "react";
 import AxiosClient from "../api/AxiosClient";
+import { useNavigate } from "react-router-dom";
 
-const BuySellPopup = ({ toggle, id}) => {
+const AddRemovePopup = ({ toggle, type, id}) => {
   const [visible, setVisible] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [amount, setAmount] = useState("");
-  const [type, setType] = useState("");
   const [symbol, setSymbol] = useState("");
   const [isButtonDisabled, setIsButtonDisabled] = useState(true);
   const formRef = useRef(null);
+  const navigate = useNavigate();
 
   useEffect(() => {
     // Check form validity on initial render
@@ -40,20 +41,20 @@ const BuySellPopup = ({ toggle, id}) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await AxiosClient.get(`portfolio/check/${id}/${symbol}`);
-      const ifBought = response.data;
-      if (ifBought == -1){
+      const response = await AxiosClient.get(`stocklist/check/${id}/${symbol}`);
+      const ifListed = response.data;
+      if (ifListed == -1){
         try {
-          AxiosClient.post(`portfolio/trade/${id}/${symbol}/${amount}/${type}`);
+          AxiosClient.post(`stocklist/list/${id}/${symbol}/${amount}/${type}`);
           toggle();
           navigate(0);
         } catch (error) {
           console.error(error);
         }
       }
-      else if (ifBought > -1){
+      else if (ifListed > -1){
         try {
-          AxiosClient.patch(`portfolio/trade/${id}/${symbol}/${amount}/${type}`);
+          AxiosClient.patch(`stocklist/list/${id}/${symbol}/${amount}/${type}`);
           toggle();
           navigate(0);
         } catch (error) {
@@ -64,6 +65,11 @@ const BuySellPopup = ({ toggle, id}) => {
       console.error(error);
     }
   };
+
+  const checkAdd = () => {
+    console.log(type === "add")
+    return (type === "add")
+  }
 
   return (
     <div
@@ -90,7 +96,7 @@ const BuySellPopup = ({ toggle, id}) => {
           onChange={handleFormChange}
           ref={formRef}
         >
-          <h1 className="text-2xl">Buy or Sell a Stock</h1>
+          <h1 className="text-2xl">{checkAdd() ? ("Add Stock to the List"):("Remove Stock From the List")}</h1>
           <label htmlFor="symbol">Stock Symbol: </label>
           <input
             type="text" 
@@ -113,25 +119,6 @@ const BuySellPopup = ({ toggle, id}) => {
             value={amount}
             onChange={(e) => setAmount(e.target.value)}
           />
-          <label htmlFor="type">Type: </label>
-            <select
-              id="type"
-              name="type"
-              required
-              className="border-2 p-2 rounded-sm"
-              onChange={(e) => setType(e.target.value)}
-              defaultValue=""
-            >
-              <option value="" disabled>
-                Select an action
-              </option>
-                <option key={1} value={`buy`}>
-                  Buy
-                </option>
-                <option key={2} value={`sell`}>
-                  Sell
-                </option>
-            </select>
           <button
             type="submit"
             className={`p-2 rounded-lg ${
@@ -147,4 +134,4 @@ const BuySellPopup = ({ toggle, id}) => {
   );
 }
 
-export default BuySellPopup;
+export default AddRemovePopup;

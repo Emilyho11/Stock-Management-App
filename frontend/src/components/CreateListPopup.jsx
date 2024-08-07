@@ -8,7 +8,6 @@ const CreateListPopup = ({ toggle, username, id}) => {
   const [privacy, setPrivacy] = useState("");
   const [isButtonDisabled, setIsButtonDisabled] = useState(true);
   const formRef = useRef(null);
-  //const username = "mirihuang"
 
   useEffect(() => {
     // Check form validity on initial render
@@ -45,6 +44,7 @@ const CreateListPopup = ({ toggle, username, id}) => {
       try {
         AxiosClient.post(`stocklist/${username}/${name}/${privacy}`);
         toggle();
+        navigate(0);
       } catch (error) {
         console.error(error);
       }
@@ -52,6 +52,7 @@ const CreateListPopup = ({ toggle, username, id}) => {
       try {
         AxiosClient.post(`stocklist/${username}/${id}/${name}/${privacy}`);
         toggle();
+        navigate(0);
       } catch (error) {
         console.error(error);
       }

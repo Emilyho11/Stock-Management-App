@@ -41,6 +41,7 @@ const CreatePortfolioPopup = ({ toggle, username}) => {
     try {
 			AxiosClient.post(`portfolio/${username}/${name}`);
       toggle();
+      navigate(0);
 		} catch (error) {
 			console.error(error);
 		}
