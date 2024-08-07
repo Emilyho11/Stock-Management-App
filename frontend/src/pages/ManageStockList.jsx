@@ -72,7 +72,6 @@ const ManageStockList = () => {
 				<Button className="flex items-center gap-4" variant={ButtonVariants.TRANSPARENT}>
 					<FontAwesomeIcon icon={faArrowLeft} />
 					<p className="font-semibold uppercase tracking-wide">Return</p>
-					<p className="font-semibold uppercase tracking-wide">Return</p>
 				</Button>
 			</Link>
 			<Card className="min-h-[50vh] !bg-transparent !items-start !p-0 max-lg:flex-col">
@@ -83,10 +82,6 @@ const ManageStockList = () => {
 					
 				</div>
 				<Card className="w-full h-full !items-start flex-col py-8 px-12 bg-white">
-					<div className="flex flex-row">
-						<CreateButton className=" bg-green-500 hover:bg-green-800" username={username} type={"add"} id={stocklist.id}/>
-						<CreateButton className=" bg-red-500 hover:bg-red-800" username={username} type={"remove"} id={stocklist.id}/>
-					</div>
 					<div className="flex flex-row">
 						<CreateButton className=" bg-green-500 hover:bg-green-800" username={username} type={"add"} id={stocklist.id}/>
 						<CreateButton className=" bg-red-500 hover:bg-red-800" username={username} type={"remove"} id={stocklist.id}/>

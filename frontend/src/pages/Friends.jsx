@@ -6,15 +6,16 @@ import AxiosClient from "../api/AxiosClient";
 import SendFriendRequestButton from "../components/SendFriendRequestButton";
 import { faCircleCheck, faCircleXmark } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { useNavigate } from "react-router-dom";
 
 const Friends = () => {
 	const {getUsername, isLoggedIn} = useAuth();
 	const user = getUsername();
-
 	const [incoming, setIncoming] = useState([]);
 	const [outgoing, setOutgoing] = useState([]);
 	const [friends, setFriends] = useState([]);
 	const [targetname, setTargetname] = useState("");
+	const navigate = useNavigate();
 
 	useEffect(() => {
 		const getFriends = async () => {
@@ -61,6 +62,16 @@ const Friends = () => {
 		getSent();
 	  }, [isLoggedIn]);
 
+	const handleAcceptFriend = (targ) => {
+		AxiosClient.post(`friends/accept/${user}/${targ}`);
+		navigate(0);
+	}
+
+	const handleRejectFriend = (targ) => {
+		AxiosClient.patch(`friends/reject/${user}/${targ}`);
+		navigate(0);
+	}
+
 	return (
 		<div>
 			<h1>Friends</h1>
@@ -88,8 +99,8 @@ const Friends = () => {
 											className="w-20 h-20 rounded-md"
 										/>
 										<h1 className="text-xl">{friendship.username}</h1>
-										<FontAwesomeIcon icon={faCircleCheck} className="text-green-500 text-2xl"/>
-										<FontAwesomeIcon icon={faCircleXmark} className="text-red-500 text-2xl"/>
+										<FontAwesomeIcon icon={faCircleCheck} className="text-green-500 text-2xl" onClick={(e) => handleAcceptFriend(friendship.username)}/>
+										<FontAwesomeIcon icon={faCircleXmark} className="text-red-500 text-2xl" onClick={(e) => handleRejectFriend(friendship.username)}/>
 									</Card>
 								))}
 					</div>

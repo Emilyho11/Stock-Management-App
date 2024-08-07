@@ -30,7 +30,7 @@ public class FriendshipController {
         Friendship.sendFriendRequest(username, target, conn);
     }
     
-    @PatchMapping("/accept/{username}/{target}")
+    @PostMapping("/accept/{username}/{target}")
     public void acceptFriendRequest(@PathVariable String username, @PathVariable String target) {
         Friendship.acceptFriendRequest(username, target, conn);
     }
