@@ -22,6 +22,8 @@ const Stocks = () => {
     const [viewType, setViewType] = useState("present"); // New state for view type
     const [time, setTime] = useState(1); // New state for time
     const [graphData, setGraphData] = useState({}); // State for graph data
+    const [clickedSymbol, setClickedSymbol] = useState(null);
+    const [clickedButton, setClickedButton] = useState(null); // New state for clicked button
 
     // Filtered symbols based on search
     const filteredSymbols = symbolList.filter((symbolItem) =>
@@ -61,13 +63,10 @@ const Stocks = () => {
     const handleDateRangeSubmit = () => {
         // Log the current state values
         console.log("Date range submitted:", { startDate, endDate });
-        setGraphData({
-            symbol,
-            startDate: formatDate(startDate),
-            endDate: formatDate(endDate),
-            viewType,
-            time,
-        });
+        setGraphData((prev) => ({
+            ...prev, 
+            startDate: formatDate(startDate), 
+            endDate: formatDate(endDate)}));
     };
 
 	useEffect( () => {
@@ -93,6 +92,7 @@ const Stocks = () => {
     // Handle symbol button click
     const handleSymbolClick = (symbol) => {
         setSymbol(symbol);
+        setClickedSymbol(symbol);
         setGraphData({
             symbol,
             startDate: formatDate(startDate),
@@ -117,7 +117,9 @@ const Stocks = () => {
                     <button
                         key={index}
                         onClick={() => handleSymbolClick(symbolItem.symbol)}
-                        className="bg-dark_red hover:bg-red-800 text-white font-bold py-2 px-4 rounded w-full mb-2"
+                        className={`${
+                            clickedSymbol === symbolItem.symbol ? 'bg-red-800' : 'bg-dark_red'
+                        } hover:bg-red-800 text-white font-bold py-2 px-4 rounded w-full mb-2`}
                     >
                         {symbolItem.symbol}
                     </button>
@@ -125,8 +127,29 @@ const Stocks = () => {
             </div>
             <div className="w-3/4 p-4 h-fit">
                 <div className="flex space-x-2 mb-4">
-                    <Button onClick={() => setViewType("future")}>View Future Stocks</Button>
-                    <Button onClick={() => { setViewType("present"); handleDateRangeSubmit(); }}>View Historical/Present Stocks</Button>
+                    <Button
+                        onClick={() => {
+                            setViewType("future");
+                            setClickedButton("future");
+                        }}
+                        className={`${
+                            clickedButton === "future" ? 'bg-blue-400' : ''
+                        }`}
+                    >
+                        View Future Stocks
+                    </Button>
+                    <Button
+                        onClick={() => {
+                            setViewType("present");
+                            handleDateRangeSubmit();
+                            setClickedButton("present");
+                        }}
+                        className={`${
+                            clickedButton === "present" ? 'bg-blue-400' : ''
+                        }`}
+                    >
+                        View Historical/Present Stocks
+                    </Button>   
                 </div>
                 <div className="mt-1">
 						<div className=" bg-white p-4 rounded-md w-full">
@@ -182,7 +205,7 @@ const Stocks = () => {
                     symbol={graphData.symbol}
                     startDate={graphData.startDate}
                     endDate={graphData.endDate}
-                    viewType={graphData.viewType}
+                    viewType={viewType}
                     time={graphData.time}
 					setDateBounds={setDateBounds}
                 />
