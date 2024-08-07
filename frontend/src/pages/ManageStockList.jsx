@@ -13,10 +13,10 @@ import { useEffect } from "react";
 import CreateButton from "../components/CreateButton";
 import AxiosClient from "../api/AxiosClient";
 import { useAuth } from "../components/AuthContext";
-
+ 
 const ManageStockList = () => {
 	const { state } = useLocation();
-  	const { stocklist, portfolio } = state;
+  	const { stocklist, portfolio, isOwner } = state;
 	const [stocks, setStocks] = React.useState([])
 	const [selectedStock, setSelectedStock] = React.useState([]);
 	const { getUsername, isLoggedIn } = useAuth();
@@ -77,16 +77,14 @@ const ManageStockList = () => {
 			<Card className="min-h-[50vh] !bg-transparent !items-start !p-0 max-lg:flex-col">
 				<div className="scale-75 ml-auto flex flex-col ">
 					<h1 className="text-left text-4xl">{stocklist.name}</h1>
-					<PrivacyIcon privacy={stocklist.privacy} />
-					
-					
+					<PrivacyIcon privacy={stocklist.privacy} />	
 				</div>
 				<Card className="w-full h-full !items-start flex-col py-8 px-12 bg-white">
 					<div className="flex flex-row">
 						<CreateButton className=" bg-green-500 hover:bg-green-800" username={username} type={"add"} id={stocklist.id}/>
 						<CreateButton className=" bg-red-500 hover:bg-red-800" username={username} type={"remove"} id={stocklist.id}/>
 					</div>			
-					<ReviewBoard stockListId={stocklist.id} />
+					<ReviewBoard stockListId={stocklist.id} privacy={stocklist.privacy} isOwner={isOwner} />
 				</Card>
 			</Card>
 			{/* <hr className="mb-2" /> */}
@@ -95,10 +93,6 @@ const ManageStockList = () => {
 					<div className="flex gap-4 items-center justify-between">
 						
 						<h1 className="text-xl text-left w-fit">Stocks</h1>
-						<Button className="flex items-center gap-4" 
-							onClick={() => navigate(`/stocklist/${stocklist.id}/add`)}> 
-							Add Stocks
-						</Button>
 					</div>
 					{
 						stocks.map((stock, index) => (

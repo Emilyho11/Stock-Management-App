@@ -5,7 +5,7 @@ import Button from "./Button";
 import { useAuth } from "./AuthContext";
 
 const ReviewBoard = (props) => {
-	const { stockListId } = props;
+	const { stockListId, privacy, isOwner } = props;
 
 	const { getUsername } = useAuth();
 	const [newReview, setNewReview] = useState({
@@ -15,6 +15,7 @@ const ReviewBoard = (props) => {
 	});
 	const [reviews, setReviews] = useState([{ username: "", stockListId: 0, content: "", expanded: false }]);
 	const [alreadyReviewed, setAlreadyReviewed] = useState(false);
+	const myUsername = getUsername();
 	const fetchReviews = async () => {
 		try {
 			const response = await AxiosClient.get("reviews/" + stockListId);
@@ -86,12 +87,34 @@ const ReviewBoard = (props) => {
 		}
 	};
 
-	return (
-		<>
-			{ReviewBox()}
-			<h2 className="text-xl">{reviews.length} REVIEWS</h2>
-			<div className="flex flex-col gap-12">
-				{reviews.sort( (a, b) => a.myReview ? -1 : 1 || a.id - b.id)
+	const checkMyReview = (review) => {
+		if (myUsername == review.username){
+			return (
+				<Review
+						key={review.id}
+						data={review}
+						expanded={review.expanded}
+						expand={() => {
+							setReviews(
+								reviews.map((item) => {
+									if (item.id === review.id) {
+										return { ...item, expanded: !item.expanded };
+									} else {
+										return item;
+									}
+								})
+							);
+						}}
+					/>
+			)
+		}
+	}
+
+	const displayReviews = () => {
+		console.log(privacy)
+		console.log(isOwner)
+		if (privacy == "public" || isOwner){
+			return (reviews.sort( (a, b) => a.myReview ? -1 : 1 || a.id - b.id)
 				.map((review, index) => (
 					<Review
 						key={review.id}
@@ -109,7 +132,22 @@ const ReviewBoard = (props) => {
 							);
 						}}
 					/>
-				))}
+				)))
+		}
+		else if (privacy == "friends"){
+			return (reviews.sort( (a, b) => a.myReview ? -1 : 1 || a.id - b.id)
+				.map((review, index) => ( checkMyReview(review)
+				)))
+		}
+		
+	}
+
+	return (
+		<>
+			{ReviewBox()}
+			<h2 className="text-xl">{reviews.length} REVIEWS</h2>
+			<div className="flex flex-col gap-12">
+				{displayReviews()}
 			</div>
 		</>
 	);
