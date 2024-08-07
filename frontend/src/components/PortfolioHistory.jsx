@@ -3,7 +3,7 @@ import Review from "./Review";
 import AxiosClient from "../api/AxiosClient";
 import Button from "./Button";
 
-const PortfolioHistory = () => {
+const PortfolioHistory = ({id}) => {
 	const [balance, setBalance] = useState(0);
 	const [cashData, setCashData] = useState([]);
 	const [transactionData, setTransactionData] = useState();
@@ -11,7 +11,7 @@ const PortfolioHistory = () => {
 	useEffect(() => {
 		const getBalance = async () => {
 			try {
-				const response = await AxiosClient.get(`portfolio/getBalance/${1}`);
+				const response = await AxiosClient.get(`portfolio/getBalance/${id}`);
 				if (response.data) {
 					setBalance(response.data);
 				} else {
