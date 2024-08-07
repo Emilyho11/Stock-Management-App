@@ -115,14 +115,19 @@ public class Friendship {
     public static void acceptFriendRequest(String username, String target, Connection conn) {
         try {
             PreparedStatement stmt;
-            stmt = conn.prepareStatement("UPDATE friendship "
-                    + "SET status = 'Accepted' "
-                    + "WHERE ((username = ? AND target = ?) OR (username = ? AND target = ?));");
+            stmt = conn.prepareStatement("INSERT INTO friendship VALUES (?, ?, 'Accepted', ?) ON CONFLICT (username, target) DO UPDATE SET status = EXCLUDED.status;");
+                    // + "SET status = 'Accepted' "
+                    // + "WHERE ((username = ? AND target = ?) OR (username = ? AND target = ?));");
             stmt.setString(1, username);
             stmt.setString(2, target);
-            stmt.setString(3, target);
-            stmt.setString(4, username);
+            stmt.setTimestamp(3, null);
+            PreparedStatement stmt2;
+            stmt2 = conn.prepareStatement("INSERT INTO friendship VALUES (?, ?, 'Accepted', ?) ON CONFLICT (username, target) DO UPDATE SET status = EXCLUDED.status;");
+            stmt2.setString(1, target);
+            stmt2.setString(2, username);
+            stmt2.setTimestamp(3, null);
             stmt.executeUpdate();
+            stmt2.executeUpdate();
             System.out.println("Friend request accepted successfully");
         } catch (SQLException ex) {
             System.out.println("Error accepting friend request: " + ex.getMessage());
