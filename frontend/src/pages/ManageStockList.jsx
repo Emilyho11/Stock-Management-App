@@ -13,7 +13,7 @@ import { useEffect } from "react";
 import CreateButton from "../components/CreateButton";
 import AxiosClient from "../api/AxiosClient";
 import { useAuth } from "../components/AuthContext";
-
+ 
 const ManageStockList = () => {
 	const { state } = useLocation();
   	const { stocklist, portfolio, isOwner } = state;
