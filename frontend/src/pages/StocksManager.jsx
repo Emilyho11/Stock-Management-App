@@ -6,7 +6,7 @@ import { HTML5Backend } from "react-dnd-html5-backend";
 import DndStockCard from "../components/DndStockCard";
 import Button from "../components/Button";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faPlus } from "@fortawesome/free-solid-svg-icons";
+import { faSquareMinus } from "@fortawesome/free-solid-svg-icons";
 import AddStocksModal from "../components/AddStocksModal";
 import CreateStockListModal from "../components/CreateStockListModal";
 import AxiosClient from "../api/AxiosClient";
@@ -102,15 +102,31 @@ const StocksManager = () => {
 	}, [isLoggedIn]);
 
 	const handleOpenPortfolio = (portfolio) => {
-		navigate(`/portfolio/${portfolio.id}`, { state: { portfolio: portfolio } });
+		if (!(portfolio.id)){
+			handleDeletePortfolio(portfolio.id)
+		}
+		else {navigate(`/portfolio/${portfolio.id}`, { state: { portfolio: portfolio } })};
 	}
 	const handleOpenStockList = (stocklist, name) => {
-		if (name==username){
+		if (!(stocklist.id)){
+			handleDeleteList(stocklist.id)
+		}
+		else if (name==username){
 			navigate(`/stocklist/${stocklist.id}`, { state: { stocklist: stocklist, isOwner: true } });
 		}
 		else {
 			navigate(`/stocklist/${stocklist.id}`, { state: { stocklist: stocklist, isOwner: false } });
 		}
+	}
+
+	const handleDeletePortfolio = (id) => {
+		AxiosClient.delete(`portfolio/delete/${id}`)
+		navigate(0);
+	}
+	
+	const handleDeleteList = (id) => {
+		AxiosClient.delete(`stocklist/delete/${id}`)
+		navigate(0);
 	}
 
 	return (
@@ -130,6 +146,7 @@ const StocksManager = () => {
 									<div key={portfolio.id} className="flex gap-4 items-center px-8 hover:!bg-white transition-all bg-white p-2 rounded-md w-72 min-h-3 hover:shadow-lg flex-col" onClick={() => handleOpenPortfolio(portfolio)}>
 										<p className="uppercase text-sm bg-gray-100  w-fit rounded-md px-2 py-1 ml-auto mr-auto">
 											Portfolio
+											<FontAwesomeIcon icon={faSquareMinus} className="text-red-500 text-2xl ml-4" onClick={(e) => handleDeletePortfolio(portfolio.id)}/>
 										</p>
 										<h1 className="text-xl font-normal">{portfolio.name}</h1>
 									</div>
@@ -154,6 +171,7 @@ const StocksManager = () => {
 									<div key={list.id} className="flex gap-4 items-center px-8 hover:!bg-white transition-all bg-white p-2 rounded-md w-72 min-h-3 hover:shadow-lg flex-col" onClick={() => handleOpenStockList(list, username)}>
 										<p className="uppercase text-sm bg-gray-100  w-fit rounded-md px-2 py-1 ml-auto mr-auto">
 											Stock List
+											<FontAwesomeIcon icon={faSquareMinus} className="text-red-500 text-2xl ml-4" onClick={(e) => handleDeleteList(list.id)}/>
 										</p>
 										<h1 className="text-xl font-normal">{list.name}</h1>
 										<PrivacyIcon privacy={list.privacy} />

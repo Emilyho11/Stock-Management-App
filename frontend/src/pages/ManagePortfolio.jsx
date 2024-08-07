@@ -19,7 +19,7 @@ import { useAuth } from "../components/AuthContext";
 const ManagePortfolio = () => {
 	const [showStocks, setShowStocks] = React.useState(null);
 	const { state } = useLocation();
-    const { portfolio } = state;
+  const { portfolio } = state;
 	const [stocks, setStocks] = React.useState([])
 	const [stocklists, setStockLists] = React.useState([])
 	const [listStocks, setListStocks] = React.useState([])
@@ -28,7 +28,7 @@ const ManagePortfolio = () => {
 	const [stockPrice, setStockPrice] = React.useState(0);
 	const [stockCov, setStockCov] = React.useState(0);
 	const [showMatrix, setShowMatrix] = React.useState(false);
-    const [matrixData, setMatrixData] = React.useState([]);
+  const [matrixData, setMatrixData] = React.useState([]);
 	const { getUsername, isLoggedIn } = useAuth();
 	const username = getUsername();
 	const navigate = useNavigate();
@@ -248,8 +248,9 @@ const ManagePortfolio = () => {
 											<td>{item.stock}</td>
 										</tr>
 									))}
-								</tbody> */
-                			<Button onClick={() => { setShowMatrix(false); setMatrixData([]); }}>
+								</tbody>
+							</table> */}
+							<Button onClick={() => { setShowMatrix(false); setMatrixData([]); }}>
 								Close
 							</Button>}
 						</div>

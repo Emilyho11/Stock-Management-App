@@ -109,8 +109,9 @@ const ManageStockList = () => {
 				</div>
 				<Card className="w-full h-full !items-start flex-col py-8 px-12 bg-white">
 					<div className="flex flex-row">
+						{isOwner ? (<>
 						<CreateButton className=" bg-green-500 hover:bg-green-800" username={username} type={"add"} id={stocklist.id}/>
-						<CreateButton className=" bg-red-500 hover:bg-red-800" username={username} type={"remove"} id={stocklist.id}/>
+						<CreateButton className=" bg-red-500 hover:bg-red-800" username={username} type={"remove"} id={stocklist.id}/></>) : (null)}
 					</div>			
 					<ReviewBoard stockListId={stocklist.id} privacy={stocklist.privacy} isOwner={isOwner} />
 				</Card>
