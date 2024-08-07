@@ -135,13 +135,13 @@ public class StockListController {
     }
 
     @GetMapping("/check/{id}/{symbol}")
-    public int getTotalStock(@PathVariable int id, @PathVariable String symbol, @PathVariable int quantity) {
+    public int getTotalStock(@PathVariable int id, @PathVariable String symbol) {
         return StockList.getTotalStock(id, symbol, conn);
     }
 
-    @PostMapping("/list/{id}/{symbol}/{quantity}/{type}")
-    public void listStocksCreate(@PathVariable int id, @PathVariable String symbol, @PathVariable int quantity, @PathVariable String type) {
-        StockList.listStocksCreate(id, symbol, type, quantity, conn);
+    @PostMapping("/list/{id}/{symbol}/{amount}/{type}")
+    public void listStocksCreate(@PathVariable int id, @PathVariable String symbol, @PathVariable int amount, @PathVariable String type) {
+        StockList.listStocksCreate(id, symbol, type, amount, conn);
     }
 
     @PatchMapping("/list/{id}/{symbol}/{amount}/{type}")

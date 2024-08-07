@@ -22,6 +22,7 @@ const ManagePortfolio = () => {
     const { portfolio } = state;
 	const [stocks, setStocks] = React.useState([])
 	const [stocklists, setStockLists] = React.useState([])
+	const [listStocks, setListStocks] = React.useState([])
 	const [selectedStock, setSelectedStock] = React.useState([]);
 	const [selectedList, setSelectedList] = React.useState([]);
 	const { getUsername, isLoggedIn } = useAuth();
@@ -54,10 +55,29 @@ const ManagePortfolio = () => {
 			  console.error("Error fetching data:", error);
 			}
 		  };
+		
+		const getListStocks = async () => {
+		
+			if (selectedList){
+				try {
+					const response = await AxiosClient.get(`stocklist/getStocks/${selectedList.id}`);
+					console.log(response.data)
+					if (response.data) {
+						const stonks = response.data;
+					  setListStocks(stonks);
+					} else {
+					  console.error("Unexpected data format:", response.data);
+					}
+				  } catch (error) {
+					console.error("Error fetching data:", error);
+				  }
+			}
+		}
 	
 		getOwnedStocks();
 		getPortfolioStockLists();
-	  }, [isLoggedIn]);
+		getListStocks();
+	  }, [selectedList, isLoggedIn]);
 
 	const handleStockListDetails = () => {
 		//directs them to the stock list page
@@ -72,31 +92,28 @@ const ManagePortfolio = () => {
 				<p>temporary info, need to fill with stock stuff</p>
 			)
 		} else if (showStocks == false && !Array.isArray(selectedList)){
-			console.log(selectedList)
 			return (
 				<div className="flex flex-row  my-4  gap-4">
 					<div className="flex min-w-[20vw] flex-col gap-2">
 						<Button className="h-1/7" onClick={() => handleStockListDetails()}>
 							View Details
 						</Button>
-						<CreateButton className="h-1/4" username={username} type={"addstock"} id={selectedList.id}/>
+						<div className="flex flex-row">
+						<CreateButton className=" bg-green-500 hover:bg-green-800" username={username} type={"add"} id={selectedList.id}/>
+						<CreateButton className=" bg-red-500 hover:bg-red-800" username={username} type={"remove"} id={selectedList.id}/>
+						</div>
+						
 					</div>
 					
 					<div className="flex min-w-[20vw] flex-col gap-2">
 					<h1 className="text-xl text-left">Stocks</h1>
-					{stocks.map((stock, index) => (
-					<button key={stock.symbol} onMouseDown={() => setSelectedStock(stock)}>
-						<Card
-							className={ (!(selectedStock[0] == stock[0]) ? ("flex gap-4 items-center hover:scale-105 hover:shadow-xl transition-all bg-white") : (
-								"flex gap-4 items-center hover:scale-105 hover:shadow-xl transition-all bg-blue-500 text-white"
-							))}
-						>
-							<div className="text-left">
-								<h5 className="card-title">{stock[0]}</h5>
-								<p className="card-text">Quantity: {stock[1]}</p>
-							</div>
-						</Card>
-					</button>
+					{listStocks.map((liststock, index) => (
+						<button key={liststock[0]} className="px-4 py-4 rounded-lg flex gap-4 items-center hover:scale-105 hover:shadow-xl transition-all bg-gray-800 text-white border-e-2 border-gray-300">
+								<div className="text-left">
+									<h5 className="card-title">{liststock[0]}</h5>
+									<p className="card-text">Quantity: {liststock[1]}</p>
+								</div>
+						</button>
 					))}
 					
 					</div>

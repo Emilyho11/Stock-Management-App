@@ -182,14 +182,13 @@ const StocksManager = () => {
 					<div className="flex gap-4 flex-wrap w-full overflow-y-scroll max-h-screen">
 							{friendLists
 								.map((list) => (
-									<div key={list.id} className="flex gap-4 items-center px-8 hover:!bg-white transition-all bg-white p-2 rounded-md w-72 min-h-3 hover:shadow-lg flex-col" onClick={() => handleOpenStockList(list)}>
+									<div key={list.id} className="flex gap-4 items-center px-8 hover:!bg-white transition-all bg-white p-2 rounded-md w-72 min-h-3 hover:shadow-lg flex-col" onClick={() => handleOpenStockList(list[1])}>
 										<p className="uppercase text-sm bg-gray-100  w-fit rounded-md px-2 py-1 ml-auto mr-auto">
 											Stock List
 										</p>
-										<h1 className="text-xl font-normal">{list.name}</h1>
-										<PrivacyIcon privacy={list.privacy} />
+										<h1 className="text-xl font-normal">{list[1].name}</h1>
+										<h1 className="text-sm font-normal">Creator: {list[0]}</h1>
 										<span className="scale-75 ml-auto ">
-											
 										</span>
 									</div>
 								))}
@@ -198,13 +197,12 @@ const StocksManager = () => {
 					<div className="flex gap-4 flex-wrap w-full overflow-y-scroll max-h-screen">
 							{publicLists
 								.map((list) => (
-									<div key={list[1].id} className="flex gap-4 items-center px-8 hover:!bg-white transition-all bg-white p-2 rounded-md w-72 min-h-3 hover:shadow-lg flex-col" onClick={() => handleOpenStockList(list)}>
+									<div key={list[1].id} className="flex gap-4 items-center px-8 hover:!bg-white transition-all bg-white p-2 rounded-md w-72 min-h-3 hover:shadow-lg flex-col" onClick={() => handleOpenStockList(list[1])}>
 										<p className="uppercase text-sm bg-gray-100  w-fit rounded-md px-2 py-1 ml-auto mr-auto">
 											Stock List
 										</p>
 										<h1 className="text-xl font-normal">{list[1].name}</h1>
-										<h1 className="text-xl font-normal">{list[0]}</h1>
-										<PrivacyIcon privacy={list.privacy} />
+										<h1 className="text-sm font-normal">Creator: {list[0]}</h1>
 										<span className="scale-75 ml-auto ">
 											
 										</span>
