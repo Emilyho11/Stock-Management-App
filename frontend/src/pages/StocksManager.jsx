@@ -104,8 +104,13 @@ const StocksManager = () => {
 	const handleOpenPortfolio = (portfolio) => {
 		navigate(`/portfolio/${portfolio.id}`, { state: { portfolio: portfolio } });
 	}
-	const handleOpenStockList = (stocklist) => {
-		navigate(`/stocklist/${stocklist.id}`, { state: { stocklist: stocklist } });
+	const handleOpenStockList = (stocklist, name) => {
+		if (name==username){
+			navigate(`/stocklist/${stocklist.id}`, { state: { stocklist: stocklist, isOwner: true } });
+		}
+		else {
+			navigate(`/stocklist/${stocklist.id}`, { state: { stocklist: stocklist, isOwner: false } });
+		}
 	}
 
 	return (
@@ -197,7 +202,7 @@ const StocksManager = () => {
 					<div className="flex gap-4 flex-wrap w-full overflow-y-scroll max-h-screen">
 							{publicLists
 								.map((list) => (
-									<div key={list[1].id} className="flex gap-4 items-center px-8 hover:!bg-white transition-all bg-white p-2 rounded-md w-72 min-h-3 hover:shadow-lg flex-col" onClick={() => handleOpenStockList(list[1])}>
+									<div key={list[1].id} className="flex gap-4 items-center px-8 hover:!bg-white transition-all bg-white p-2 rounded-md w-72 min-h-3 hover:shadow-lg flex-col" onClick={() => handleOpenStockList(list[1], list[0])}>
 										<p className="uppercase text-sm bg-gray-100  w-fit rounded-md px-2 py-1 ml-auto mr-auto">
 											Stock List
 										</p>
