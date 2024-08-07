@@ -17,10 +17,10 @@ import { useAuth } from "../components/AuthContext";
 const ManageStockList = () => {
 	const { getUsername } = useAuth();
 	const { state } = useLocation();
-    const { stocklist, portfolio } = state;
+  const { stocklist, portfolio } = state;
 	const [stocks, setStocks] = React.useState([])
 	const [selectedStock, setSelectedStock] = React.useState([]);
-	const username = getUsername(); //replace with logged in user
+	const username = getUsername();
 	const navigate = useNavigate();
 
 	useEffect(() => {
@@ -38,7 +38,7 @@ const ManageStockList = () => {
 		};
 	
 		getListedStocks();
-	  }, []);
+	  }, [isLoggedIn]);
 
 	  const displayDetails = () => {
 		console.log(selectedStock)
@@ -62,24 +62,28 @@ const ManageStockList = () => {
 	}
 	
 	const goBack = (e) => {
-		console.log("going back")
 		e.preventDefault();
-		return (portfolio ? (navigate(`/portfolio/${portfolio.id}`, { state: { portfolio: portfolio } })) : ("/stocks-manager"))
+		return (portfolio ? (navigate(`/portfolio/${portfolio.id}`, { state: { portfolio: portfolio } })) : (navigate("/stock-manager")))
 	}
 	return (
 		<div className="md:w-2/3 ml-auto mr-auto flex flex-col gap-2">
 			<Link to={goBack} onClick={(e) => goBack(e)}>
 				<Button className="flex items-center gap-4" variant={ButtonVariants.TRANSPARENT}>
 					<FontAwesomeIcon icon={faArrowLeft} />
-					<p className="font-semibold uppercase tracking-wide">Return to Portfolio</p>
+					<p className="font-semibold uppercase tracking-wide">Return</p>
 				</Button>
 			</Link>
 			<Card className="min-h-[50vh] !bg-transparent !items-start !p-0 max-lg:flex-col">
-				<div className="scale-75 ml-auto ">
+				<div className="scale-75 ml-auto flex flex-col ">
 					<h1 className="text-left text-4xl">{stocklist.name}</h1>
 					<PrivacyIcon privacy={stocklist.privacy} />
+					
 				</div>
 				<Card className="w-full h-full !items-start flex-col py-8 px-12 bg-white">
+					<div className="flex flex-row">
+						<CreateButton className=" bg-green-500 hover:bg-green-800" username={username} type={"add"} id={stocklist.id}/>
+						<CreateButton className=" bg-red-500 hover:bg-red-800" username={username} type={"remove"} id={stocklist.id}/>
+					</div>
 					<ReviewBoard stockListId={stocklist.id} />
 				</Card>
 			</Card>

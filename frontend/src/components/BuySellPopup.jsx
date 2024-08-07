@@ -46,6 +46,7 @@ const BuySellPopup = ({ toggle, id}) => {
         try {
           AxiosClient.post(`portfolio/trade/${id}/${symbol}/${amount}/${type}`);
           toggle();
+          navigate(0);
         } catch (error) {
           console.error(error);
         }
@@ -54,6 +55,7 @@ const BuySellPopup = ({ toggle, id}) => {
         try {
           AxiosClient.patch(`portfolio/trade/${id}/${symbol}/${amount}/${type}`);
           toggle();
+          navigate(0);
         } catch (error) {
           console.error(error);
         }

@@ -42,6 +42,7 @@ const DepositWithdrawPopup = ({ toggle, id}) => {
       try {
         AxiosClient.post(`portfolio/withdraw/${id}/${amount}`);
         toggle();
+        navigate(0);
       } catch (error) {
         console.error(error);
       }
@@ -49,6 +50,7 @@ const DepositWithdrawPopup = ({ toggle, id}) => {
       try {
         AxiosClient.post(`portfolio/deposit/${id}/${amount}`);
         toggle();
+        navigate(0);
       } catch (error) {
         console.error(error);
       }

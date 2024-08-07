@@ -2,11 +2,11 @@ import { useEffect, useState, useRef } from "react";
 import AxiosClient from "../api/AxiosClient";
 import { useNavigate } from "react-router-dom";
 
-const CreateListPopup = ({ toggle, username, id}) => {
+const AddRemovePopup = ({ toggle, type, id}) => {
   const [visible, setVisible] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
-  const [name, setName] = useState("");
-  const [privacy, setPrivacy] = useState("");
+  const [amount, setAmount] = useState("");
+  const [symbol, setSymbol] = useState("");
   const [isButtonDisabled, setIsButtonDisabled] = useState(true);
   const formRef = useRef(null);
   const navigate = useNavigate();
@@ -40,30 +40,40 @@ const CreateListPopup = ({ toggle, username, id}) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log(name)
-    console.log(privacy)
-    if (!id){
-      try {
-        AxiosClient.post(`stocklist/${username}/${name}/${privacy}`);
-        toggle();
-        navigate(0); // Refresh the page
-      } catch (error) {
-        console.error(error);
+    try {
+      const response = await AxiosClient.get(`stocklist/check/${id}/${symbol}`);
+      const ifListed = response.data;
+      if (ifListed == -1){
+        try {
+          AxiosClient.post(`stocklist/list/${id}/${symbol}/${amount}/${type}`);
+          toggle();
+          navigate(0);
+        } catch (error) {
+          console.error(error);
+        }
       }
-    } else {
-      try {
-        AxiosClient.post(`stocklist/${username}/${id}/${name}/${privacy}`);
-        toggle();
-        navigate(0); // Refresh the page
-      } catch (error) {
-        console.error(error);
+      else if (ifListed > -1){
+        try {
+          AxiosClient.patch(`stocklist/list/${id}/${symbol}/${amount}/${type}`);
+          toggle();
+          navigate(0);
+        } catch (error) {
+          console.error(error);
+        }
       }
+    } catch (error) {
+      console.error(error);
     }
   };
 
+  const checkAdd = () => {
+    console.log(type === "add")
+    return (type === "add")
+  }
+
   return (
     <div
-      className={`fixed inset-0 flex items-center justify-center transition-opacity duration-300 ${
+      className={`fixed inset-0 flex items-center justify-center transition-opacity duration-300 w-full ${
         visible ? "opacity-100" : "opacity-0"
       }`}
       onClick={handleToggle}
@@ -71,7 +81,7 @@ const CreateListPopup = ({ toggle, username, id}) => {
       {id ? (<div></div>): ( <div className="absolute inset-0 bg-black bg-opacity-40"></div>)}
      
       <div
-        className="relative flex flex-col bg-white shadow-lg rounded-lg p-2 z-10"
+        className="relative flex flex-col bg-white shadow-2xl border-b-2 border-gray-100 rounded-lg p-2 z-10"
         onClick={handlePopupClick}
       >
         <button
@@ -86,39 +96,29 @@ const CreateListPopup = ({ toggle, username, id}) => {
           onChange={handleFormChange}
           ref={formRef}
         >
-          <h1 className="text-2xl">Create New Stock List</h1>
-          <label htmlFor="name">Name: </label>
+          <h1 className="text-2xl">{checkAdd() ? ("Add Stock to the List"):("Remove Stock From the List")}</h1>
+          <label htmlFor="symbol">Stock Symbol: </label>
           <input
-            type="text"
-            id="name"
-            name="name"
+            type="text" 
+            id="symbol"
+            name="symbol"
             required
             className="border-2 p-2 rounded-sm"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
+            value={symbol}
+            onChange={(e) => setSymbol(e.target.value)}
           />
-          <label htmlFor="privacy">Privacy: </label>
-            <select
-              id="privacy"
-              name="Privacy"
-              required
-              className="border-2 p-2 rounded-sm"
-              onChange={(e) => setPrivacy(e.target.value)}
-              defaultValue=""
-            >
-              <option value="" disabled>
-                Select a privacy setting
-              </option>
-                <option key={1} value={`private`}>
-                  Private
-                </option>
-                <option key={2} value={`friends`}>
-                  Friends
-                </option>
-                <option key={3} value={`public`}>
-                  Public
-                </option>
-            </select>
+          <label htmlFor="amount">Amount: </label>
+          <input
+            type="number" 
+            min="0" 
+            step="1"
+            id="amount"
+            name="amount"
+            required
+            className="border-2 p-2 rounded-sm"
+            value={amount}
+            onChange={(e) => setAmount(e.target.value)}
+          />
           <button
             type="submit"
             className={`p-2 rounded-lg ${
@@ -134,4 +134,4 @@ const CreateListPopup = ({ toggle, username, id}) => {
   );
 }
 
-export default CreateListPopup;
+export default AddRemovePopup;
