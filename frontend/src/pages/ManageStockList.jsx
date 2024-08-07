@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import StockCard from "../components/StockCard";
 import Card from "../components/Card";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -19,6 +19,8 @@ const ManageStockList = () => {
   	const { stocklist, portfolio, isOwner } = state;
 	const [stocks, setStocks] = React.useState([])
 	const [selectedStock, setSelectedStock] = React.useState([]);
+	const [stockPrice, setStockPrice] = React.useState(0);
+	const [stockCov, setStockCov] = React.useState(0);
 	const { getUsername, isLoggedIn } = useAuth();
 	const username = getUsername();
 	const navigate = useNavigate();
@@ -35,22 +37,48 @@ const ManageStockList = () => {
 		  } catch (error) {
 			console.error("Error fetching data:", error);
 		  }
-		};
-	
+		}
+
+		const getStockPrice = async () => {
+			try {
+				const response = await AxiosClient.get(`stocks/current/${selectedStock[0]}`)
+				if (response.data) {
+					setStockPrice(response.data)
+				} else {
+				  console.error("Unexpected data format:", response.data);
+				}
+			  } catch (error) {
+				console.error("Error fetching data:", error);
+			  }
+		}
+
+		const getStockCOV = async () => {
+			try {
+				const response = await AxiosClient.get(`stocks/COV/${selectedStock[0]}`)
+				if (response.data) {
+					setStockCov(response.data)
+				} else {
+				  console.error("Unexpected data format:", response.data);
+				}
+			  } catch (error) {
+				console.error("Error fetching data:", error);
+			  }
+		}
+		getStockCOV();
 		getListedStocks();
-	  }, [isLoggedIn]);
+		getStockPrice();
+	}, [selectedStock, isLoggedIn]);
 
 	  const displayDetails = () => {
-		console.log(selectedStock)
 		if (selectedStock[0]){
 			return (
 				<div className="flex flex-col  my-4  gap-4">
-					
 					<div className="flex min-w-[20vw] flex-col gap-2">
 					<h1 className="text-xl text-left">Information</h1>
-					
+					{/* {getStockPrice(selectedStock[0])} */}
+					<p className="text-lg text-left">Current Market Value per Holding: ${stockPrice}</p>
+					<p className="text-lg text-left">Current Market COV: {stockCov}</p>
 					</div>
-					
 				</div>
 			)
 		} else {
@@ -109,12 +137,12 @@ const ManageStockList = () => {
 								</Card>
 							</button>
 						))
-					
 					}
 				</div>
 
 				<div className="flex-1 flex flex-col gap-2">
 					<h1 className="text-xl text-left">Details</h1>
+					{/* <div className="h-full bg-white">{displayDetails()}</div> */}
 					<Card className="h-full bg-white">{displayDetails()}</Card>
 				</div>
 			</div>

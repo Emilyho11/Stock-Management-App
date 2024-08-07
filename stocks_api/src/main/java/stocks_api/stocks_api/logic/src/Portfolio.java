@@ -189,19 +189,11 @@ public class Portfolio {
     public static double estimateStockValue(int id, Connection conn) {
         try {
             PreparedStatement stmt;
-            stmt = conn.prepareStatement("SELECT SUM(b.total * s.close) "
-                                            + "FROM bought b "
-                                            + "INNER JOIN ("
-                                                +    "SELECT symbol, timestamp, close "
-                                                +    "FROM stock_data "
-                                                +    "WHERE (symbol, timestamp) IN ("
-                                                    +        "SELECT symbol, MAX(timestamp) "
-                                                    +         "FROM stock_data "
-                                                    +         "GROUP BY symbol"
-                                                    +")"
-                                                    +")s "
-                                                    +"ON b.symbol = s.symbol"
-                                                    +"WHERE b.portfolio_id = ?;");
+            stmt = conn.prepareStatement("SELECT SUM(b.total * s.close) FROM bought b INNER JOIN "+
+            "(SELECT symbol, timestamp, close FROM stock_data WHERE "+
+            "(symbol, timestamp) IN (SELECT symbol, MAX(timestamp) "+
+            "FROM stock_data GROUP BY symbol)) s ON b.symbol = s.symbol "+
+            "WHERE b.portfolio_id = ?;");
             stmt.setInt(1, id);
             ResultSet rs = stmt.executeQuery();
             System.out.println("Retrieved this user's portfolio stocks estimate");
@@ -220,11 +212,15 @@ public class Portfolio {
     public static double estimatePortfolioValue(int id, Connection conn) {
         double bal = getBalance(id, conn);
         double val = estimateStockValue(id, conn);
-        if (bal + val < 0){
-            return 0;
-        } else {
-            return bal + val;
+        double realbal = 0;
+        double realval = 0;
+        if (bal > 0){
+            realbal = bal;
         }
+        if (val > 0){
+            realval = val;
+        }
+        return realbal+realval;
     }
 
     //creates a new bought tuple

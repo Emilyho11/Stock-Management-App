@@ -25,6 +25,8 @@ const ManagePortfolio = () => {
 	const [listStocks, setListStocks] = React.useState([])
 	const [selectedStock, setSelectedStock] = React.useState([]);
 	const [selectedList, setSelectedList] = React.useState([]);
+	const [stockPrice, setStockPrice] = React.useState(0);
+	const [stockCov, setStockCov] = React.useState(0);
 	const { getUsername, isLoggedIn } = useAuth();
 	const username = getUsername();
 	const navigate = useNavigate();
@@ -73,11 +75,39 @@ const ManagePortfolio = () => {
 				  }
 			}
 		}
-	
+
+		const getStockPrice = async () => {
+			try {
+				const response = await AxiosClient.get(`stocks/current/${selectedStock[0]}`)
+				if (response.data) {
+					console.log(response.data)
+					setStockPrice(response.data)
+				} else {
+				  console.error("Unexpected data format:", response.data);
+				}
+			  } catch (error) {
+				console.error("Error fetching data:", error);
+			  }
+		}
+		const getStockCOV = async () => {
+			try {
+				const response = await AxiosClient.get(`stocks/COV/${selectedStock[0]}`)
+				if (response.data) {
+					setStockCov(response.data)
+				} else {
+				  console.error("Unexpected data format:", response.data);
+				}
+			  } catch (error) {
+				console.error("Error fetching data:", error);
+			  }
+		}
+		
+		getStockCOV();	
+		getStockPrice()
 		getOwnedStocks();
 		getPortfolioStockLists();
 		getListStocks();
-	  }, [selectedList, isLoggedIn]);
+	  }, [selectedStock, selectedList, isLoggedIn]);
 
 	const handleStockListDetails = () => {
 		//directs them to the stock list page
@@ -89,7 +119,15 @@ const ManagePortfolio = () => {
 	const displayDetails = () => {
 		if ((showStocks || showStocks == null)  && selectedStock.length > 0){
 			return (
-				<p>temporary info, need to fill with stock stuff</p>
+				<Card className="h-full bg-white">
+				<div className="flex flex-col  my-4  gap-4">
+					<div className="flex min-w-[20vw] flex-col gap-2">
+					<h1 className="text-xl text-left">Information</h1>
+					<p className="text-lg text-left">Current Market Value per Holding: ${stockPrice}</p>
+					<p className="text-lg text-left">Current Market COV: {stockCov}</p>
+					</div>
+				</div>
+				</Card>
 			)
 		} else if (showStocks == false && !Array.isArray(selectedList)){
 			return (

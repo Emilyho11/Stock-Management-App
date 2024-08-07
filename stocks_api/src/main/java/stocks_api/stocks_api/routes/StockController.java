@@ -78,6 +78,39 @@ public class StockController {
         }
     }
 
+    // Get a stocks current COV
+    @GetMapping("/COV/{symbol}")
+    @ResponseBody
+    public double getStockCOV(@PathVariable String symbol) {
+        try {
+            String sqlQuery = "SELECT cov FROM stocks WHERE symbol = ?";
+            PreparedStatement preparedStatement = DBHandler.getInstance().getConnection().prepareStatement(sqlQuery);
+            preparedStatement.setString(1, symbol);
+            ResultSet rs = preparedStatement.executeQuery();
+            if (rs.next()){
+                return rs.getDouble("cov");
+            }
+            return 0;
+        } catch (Exception e) {
+            e.printStackTrace();
+            // output error message
+            return -1;
+        }
+    }
+
+    // Get a stocks current price
+    @GetMapping("/current/{symbol}")
+    @ResponseBody
+    public double getStockPrice(@PathVariable String symbol) {
+        try {
+            return Stocks.getCurrentStockPrice(symbol);
+        } catch (Exception e) {
+            e.printStackTrace();
+            // output error message
+            return -1;
+        }
+    }
+
     // This function inserts a stock into stocks table, but updates cov if the symbol already exists
     @PostMapping("/")
     @ResponseBody
