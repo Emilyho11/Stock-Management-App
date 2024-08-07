@@ -15,7 +15,7 @@ import AxiosClient from "../api/AxiosClient";
 import { useAuth } from "../components/AuthContext";
 
 const ManageStockList = () => {
-	const { getUsername } = useAuth();
+	const { getUsername, isLoggedIn } = useAuth();
 	const { state } = useLocation();
   const { stocklist, portfolio } = state;
 	const [stocks, setStocks] = React.useState([])
