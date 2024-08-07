@@ -1,13 +1,14 @@
 import { useEffect, useState, useRef } from "react";
 import AxiosClient from "../api/AxiosClient";
+import { useNavigate } from "react-router-dom";
 
 const CreatePortfolioPopup = ({ toggle, username}) => {
   const [visible, setVisible] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [name, setName] = useState("");
   const [isButtonDisabled, setIsButtonDisabled] = useState(true);
+  const navigate = useNavigate();
   const formRef = useRef(null);
-  //const username = "mirihuang"
 
   useEffect(() => {
     // Check form validity on initial render
@@ -25,6 +26,7 @@ const CreatePortfolioPopup = ({ toggle, username}) => {
 
   const handleToggle = () => {
     toggle();
+    navigate(0); // Refresh the page
   };
 
   const handleFormChange = () => {
@@ -41,7 +43,7 @@ const CreatePortfolioPopup = ({ toggle, username}) => {
     try {
 			AxiosClient.post(`portfolio/${username}/${name}`);
       toggle();
-      navigate(0);
+      navigate(0); // Refresh the page
 		} catch (error) {
 			console.error(error);
 		}
