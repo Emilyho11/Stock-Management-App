@@ -183,7 +183,7 @@ public class Stocks extends Table<Stocks> {
                 Double COV = rs.getDouble("cov");
                 covMap.put(symbol, COV);
             }
-            return covMap;  
+            return covMap;
         } catch (Exception e) {
             e.printStackTrace();
         }

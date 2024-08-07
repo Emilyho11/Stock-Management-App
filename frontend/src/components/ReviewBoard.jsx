@@ -55,7 +55,10 @@ const ReviewBoard = (props) => {
 			console.error("User not logged in");
 			return;
 		}
-
+		if (isOwner) {
+			console.error("Owner cannot review their own stock list");
+			return;
+		}
 		try {
 			const response = await AxiosClient.post("reviews/", newReview);
 			console.log(response.data);
