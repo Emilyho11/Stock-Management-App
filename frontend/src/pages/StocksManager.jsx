@@ -84,7 +84,7 @@ const StocksManager = () => {
 						<div className="flex gap-4 flex-wrap w-full">
 							{portfolios
 								.map((portfolio) => (
-									<div className="flex gap-4 items-center px-8 hover:!bg-white transition-all bg-white p-2 rounded-md w-72 min-h-3 hover:shadow-lg " onClick={() => handleOpenPortfolio(portfolio)}>
+									<div key={portfolio.id} className="flex gap-4 items-center px-8 hover:!bg-white transition-all bg-white p-2 rounded-md w-72 min-h-3 hover:shadow-lg flex-col" onClick={() => handleOpenPortfolio(portfolio)}>
 										<p className="uppercase text-sm bg-gray-100  w-fit rounded-md px-2 py-1 ml-auto mr-auto">
 											Portfolio
 										</p>
@@ -108,13 +108,14 @@ const StocksManager = () => {
 					<div className="flex gap-4 flex-wrap w-full">
 							{stockLists
 								.map((list) => (
-									<div className="flex gap-4 items-center px-8 hover:!bg-white transition-all bg-white p-2 rounded-md w-72 min-h-3 hover:shadow-lg " onClick={() => handleOpenStockList(list)}>
+									<div key={list.id} className="flex gap-4 items-center px-8 hover:!bg-white transition-all bg-white p-2 rounded-md w-72 min-h-3 hover:shadow-lg flex-col" onClick={() => handleOpenStockList(list)}>
 										<p className="uppercase text-sm bg-gray-100  w-fit rounded-md px-2 py-1 ml-auto mr-auto">
 											Stock List
 										</p>
 										<h1 className="text-xl font-normal">{list.name}</h1>
+										<PrivacyIcon privacy={list.privacy} />
 										<span className="scale-75 ml-auto ">
-											<PrivacyIcon privacy={list.privacy} />
+											
 										</span>
 									</div>
 								))}
