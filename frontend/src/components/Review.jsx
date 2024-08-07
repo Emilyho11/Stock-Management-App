@@ -1,5 +1,4 @@
 import React from "react";
-import Card from "./Card";
 import Button, { ButtonVariants } from "./Button";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faX } from "@fortawesome/free-solid-svg-icons";
@@ -16,9 +15,6 @@ const Review = (props) => {
 	}
 
 	const deleteReview = async () => {
-		if (!myReview) {
-			return;
-		}
 		console.log("Deleting review", data);
 		try {
 			const response = await AxiosClient.delete("reviews/"+ getUsername() + "/" + stockListId);

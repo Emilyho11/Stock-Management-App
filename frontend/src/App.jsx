@@ -24,10 +24,10 @@ function App() {
 					<Navbar />
 					<div className="flex-1 bg-gray-100 relative pt-4">
 						<Routes>
-							<Route path="/" element={<Stocks />} />
+							<Route path="/stocks" element={<Stocks />} />
 							<Route path="/portfolio/:id" element={<ManagePortfolio />} />
 							<Route path="/stocklist/:id" element={<ManageStocks />} />
-							<Route path="/stock-manager" element={<StocksManager />} />
+							<Route path="/" element={<StocksManager />} />
 							<Route path="/account" element={<Account />} />
 							<Route path="/friends" element={<Friends />} />
 							<Route path="/logout" element={<Logout />} />

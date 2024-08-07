@@ -23,8 +23,8 @@ const Navbar = () => {
 		return <> </>;
 	}
 	const myLinks = [
-		{ to: "/", text: "Stocks", icon: faBoxesStacked },
-		{ to: "/stock-manager", text: "Manage My Stocks", icon: faHouse },
+		{ to: "/", text: "Manage My Stocks", icon: faHouse },
+		{ to: "/stocks", text: "Stocks", icon: faBoxesStacked },
 		{ to: "/friends", text: "Friends", icon: faUserFriends },
 		{ to: "/account", text: "Account", icon: faBoxesStacked },
 	];
