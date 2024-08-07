@@ -52,8 +52,6 @@ const ManageStockList = () => {
 					</div>
 					
 				</div>
-				
-				
 			)
 		} else {
 			return (

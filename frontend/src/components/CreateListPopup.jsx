@@ -1,5 +1,6 @@
 import { useEffect, useState, useRef } from "react";
 import AxiosClient from "../api/AxiosClient";
+import { useNavigate } from "react-router-dom";
 
 const CreateListPopup = ({ toggle, username, id}) => {
   const [visible, setVisible] = useState(false);
@@ -8,6 +9,7 @@ const CreateListPopup = ({ toggle, username, id}) => {
   const [privacy, setPrivacy] = useState("");
   const [isButtonDisabled, setIsButtonDisabled] = useState(true);
   const formRef = useRef(null);
+  const navigate = useNavigate();
   //const username = "mirihuang"
 
   useEffect(() => {
@@ -45,6 +47,7 @@ const CreateListPopup = ({ toggle, username, id}) => {
       try {
         AxiosClient.post(`stocklist/${username}/${name}/${privacy}`);
         toggle();
+        navigate(0); // Refresh the page
       } catch (error) {
         console.error(error);
       }
@@ -52,6 +55,7 @@ const CreateListPopup = ({ toggle, username, id}) => {
       try {
         AxiosClient.post(`stocklist/${username}/${id}/${name}/${privacy}`);
         toggle();
+        navigate(0); // Refresh the page
       } catch (error) {
         console.error(error);
       }
