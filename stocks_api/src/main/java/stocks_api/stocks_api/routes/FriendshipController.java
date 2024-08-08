@@ -28,6 +28,7 @@ public class FriendshipController {
     @PostMapping("/{username}/{target}")
     public void sendFriendRequest(@PathVariable String username, @PathVariable String target) {
         Friendship.sendFriendRequest(username, target, conn);
+        //System.out.println(Friendship.checkRequestable(username, target, conn));
     }
     
     @PostMapping("/accept/{username}/{target}")
