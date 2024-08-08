@@ -126,6 +126,7 @@ public class StockListController {
 
     @PatchMapping("/changePrivacy/{id}/{privacy}")
     public void changePrivacy(@PathVariable int id, @PathVariable String privacy) {
+        System.out.println(privacy);
         StockList.changePrivacy(id, privacy, conn);
     }
 

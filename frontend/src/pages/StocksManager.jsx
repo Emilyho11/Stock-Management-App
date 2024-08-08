@@ -112,10 +112,10 @@ const StocksManager = () => {
 			handleDeleteList(stocklist.id)
 		}
 		else if (name==username){
-			navigate(`/stocklist/${stocklist.id}`, { state: { stocklist: stocklist, isOwner: true } });
+			navigate(`/stocklist/${stocklist.id}`, { state: { stocklist: stocklist, privacy: stocklist.privacy, isOwner: true } });
 		}
 		else {
-			navigate(`/stocklist/${stocklist.id}`, { state: { stocklist: stocklist, isOwner: false } });
+			navigate(`/stocklist/${stocklist.id}`, { state: { stocklist: stocklist, privacy: stocklist.privacy, isOwner: false } });
 		}
 	}
 
