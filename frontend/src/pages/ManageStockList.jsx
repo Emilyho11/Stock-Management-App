@@ -16,7 +16,7 @@ import { useAuth } from "../components/AuthContext";
  
 const ManageStockList = () => {
 	const { state } = useLocation();
-  	const { stocklist, portfolio, isOwner } = state;
+  	const { stocklist, privacy, portfolio, isOwner } = state;
 	const [stocks, setStocks] = React.useState([])
 	const [selectedStock, setSelectedStock] = React.useState([]);
 	const [stockPrice, setStockPrice] = React.useState(0);
@@ -94,6 +94,32 @@ const ManageStockList = () => {
 		return (portfolio ? (navigate(`/portfolio/${portfolio.id}`, { state: { portfolio: portfolio } })) : (navigate("/")));
 	}
 
+	const handlePrivacyClick = async () => {
+		if (privacy.trim() === "public"){
+			console.log('hihhihihi')
+			changePrivacy(stocklist.id, "friends")
+			privacy = await changePrivacy(stocklist.id, "friends")
+			//console.log(privacy)
+			//navigate(0);
+		}
+		if (privacy.trim() === "friends"){
+			console.log('byebyebyebye')
+			changePrivacy(stocklist.id, "private")			
+			privacy = await changePrivacy(stocklist.id, "private")
+		}
+		if (privacy.trim() === "private"){
+			console.log('aahahhahaha')
+			console.log(stocklist.id)
+			changePrivacy(stocklist.id, "public")	
+			privacy = await changePrivacy(stocklist.id, "public")
+		}
+	}
+
+	const changePrivacy = (id, newPrivacy) => {
+		AxiosClient.patch(`stocklist/changePrivacy/${id}/${newPrivacy}`)
+		navigate(`/stocklist/${id}`, { state: { stocklist: stocklist, privacy: newPrivacy, portfolio: portfolio, isOwner: isOwner}});
+	}
+
 	return (
 		<div className="md:w-2/3 ml-auto mr-auto flex flex-col gap-2">
 			<Link to={goBack} onClick={(e) => goBack(e)}>
@@ -103,9 +129,9 @@ const ManageStockList = () => {
 				</Button>
 			</Link>
 			<Card className="min-h-[50vh] !bg-transparent !items-start !p-0 max-lg:flex-col">
-				<div className="scale-75 ml-auto flex flex-col ">
+				<div className="scale-75 ml-auto flex flex-col" onClick={(e) => handlePrivacyClick(stocklist)}>
 					<h1 className="text-left text-4xl">{stocklist.name}</h1>
-					<PrivacyIcon privacy={stocklist.privacy} />	
+					<PrivacyIcon privacy={privacy}/>	
 				</div>
 				<Card className="w-full h-full !items-start flex-col py-8 px-12 bg-white">
 					<div className="flex flex-row">
@@ -113,7 +139,7 @@ const ManageStockList = () => {
 						<CreateButton className=" bg-green-500 hover:bg-green-800" username={username} type={"add"} id={stocklist.id}/>
 						<CreateButton className=" bg-red-500 hover:bg-red-800" username={username} type={"remove"} id={stocklist.id}/></>) : (null)}
 					</div>			
-					<ReviewBoard stockListId={stocklist.id} privacy={stocklist.privacy} isOwner={isOwner} />
+					<ReviewBoard stockListId={stocklist.id} privacy={privacy} isOwner={isOwner} />
 				</Card>
 			</Card>
 			{/* <hr className="mb-2" /> */}

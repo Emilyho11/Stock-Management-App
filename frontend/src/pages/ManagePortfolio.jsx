@@ -116,7 +116,7 @@ const ManagePortfolio = () => {
 	const handleStockListDetails = () => {
 		//directs them to the stock list page
 		if (selectedList){
-			navigate(`/stocklist/${selectedList.id}`, { state: { stocklist: selectedList, portfolio: portfolio}});
+			navigate(`/stocklist/${selectedList.id}`, { state: { stocklist: selectedList, privacy: selectedList.privacy, portfolio: portfolio}});
 		}
 	}
 
