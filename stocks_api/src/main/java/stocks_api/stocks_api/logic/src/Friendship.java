@@ -93,22 +93,11 @@ public class Friendship {
                 PreparedStatement stmt;
                 stmt = conn.prepareStatement("INSERT INTO friendship (username, target, status, rejected) "
                         + "VALUES (? , ?, 'Pending', ?) ON CONFLICT (username, target) DO UPDATE SET status = EXCLUDED.status;");
-                        + "VALUES (? , ?, 'Pending', ?) ON CONFLICT (username, target) DO UPDATE SET status = EXCLUDED.status;");
                 stmt.setString(1, username);
                 stmt.setString(2, target);
                 stmt.setDate(3, null);
                 stmt.executeUpdate();
                 System.out.println("Friend request sent successfully");
-            }
-            // } else if (requestable.equals("Update")){
-            //     PreparedStatement stmt;
-            //     stmt = conn.prepareStatement("UPDATE friendship "
-            //             + "SET status = 'Pending' "
-            //             + "WHERE (username = ? AND target = ?);");
-            //     stmt.setString(1, username);
-            //     stmt.setString(2, target);
-            //     stmt.executeUpdate();
-            // }
             }
             // } else if (requestable.equals("Update")){
             //     PreparedStatement stmt;
