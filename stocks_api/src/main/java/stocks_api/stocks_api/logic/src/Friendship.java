@@ -4,7 +4,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.time.LocalTime;
+import java.time.LocalDateTime;
 import static java.time.temporal.ChronoUnit.MINUTES;
 import java.util.Calendar;
 import java.util.Date;
@@ -38,9 +38,11 @@ public class Friendship {
     //checks if the time since the last rejection between 2 users has passed 5 minutes
     private static boolean checkRejectionTime(ResultSet rs) {
         try {
-            LocalTime lastrejection = rs.getTime("rejected").toLocalTime();
-            LocalTime now = LocalTime.now();
-            if (MINUTES.between(now, lastrejection) > 5 ) {
+            LocalDateTime lastrejection = rs.getTimestamp("rejected").toLocalDateTime();
+            //OffsetDateTime lastrejection = OffsetDateTime.ofInstant(rs.getTimestamp("rejected")) ;
+            LocalDateTime now = LocalDateTime.now();
+            System.out.println(MINUTES.between(lastrejection, now));
+            if (MINUTES.between(lastrejection, now) > 5 ) {
                 return true;
             } else {
                 return false;
@@ -52,35 +54,33 @@ public class Friendship {
     }
 
     //checks if a user can send a friend request to target
-    private static boolean checkRequestable(String username, String target, Connection conn) {
+    public static boolean checkRequestable(String username, String target, Connection conn) {
         try {
             PreparedStatement stmt;
-            stmt = conn.prepareStatement("SELECT * FROM friendship WHERE ((username = ? AND target = ?) OR (username = ? AND target = ?));");
+            stmt = conn.prepareStatement("SELECT * FROM friendship WHERE (username = ? AND target = ?);");
             stmt.setString(1, username);
             stmt.setString(2, target);
-            stmt.setString(3, target);
-            stmt.setString(4, username);
             ResultSet rs = stmt.executeQuery();
             if (rs.next()){
-                String friendstatus = rs.getString("status");
+                String friendstatus = rs.getString("status").trim();
+                //return friendstatus;
                 //if there is an existing friend req, dont let them
-                if (friendstatus.equals("Accepted") || friendstatus.equals("Pending")){
-                    return false;
+                if ("Accepted".equals(friendstatus) || "Pending".equals(friendstatus)){
+                   return false;
                 }
                 //if there is a rejection already, check if the time has elapsed
                 else if (friendstatus.equals("Rejected")){
-                    if (checkRejectionTime(rs)){
-                        return true;
-                    }
-                    return false;
+                    return checkRejectionTime(rs);
                 }
-                return true;
+               return true;
             }
             System.out.println("Checked for this friendship requestability successfully");
             return true;
+            // return "";
         } catch (SQLException ex) {
             System.out.println("Error finding this friendship's requestability: " + ex.getMessage());
             return false;
+            // return "";
         }
     }
 
@@ -88,6 +88,7 @@ public class Friendship {
     public static void sendFriendRequest(String username, String target, Connection conn) {
         try {
             boolean requestable = checkRequestable(username, target, conn);
+            System.out.println(requestable);
             if (requestable){
                 PreparedStatement stmt;
                 stmt = conn.prepareStatement("INSERT INTO friendship (username, target, status, rejected) "
@@ -116,19 +117,22 @@ public class Friendship {
     public static void acceptFriendRequest(String username, String target, Connection conn) {
         try {
             PreparedStatement stmt;
-            stmt = conn.prepareStatement("INSERT INTO friendship VALUES (?, ?, 'Accepted', ?) ON CONFLICT (username, target) DO UPDATE SET status = EXCLUDED.status;");
+            stmt = conn.prepareStatement("INSERT INTO friendship VALUES (?, ?, 'Accepted', ?), (?, ?, 'Accepted', ?) ON CONFLICT (username, target) DO UPDATE SET status = EXCLUDED.status;");
                     // + "SET status = 'Accepted' "
                     // + "WHERE ((username = ? AND target = ?) OR (username = ? AND target = ?));");
             stmt.setString(1, username);
             stmt.setString(2, target);
             stmt.setTimestamp(3, null);
-            PreparedStatement stmt2;
-            stmt2 = conn.prepareStatement("INSERT INTO friendship VALUES (?, ?, 'Accepted', ?) ON CONFLICT (username, target) DO UPDATE SET status = EXCLUDED.status;");
-            stmt2.setString(1, target);
-            stmt2.setString(2, username);
-            stmt2.setTimestamp(3, null);
+            stmt.setString(4, target);
+            stmt.setString(5, username);
+            stmt.setTimestamp(6, null);
+            // PreparedStatement stmt2;
+            // stmt2 = conn.prepareStatement("INSERT INTO friendship VALUES (?, ?, 'Accepted', ?) ON CONFLICT (username, target) DO UPDATE SET status = EXCLUDED.status;");
+            // stmt2.setString(1, target);
+            // stmt2.setString(2, username);
+            // stmt2.setTimestamp(3, null);
             stmt.executeUpdate();
-            stmt2.executeUpdate();
+            //stmt2.executeUpdate();
             System.out.println("Friend request accepted successfully");
         } catch (SQLException ex) {
             System.out.println("Error accepting friend request: " + ex.getMessage());
