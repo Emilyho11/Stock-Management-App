@@ -75,7 +75,6 @@ const ManageStockList = () => {
 				<div className="flex flex-col  my-4  gap-4">
 					<div className="flex min-w-[20vw] flex-col gap-2">
 					<h1 className="text-xl text-left">Information</h1>
-					{/* {getStockPrice(selectedStock[0])} */}
 					<p className="text-lg text-left">Current Market Value per Holding: ${stockPrice}</p>
 					<p className="text-lg text-left">Current Market COV: {stockCov}</p>
 					</div>
@@ -96,22 +95,14 @@ const ManageStockList = () => {
 
 	const handlePrivacyClick = async () => {
 		if (privacy.trim() === "public"){
-			console.log('hihhihihi')
 			changePrivacy(stocklist.id, "friends")
-			privacy = await changePrivacy(stocklist.id, "friends")
-			//console.log(privacy)
-			//navigate(0);
 		}
 		if (privacy.trim() === "friends"){
-			console.log('byebyebyebye')
 			changePrivacy(stocklist.id, "private")			
-			privacy = await changePrivacy(stocklist.id, "private")
 		}
 		if (privacy.trim() === "private"){
-			console.log('aahahhahaha')
 			console.log(stocklist.id)
 			changePrivacy(stocklist.id, "public")	
-			privacy = await changePrivacy(stocklist.id, "public")
 		}
 	}
 
