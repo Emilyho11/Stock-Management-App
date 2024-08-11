@@ -164,6 +164,7 @@ public class ReviewController {
         }
     }
 
+    // Get reviews by username
     @GetMapping("/user/{username}")
     @ResponseBody
     public BasicResponse getReviewsByUsername(@PathVariable String username) {
