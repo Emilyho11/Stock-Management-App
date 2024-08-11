@@ -2,7 +2,7 @@ import React from "react";
 import StockCard from "../components/StockCard";
 import Card from "../components/Card";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faArrowLeft, faMoneyBillTransfer, faCreditCard, faChartSimple } from "@fortawesome/free-solid-svg-icons";
+import { faArrowLeft, faSquareMinus, faChartSimple } from "@fortawesome/free-solid-svg-icons";
 import Button, { ButtonVariants } from "../components/Button";
 import { Link } from "react-router-dom";
 import ReviewBoard from "../components/ReviewBoard";
@@ -116,8 +116,13 @@ const ManagePortfolio = () => {
 	const handleStockListDetails = () => {
 		//directs them to the stock list page
 		if (selectedList){
-			navigate(`/stocklist/${selectedList.id}`, { state: { stocklist: selectedList, portfolio: portfolio}});
+			navigate(`/stocklist/${selectedList.id}`, { state: { stocklist: selectedList, privacy: selectedList.privacy, portfolio: portfolio, isOwner: true}});
 		}
+	}
+
+	const handleDeleteList = (id) => {
+		AxiosClient.delete(`stocklist/delete/${id}`)
+		navigate(0);
 	}
 
 	const displayDetails = () => {
@@ -137,9 +142,13 @@ const ManagePortfolio = () => {
 			return (
 				<div className="flex flex-row  my-4  gap-4">
 					<div className="flex min-w-[20vw] flex-col gap-2">
-						<Button className="h-1/7" onClick={() => handleStockListDetails()}>
+						<div className="flex flex-row">
+						<Button className="h-1/7 w-3/4" onClick={() => handleStockListDetails()}>
 							View Details
 						</Button>
+						<button><FontAwesomeIcon icon={faSquareMinus} className="text-red-500 text-2xl ml-4" onClick={(e) => handleDeleteList(selectedList.id)}/>
+						</button>
+						</div>
 						<div className="flex flex-row">
 						<CreateButton className=" bg-green-500 hover:bg-green-800" username={username} type={"add"} id={selectedList.id}/>
 						<CreateButton className=" bg-red-500 hover:bg-red-800" username={username} type={"remove"} id={selectedList.id}/>
@@ -199,7 +208,7 @@ const ManagePortfolio = () => {
 
 	return (
 		<div className="md:w-2/3 ml-auto mr-auto flex flex-col gap-2">
-			<Link to="/stock-manager">
+			<Link to="/">
 				<Button className="flex items-center gap-4" variant={ButtonVariants.TRANSPARENT}>
 					<FontAwesomeIcon icon={faArrowLeft} />
 					<p className="font-semibold uppercase tracking-wide">Home</p>

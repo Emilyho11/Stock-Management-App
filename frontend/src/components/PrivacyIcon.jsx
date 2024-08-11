@@ -1,7 +1,7 @@
 import React from "react";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faComments, faEyeSlash, faUserGroup } from "@fortawesome/free-solid-svg-icons";
+import { faEye, faEyeSlash, faUserGroup } from "@fortawesome/free-solid-svg-icons";
 
 const PrivacyIcon = (props) => {
 	const checkPrivacy = (privacy) => {
@@ -20,6 +20,12 @@ const PrivacyIcon = (props) => {
 				</span>
 			)
 		}
+		return (
+			<span className={" " + props.className}>
+				<FontAwesomeIcon icon={faEye} className="mr-2 " />
+				PUBLIC
+			</span>
+		)
 	}
 	return (
 		<>

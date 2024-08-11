@@ -44,32 +44,11 @@ const CreateStockForm = () => {
         }
     };
 
-    // const apiUpdateStock = async () => {
-    //     try {
-    //         const response = await AxiosClient.patch(`stocks/`, stockData);
-    //         if (response.data) {
-    //             console.log("Stock updated successfully in stocks table");
-    //         } else {
-    //             console.error("Unexpected data format:", response.data);
-    //         }
-    //     } catch (error) {
-    //         console.error("Error updating stock:", error);
-    //     }
-    // };
-
-    // const stockInsertIfExists = async () => {
-    //     try {
-    //         const response = await AxiosClient.get(`stocks/${stockData.symbol}`);
-    //         response.data ? apiUpdateStock() : apiInsertStock();
-    //     } catch (error) {
-    //         console.error("Error checking stock:", error);
-    //     }
-    // };
-
     // Handle create stock form submission
     const handleCreateStockSubmit = async (e) => {
         e.preventDefault();
         await apiInsertStockData();
+        navigate(0);
     };
 
     return (

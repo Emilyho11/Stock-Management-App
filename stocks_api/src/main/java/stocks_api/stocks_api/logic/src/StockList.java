@@ -69,7 +69,7 @@ public class StockList extends Table {
             ResultSet rs = stmt.executeQuery();
             System.out.println("Generated a new stock list id successfully");
             if (rs.next()){
-                return (rs.getInt(1) + 1);
+                return (rs.getInt(1));
             }
             return 0;
         } catch (SQLException ex) {
@@ -81,27 +81,27 @@ public class StockList extends Table {
 
     //adds a new stock list to the database
     public static int createStockList(String owner, String name, String privacy, Connection conn){
-        int newid = StockList.getNewId(conn);
-        if(newid > -1){
+        //int newid = StockList.getNewId(conn);
+        //if(newid > -1){
             try {
                 PreparedStatement stmt1;
-                stmt1 = conn.prepareStatement("INSERT INTO stock_list (stocklist_id, name, privacy) VALUES (?, ?, ?);");
-                stmt1.setInt(1, newid);
-                stmt1.setString(2, name);
-                stmt1.setString(3, privacy);
+                stmt1 = conn.prepareStatement("INSERT INTO stock_list (name, privacy) VALUES (?, ?);");
+                //stmt1 = conn.prepareStatement("INSERT INTO stock_list (stocklist_id, name, privacy) VALUES (?, ?, ?);");
+                stmt1.setString(1, name);
+                stmt1.setString(2, privacy);
                 stmt1.executeUpdate();
-                System.out.println(newid);
-                return newid;
+                //System.out.println(newid);
+                return StockList.getNewId(conn);
             } catch (Exception ex) {
                 System.out.println("Error creating a new stock list");
                 ex.printStackTrace();
-                return newid;
+                return -1;
             }
-        }
-        else {
-            System.out.println("Error getting a new stock list id");
-            return newid;
-        }
+        // }
+        // else {
+        //     System.out.println("Error getting a new stock list id");
+        //     return newid;
+        // }
     }
 
     //changes the privacy of a given stock list
