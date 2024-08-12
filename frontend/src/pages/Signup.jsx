@@ -3,7 +3,7 @@ import Card from "../components/Card";
 import Button, { ButtonVariants } from "../components/Button";
 import AxiosClient from "../api/AxiosClient";
 import { Link, useNavigate } from "react-router-dom";
-import { useAuth } from "../components/AuthContext";
+import stocksBg from "../assets/images/bg.jpg";
 
 const Signup = () => {
 	const [username, setUsername] = useState("");
@@ -35,13 +35,21 @@ const Signup = () => {
 	};
 
 	return (
-		<div className="w-full">
-			<Card className="!w-full md:!w-1/3 p-4 ml-auto mr-auto flex flex-col ">
+		<div className="relative w-full h-screen flex items-center justify-center">
+			<div
+				className="absolute top-0 left-0 w-full h-full opacity-60 blur-sm grayscale-[40%]"
+				style={{
+					backgroundImage: `url(${stocksBg})`,
+					backgroundSize: "cover",
+					backgroundPosition: "center",
+				}}
+			></div>
+			<Card className="relative z-10 w-full md:w-1/4 px-14 flex flex-col bg-gray-100 py-24">
 				<h1>Signup</h1>
 
 				<form
 					onSubmit={handleCreate}
-					className="flex flex-col  w-full md:w-1/2 [&>input]:bg-gray-200 [&>input]:px-2 [&>input]:py-1 [&>input]:rounded-sm [&>label]:text-left"
+					className="flex flex-col  w-full [&>input]:bg-gray-200 [&>input]:px-2 [&>input]:py-2 [&>input]:rounded-sm [&>label]:text-left"
 				>
 					<label htmlFor="username">Username:</label>
 					<input
@@ -72,15 +80,14 @@ const Signup = () => {
 						onChange={(e) => setEmail(e.target.value)}
 						required
 					/>
-					<br className="my-2" />
-					<Button type="submit" variant={ButtonVariants.LIGHT}>
+					{message && <p>{message}</p>}
+					<Link className="text-blue-600 text-left hover:text-dark_red hover:underline my-6" to="/login">
+						Have an account? Sign in here.
+					</Link>
+					<Button type="submit" className="w-1/2 mx-auto flex items-center justify-center mt-6">
 						Login{" "}
 					</Button>
 				</form>
-				{message && <p>{message}</p>}
-				<Link className="text-blue-600 hover:text-dark_red hover:underline" to="/login">
-					Have an account? Sign in here.
-				</Link>
 			</Card>
 		</div>
 	);
