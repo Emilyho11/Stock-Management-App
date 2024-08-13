@@ -19,9 +19,9 @@ const Navbar = () => {
 		}
 	}, []);
 
-	if (!isLoggedIn()) {
-		return <> </>;
-	}
+	// if (!isLoggedIn()) {
+	// 	return <> </>;
+	// }
 	const myLinks = [
 		{ to: "/", text: "Manage My Stocks", icon: faHouse },
 		{ to: "/stocks", text: "Stocks", icon: faBoxesStacked },
@@ -35,23 +35,25 @@ const Navbar = () => {
 				<FontAwesomeIcon icon={faArrowTrendUp} className="text-4xl text-green-500 m-4" />
 				<h1 className="text-xl tracking-wide">Stock Management</h1>
 			</div>
-			<div className="m-4 mr-32 absolute top-5 right-0 gap-14 text-base hidden md:flex">
-				{myLinks.map((link, index) => (
-					<NavLink
-						key={index}
-						to={link.to}
-						className={({ isActive }) =>
-							[
-								"text-gray-600 hover:text-stock_color transition-all pb-2 ",
-								!isActive ? "active" : "!text-dark_red scale-110 border-b-2 border-dark_red",
-							].join(" ")
-						}
-					>
-						<FontAwesomeIcon icon={link.icon} className="mr-2" />
-						{link.text}
-					</NavLink>
-				))}
-			</div>
+			{isLoggedIn() && (
+				<div className="m-4 mr-32 absolute top-5 right-0 gap-14 text-base hidden md:flex">
+					{myLinks.map((link, index) => (
+						<NavLink
+							key={index}
+							to={link.to}
+							className={({ isActive }) =>
+								[
+									"text-gray-600 hover:text-stock_color transition-all pb-2 ",
+									!isActive ? "active" : "!text-dark_red scale-110 border-b-2 border-dark_red",
+								].join(" ")
+							}
+						>
+							<FontAwesomeIcon icon={link.icon} className="mr-2" />
+							{link.text}
+						</NavLink>
+					))}
+				</div>
+			)}
 			<div className="md:hidden flex items-center absolute top-0 right-0 m-4">
 				<button
 					onClick={() => setIsOpen(!isOpen)}
