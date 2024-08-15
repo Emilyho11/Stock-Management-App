@@ -76,22 +76,45 @@ const Friends = () => {
 		AxiosClient.delete(`friends/delete/${user}/${targ}`);
 		navigate(0);
 	}
-
 	return (
 		<div>
-			<h1>Friends</h1>
-			<div className="flex space-x-evenly w-screen flex-row gap-4">
-				<div className="ml-auto">You have {friends.length} friends.</div>
-				<SendFriendRequestButton className="" username={user} target={targetname}></SendFriendRequestButton>
-				<input type="text" 
+			<h1 className="text-center">Friends</h1>
+			<div className="flex flex-col items-center w-full gap-4">
+				<div className="text-center">You have {friends.length} friends.</div>
+				<div className="flex items-center gap-2">
+					<input
+						type="search"
 						id="targetname"
 						name="targetname"
 						required
-						className="border-2 p-2 rounded-full mr-auto border-gray-500"
+						className="border-2 p-2 rounded-md border-gray-500"
+						placeholder="Search friends..."
 						value={targetname}
-						onChange={(e) => setTargetname(e.target.value)}></input>
+						onChange={(e) => setTargetname(e.target.value)}
+					/>
+					<SendFriendRequestButton className="" username={user} target={targetname}></SendFriendRequestButton>
+				</div>
 			</div>
 			<div className="flex flex-row gap-4 space-x-reverse ml-auto mr-auto">
+			<	div className="flex flex-col gap-4 mt-4 ml-auto mr-auto">
+					<div className="w-1/4 min-w-fit flex flex-col">
+					<h1 className="text-xl">Your Friends</h1>
+					<div className="h-max-screen overflow-y-scroll w-full rounded-lg">
+						{friends.map((friendship) => (
+								<Card key={friendship.username} className="m-4 bg-white scale-90">
+									<img
+										src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png"
+										alt="profile pic"
+										className="w-20 h-20 rounded-md"
+									/>
+									<h1 className="text-xl">{friendship.username}</h1>
+									{friendship.status == "pending" && <p className="ml-auto">{friendship.status}...</p>}
+									<FontAwesomeIcon icon={faSquareMinus} className="text-red-500 text-2xl ml-auto" onClick={(e) => handleDeleteFriend(friendship.username)}/>
+								</Card>
+							))}
+					</div>
+					</div>
+				</div>
 				<div className="flex flex-col gap-4 mt-4 ml-auto mr-auto">
 					<div className="w-1/3 min-w-fit flex flex-col h-full">
 					<h1 className="text-xl">Incoming Requests</h1>
@@ -110,25 +133,6 @@ const Friends = () => {
 								))}
 					</div>
 						
-					</div>
-				</div>
-				<div className="flex flex-col gap-4 mt-4 ml-auto mr-auto">
-					<div className="w-1/4 min-w-fit flex flex-col">
-					<h1 className="text-xl">Your Friends</h1>
-					<div className="h-max-screen overflow-y-scroll w-full  rounded-lg">
-						{friends.map((friendship) => (
-								<Card key={friendship.username} className="m-4 bg-white scale-90">
-									<img
-										src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png"
-										alt="profile pic"
-										className="w-20 h-20 rounded-md"
-									/>
-									<h1 className="text-xl">{friendship.username}</h1>
-									{friendship.status == "pending" && <p className="ml-auto">{friendship.status}...</p>}
-									<FontAwesomeIcon icon={faSquareMinus} className="text-red-500 text-2xl ml-auto" onClick={(e) => handleDeleteFriend(friendship.username)}/>
-								</Card>
-							))}
-					</div>
 					</div>
 				</div>
 				<div className="flex flex-col gap-4 mt-4 ml-auto mr-auto">
