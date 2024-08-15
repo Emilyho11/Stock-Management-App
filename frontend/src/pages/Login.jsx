@@ -69,7 +69,7 @@ const Login = () => {
                         onChange={(e) => setPassword(e.target.value)}
                         required
                     />
-					{message && <p className={`pt-4 message ${message.includes("Error") || message.includes("failed") ? "text-red-600" : "text-green-600"}`}>{message}</p>}
+                    {message && <p className={`pt-4 message ${message.includes("success") || message.includes("Logging in") ? "text-green-600" : "text-red-600"}`}>{message}</p>}
 					<Link className="text-blue-600 text-left hover:text-dark_red hover:underline my-6" to="/signup">
 						Don't have an account yet? Sign up here.
 					</Link>
