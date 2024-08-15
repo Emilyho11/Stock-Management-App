@@ -80,7 +80,7 @@ const Signup = () => {
 						onChange={(e) => setEmail(e.target.value)}
 						required
 					/>
-					{message && <p>{message}</p>}
+					{message && <p className={`pt-4 message ${message.includes("success") ? "text-green-600" : "text-red-600"}`}>{message}</p>}
 					<Link className="text-blue-600 text-left hover:text-dark_red hover:underline my-6" to="/login">
 						Have an account? Sign in here.
 					</Link>
