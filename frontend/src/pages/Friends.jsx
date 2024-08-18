@@ -138,7 +138,7 @@ const Friends = () => {
 						<h1 className="text-xl">Your Friends</h1>
 						<div className="h-max-screen w-full rounded-lg">
 							{friends.map((friendship) => (
-									<Card key={friendship.username} className="m-4 bg-white scale-90 pr-24">
+									<Card key={friendship.username} className="m-4 bg-white scale-90 pr-32">
 										<img
 											src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png"
 											alt="profile pic"
@@ -146,7 +146,7 @@ const Friends = () => {
 										/>
 										<h1 className="text-xl">{friendship.username}</h1>
 										{friendship.status == "pending" && <p className="ml-auto">{friendship.status}...</p>}
-										<FontAwesomeIcon icon={faX} className="absolute top-4 right-4 text-red-500 text-xl cursor-pointer" onClick={(e) => handleDeleteFriend(friendship.username)}/>
+										<FontAwesomeIcon icon={faX} className="absolute top-4 right-4 text-red-500 hover:text-red-300 text-xl cursor-pointer" onClick={(e) => handleDeleteFriend(friendship.username)}/>
 									</Card>
 								))}
 						</div>
