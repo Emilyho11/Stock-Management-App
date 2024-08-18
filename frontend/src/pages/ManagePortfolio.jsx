@@ -2,7 +2,7 @@ import React from "react";
 import StockCard from "../components/StockCard";
 import Card from "../components/Card";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faArrowLeft, faSquareMinus, faChartSimple } from "@fortawesome/free-solid-svg-icons";
+import { faArrowLeft, faX, faChartSimple } from "@fortawesome/free-solid-svg-icons";
 import Button, { ButtonVariants } from "../components/Button";
 import { Link } from "react-router-dom";
 import ReviewBoard from "../components/ReviewBoard";
@@ -146,7 +146,7 @@ const ManagePortfolio = () => {
 						<Button className="h-1/7 w-3/4" onClick={() => handleStockListDetails()}>
 							View Details
 						</Button>
-						<button><FontAwesomeIcon icon={faSquareMinus} className="text-red-500 text-2xl ml-4" onClick={(e) => handleDeleteList(selectedList.id)}/>
+						<button><FontAwesomeIcon icon={faX} className="text-red-500 text-xl ml-4" onClick={(e) => handleDeleteList(selectedList.id)}/>
 						</button>
 						</div>
 						<div className="flex flex-row">
