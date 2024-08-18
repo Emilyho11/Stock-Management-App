@@ -36,7 +36,7 @@ const Navbar = () => {
 				<h1 className="text-xl tracking-wide">Stock Management</h1>
 			</div>
 			{isLoggedIn() && (
-				<div className="m-4 mr-32 absolute top-5 right-0 gap-14 text-base hidden md:flex">
+				<div className="m-4 mr-32 absolute top-5 right-0 gap-14 text-base hidden lg:flex">
 					{myLinks.map((link, index) => (
 						<NavLink
 							key={index}
@@ -54,7 +54,7 @@ const Navbar = () => {
 					))}
 				</div>
 			)}
-			<div className="md:hidden flex items-center absolute top-0 right-0 m-4">
+			<div className="lg:hidden flex items-center absolute top-0 right-0 m-4">
 				<button
 					onClick={() => setIsOpen(!isOpen)}
 					className="text-white hover:text-stock_color focus:outline-none"
@@ -63,7 +63,7 @@ const Navbar = () => {
 				</button>
 			</div>
 			{isOpen && (
-				<div className="md:hidden absolute top-12 w-screen bg-dark_red shadow-lg flex flex-col text-lg z-10 gap-2 p-4">
+				<div className="lg:hidden absolute top-14 right-0 w-full md:w-1/3 bg-dark_red shadow-lg flex flex-col text-lg z-10 gap-2 p-2">
 					{myLinks.map((link, index) => (
 						<NavLink
 							key={index}
