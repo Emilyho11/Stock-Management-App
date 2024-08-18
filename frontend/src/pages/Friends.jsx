@@ -101,15 +101,19 @@ const Friends = () => {
 						<h1 className="text-xl">Incoming Requests</h1>
 						<div className="h-max-screen w-full rounded-lg">
 							{incoming.map((friendship) => (
-										<Card key={friendship.username} className="m-4 bg-white scale-90">
-											<img
-												src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png"
-												alt="profile pic"
-												className="w-20 h-20 rounded-md"
-											/>
-											<h1 className="text-xl">{friendship.username}</h1>
-											<FontAwesomeIcon icon={faCircleCheck} className="text-green-500 text-2xl" onClick={(e) => handleAcceptFriend(friendship.username)}/>
-											<FontAwesomeIcon icon={faCircleXmark} className="text-red-500 text-2xl" onClick={(e) => handleRejectFriend(friendship.username)}/>
+										<Card key={friendship.username} className="m-4 bg-white scale-90 w-[340px] flex items-center justify-between">
+											<div className="flex items-center">
+												<img
+													src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png"
+													alt="profile pic"
+													className="w-20 h-20 rounded-md"
+												/>
+												<h1 className="text-xl ml-4">{friendship.username}</h1>
+											</div>
+											<div className="flex items-center">
+												<FontAwesomeIcon icon={faCircleCheck} className="text-green-500 hover:text-green-300 text-2xl mr-2" onClick={(e) => handleAcceptFriend(friendship.username)}/>
+												<FontAwesomeIcon icon={faCircleXmark} className="text-red-500 hover:text-red-300 text-2xl" onClick={(e) => handleRejectFriend(friendship.username)}/>
+											</div>
 										</Card>
 									))}
 						</div>
@@ -120,7 +124,7 @@ const Friends = () => {
 					<h1 className="text-xl">Sent Requests</h1>
 					<div className="h-max-screen w-full rounded-lg">
 						{outgoing.map((friendship) => (
-								<Card key={friendship.username} className="m-4 bg-white scale-90">
+								<Card key={friendship.username} className="m-4 bg-white scale-90 w-[340px]">
 									<img
 										src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png"
 										alt="profile pic"
@@ -138,7 +142,7 @@ const Friends = () => {
 						<h1 className="text-xl">Your Friends</h1>
 						<div className="h-max-screen w-full rounded-lg">
 							{friends.map((friendship) => (
-									<Card key={friendship.username} className="m-4 bg-white scale-90 pr-32">
+									<Card key={friendship.username} className="m-4 bg-white scale-90 w-[340px]">
 										<img
 											src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png"
 											alt="profile pic"
