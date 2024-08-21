@@ -5,6 +5,7 @@ import { Link } from "react-router-dom";
 import { useAuth } from "../components/AuthContext";
 import { useNavigate } from "react-router-dom";
 import AxiosClient from "../api/AxiosClient";
+import DeletePopup from "../components/DeletePopup";
 
 const Account = () => {
     const { getUsername, isLoggedIn } = useAuth();
@@ -13,6 +14,7 @@ const Account = () => {
     const [username, setUsername] = useState(getUsername());
     const [password, setPassword] = useState("");
     const [email, setEmail] = useState("");
+	const [showDeletePopup, setShowDeletePopup] = useState(false);
 
     useEffect(() => {
         if (!isLoggedIn()) {
@@ -31,7 +33,7 @@ const Account = () => {
             const user = {
                 username: getUsername(),
             };
-            const response = await AxiosClient.delete("account/", { data: user });
+            const response = await AxiosClient.delete("/users/", { data: user });
             if (response.data.message === "User deleted successfully") {
                 console.log("Account deleted successfully");
                 navigate("/login");
@@ -53,6 +55,19 @@ const Account = () => {
         console.log("Saved:", { username, password, email });
 		navigate(0);
     };
+
+	const handleDeleteClick = () => {
+		setShowDeletePopup(true);
+	}
+
+	const handleConfirmDelete = () => {
+		setShowDeletePopup(false);
+		deleteAccount();
+	}
+
+	const handleCancelDelete = () => {
+		setShowDeletePopup(false);
+	}
 
     return (
         <div className="mx-16 my-4">
@@ -100,8 +115,15 @@ const Account = () => {
             <Link to={"/logout"}>
                 <Button className="mt-8 hover:bg-blue-950">Logout</Button>
             </Link>
-            <Button className="bg-red-700 hover:bg-dark_red mt-4 ml-24" onClick={deleteAccount}>Delete Account</Button>
-        </div>
+            <Button className="bg-red-700 hover:bg-dark_red mt-4 ml-24" onClick={handleDeleteClick}>Delete Account</Button>
+			{showDeletePopup && (
+                <DeletePopup
+                    message="Are you sure you want to delete your account?"
+                    onConfirm={handleConfirmDelete}
+                    onCancel={handleCancelDelete}
+                />
+            )}
+		</div>
     );
 };
 
