@@ -1,28 +1,23 @@
 package stocks_api.stocks_api.routes;
-import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.util.ArrayList;
 
-import org.springframework.boot.autoconfigure.security.SecurityProperties;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.RestController;
 
-
-import com.fasterxml.jackson.databind.introspect.TypeResolutionContext;
-
-import stocks_api.stocks_api.logic.src.User;
-import stocks_api.stocks_api.logic.src.StockList;
 import stocks_api.stocks_api.logic.src.DBHandler;
 import stocks_api.stocks_api.logic.src.ParserUtil;
+import stocks_api.stocks_api.logic.src.Stocks;
+import stocks_api.stocks_api.logic.src.User;
 import stocks_api.stocks_api.utils.BasicResponse;
 
 @CrossOrigin(origins = "*", allowedHeaders = "*")
@@ -33,38 +28,44 @@ public class UserController {
 
     // Api that returns all users in the database
     @GetMapping("/")
-    @ResponseBody
-    public BasicResponse getUsers() {
+    public ArrayList<User> getAllStocks() {
         try {
-            ResultSet rs = DBHandler.getInstance().executeQuery("SELECT username, email FROM users;");
-            String result = ParserUtil.resultSetToJson(rs);
-            System.out.println("ResultSet");
-            System.out.println(result);
-            return BasicResponse.ok(result);
+            String sqlQuery = "SELECT username, email FROM users;";
+            PreparedStatement preparedStatement = DBHandler.getInstance().getConnection().prepareStatement(sqlQuery.toString());
+            ResultSet rs = preparedStatement.executeQuery();
+            ArrayList<User> users = new ArrayList<User>();
+            while (rs.next()) {
+                User user = new User();
+                user.setUsername(rs.getString("username").trim());
+                user.setEmail(rs.getString("email").trim());
+                users.add(user);
+            }
+            return users;
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return BasicResponse.ok("FAILED to get users");
+        return null;
     }
 
     // Api that returns a user with a specific username
     @GetMapping("/{username}")
-    @ResponseBody
-    public BasicResponse getUser(@PathVariable String username) {
+    public User getUser(@PathVariable String username) {
         try {
-            String sqlQuery = "SELECT username, email FROM users WHERE username = ?";
+            String sqlQuery = "SELECT username, password, email FROM users WHERE username = ?;";
             PreparedStatement preparedStatement = DBHandler.getInstance().getConnection().prepareStatement(sqlQuery);
             preparedStatement.setString(1, username);
             ResultSet rs = preparedStatement.executeQuery();
-            String result = ParserUtil.resultSetToJson(rs);
-            System.out.println("ResultSet");
-            System.out.println(result);
-            return BasicResponse.ok(result);            
-            
+            User user = new User();
+            while (rs.next()) {
+                user.setUsername(rs.getString("username").trim());
+                user.setPassword(rs.getString("password").trim());
+                user.setEmail(rs.getString("email").trim());
+            }
+            return user;
         } catch (Exception e) {
-            // output error message
-            return BasicResponse.ok("FAILED to get user with username: " + username);
+            e.printStackTrace();
         }
+        return null;
     }
 
     // Api that creates a user
@@ -97,6 +98,10 @@ public class UserController {
     @PatchMapping("/updateUsername/{oldUsername}/{newUsername}")
     @ResponseBody
     public BasicResponse updateUsername(@PathVariable String oldUsername, @PathVariable String newUsername) {
+        // Check if username already exists
+        if (User.userExists(newUsername)) {
+            return BasicResponse.ok("Username already exists");
+        }
         try {
             String sqlUpdate = "UPDATE users SET username = ? WHERE username = ?";
             PreparedStatement preparedStatement = DBHandler.getInstance().getConnection().prepareStatement(sqlUpdate);
