@@ -146,8 +146,7 @@ const ManagePortfolio = () => {
 						<Button className="h-1/7 w-3/4" onClick={() => handleStockListDetails()}>
 							View Details
 						</Button>
-						<button><FontAwesomeIcon icon={faX} className="text-red-500 text-xl ml-4" onClick={(e) => handleDeleteList(selectedList.id)}/>
-						</button>
+						<button><FontAwesomeIcon icon={faX} className="text-red-500 text-xl ml-4" onClick={(e) => handleDeleteList(selectedList.id)}/></button>
 						</div>
 						<div className="flex flex-row">
 						<CreateButton className=" bg-green-500 hover:bg-green-800" username={username} type={"add"} id={selectedList.id}/>
