@@ -95,36 +95,33 @@ const Friends = () => {
 					<SendFriendRequestButton className="" username={user} target={targetname}></SendFriendRequestButton>
 				</div>
 			</div>
-			<div className="flex flex-row space-x-reverse ml-auto mr-auto">
-				<div className="flex flex-col mt-4 ml-auto mr-auto">
-					<div className="w-1/3 min-w-fit flex flex-col h-full">
-						<h1 className="text-xl">Incoming Requests</h1>
-						<div className="h-max-screen w-full rounded-lg">
-							{incoming.map((friendship) => (
-										<Card key={friendship.username} className="m-4 bg-white scale-90 w-[345px] flex items-center justify-between">
-											<div className="flex items-center">
-												<img
-													src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png"
-													alt="profile pic"
-													className="w-20 h-20 rounded-md"
-												/>
-												<h1 className="text-xl ml-4">{friendship.username}</h1>
-											</div>
-											<div className="flex items-center">
-												<FontAwesomeIcon icon={faCircleCheck} className="text-green-500 hover:text-green-300 text-2xl mr-2" onClick={(e) => handleAcceptFriend(friendship.username)}/>
-												<FontAwesomeIcon icon={faCircleXmark} className="text-red-500 hover:text-red-300 text-2xl" onClick={(e) => handleRejectFriend(friendship.username)}/>
-											</div>
-										</Card>
-									))}
-						</div>
+			<div className="grid grid-cols-3 mt-8 place-items-center">
+				<div className="w-1/3 min-w-fit flex flex-col h-full">
+					<h1 className="text-xl">Incoming Requests</h1>
+					<div className="h-max-screen w-full rounded-lg">
+						{incoming.map((friendship) => (
+								<Card key={friendship.username} className="m-4 bg-white scale-90 w-[330px] flex items-center justify-between">
+									<div className="flex items-center">
+										<img
+											src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png"
+											alt="profile pic"
+											className="w-20 h-20 rounded-md"
+										/>
+										<h1 className="text-xl ml-4">{friendship.username}</h1>
+									</div>
+									<div className="flex items-center">
+										<FontAwesomeIcon icon={faCircleCheck} className="text-green-500 hover:text-green-300 text-2xl mr-2" onClick={(e) => handleAcceptFriend(friendship.username)}/>
+										<FontAwesomeIcon icon={faCircleXmark} className="text-red-500 hover:text-red-300 text-2xl" onClick={(e) => handleRejectFriend(friendship.username)}/>
+									</div>
+								</Card>
+							))}
 					</div>
 				</div>
-				<div className="flex flex-col gap-4 mt-4 mr-auto">
-					<div className="w-1/3 min-w-fit ">
+				<div className="w-1/3 min-w-fit flex flex-col h-full">
 					<h1 className="text-xl">Sent Requests</h1>
 					<div className="h-max-screen w-full rounded-lg">
 						{outgoing.map((friendship) => (
-								<Card key={friendship.username} className="m-4 bg-white scale-90 w-[345px]">
+								<Card key={friendship.username} className="m-4 bg-white scale-90 w-[330px]">
 									<img
 										src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png"
 										alt="profile pic"
@@ -135,25 +132,22 @@ const Friends = () => {
 								</Card>
 							))}
 					</div>
-					</div>
 				</div>
-				<div className="flex flex-col gap-4 mt-4 mr-auto">
-					<div className="w-1/3 min-w-fit flex flex-col">
-						<h1 className="text-xl">Your Friends</h1>
-						<div className="h-max-screen w-full rounded-lg">
-							{friends.map((friendship) => (
-									<Card key={friendship.username} className="m-4 bg-white scale-90 w-[345px]">
-										<img
-											src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png"
-											alt="profile pic"
-											className="w-20 h-20 rounded-md"
-										/>
-										<h1 className="text-xl">{friendship.username}</h1>
-										{friendship.status == "pending" && <p className="ml-auto">{friendship.status}...</p>}
-										<FontAwesomeIcon icon={faX} className="absolute top-4 right-4 text-red-500 hover:text-red-300 text-xl cursor-pointer" onClick={(e) => handleDeleteFriend(friendship.username)}/>
-									</Card>
-								))}
-						</div>
+				<div className="w-1/3 min-w-fit flex flex-col h-full">
+					<h1 className="text-xl">Your Friends</h1>
+					<div className="h-max-screen w-full rounded-lg">
+						{friends.map((friendship) => (
+								<Card key={friendship.username} className="m-4 bg-white scale-90 w-[330px]">
+									<img
+										src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png"
+										alt="profile pic"
+										className="w-20 h-20 rounded-md"
+									/>
+									<h1 className="text-xl">{friendship.username}</h1>
+									{friendship.status == "pending" && <p className="ml-auto">{friendship.status}...</p>}
+									<FontAwesomeIcon icon={faX} className="absolute top-4 right-4 text-red-500 hover:text-red-300 text-xl cursor-pointer" onClick={(e) => handleDeleteFriend(friendship.username)}/>
+								</Card>
+							))}
 					</div>
 				</div>
 			</div>
