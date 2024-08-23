@@ -128,9 +128,8 @@ const StocksManager = () => {
 
 	return (
 		<>
-			{/* <CreateStockListModal /> */}
-			<div className="w-2/3 ml-auto mr-auto flex flex-col md:flex-row m-4 gap-4">
-				<div className="flex min-w-[20vw] flex-col gap-2">
+			<div className="w-full items-center justify-center">
+				<div className="flex min-w-[20vw] flex-col gap-2 w-2/3 ml-auto mr-auto p-10">
 					<div className="flex">
 						<CreateButton username={username} type={"portfolio"} id={null}></CreateButton>
 						<CreateButton username={username} type={"stocklist"} id={null}></CreateButton>
