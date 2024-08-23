@@ -115,7 +115,7 @@ const ManagePortfolio = () => {
 
 	const handleStockListDetails = () => {
 		//directs them to the stock list page
-		if (selectedList){
+		if (selectedList) {
 			navigate(`/stocklist/${selectedList.id}`, { state: { stocklist: selectedList, privacy: selectedList.privacy, portfolio: portfolio, isOwner: true}});
 		}
 	}
@@ -140,22 +140,18 @@ const ManagePortfolio = () => {
 			)
 		} else if (showStocks == false && !Array.isArray(selectedList)){
 			return (
-				<div className="flex flex-row  my-4  gap-4">
-					<div className="flex min-w-[20vw] flex-col gap-2">
-						<div className="flex flex-row">
+				<div className="flex flex-row gap-4 place-items-center">
+					<div className="min-w-[20vw] flex flex-col items-center gap-4">
 						<Button className="h-1/7 w-3/4" onClick={() => handleStockListDetails()}>
 							View Details
 						</Button>
-						<button><FontAwesomeIcon icon={faX} className="text-red-500 text-xl ml-4" onClick={(e) => handleDeleteList(selectedList.id)}/></button>
+						<div className="md:flex">
+							<CreateButton className=" bg-green-500 hover:bg-green-800" username={username} type={"add"} id={selectedList.id}/>
+							<CreateButton className=" bg-red-500 hover:bg-red-800" username={username} type={"remove"} id={selectedList.id}/>
 						</div>
-						<div className="flex flex-row">
-						<CreateButton className=" bg-green-500 hover:bg-green-800" username={username} type={"add"} id={selectedList.id}/>
-						<CreateButton className=" bg-red-500 hover:bg-red-800" username={username} type={"remove"} id={selectedList.id}/>
-						</div>
-						
 					</div>
 					
-					<div className="flex w-full flex-col gap-2 overflow-y-scroll h-full w-full">
+					<div className={`flex w-full flex-col gap-2 h-52 ${listStocks.length > 0 ? 'overflow-y-scroll' : ''}`}>
 					<h1 className="text-xl text-left">Stocks</h1>
 					{listStocks.map((liststock, index) => (
 						<button key={liststock[0]} className="min-w-[20vw] px-4 py-4 rounded-lg flex gap-4 items-center hover:shadow-xl transition-all bg-gray-800 text-white border-e-2 border-gray-300">
@@ -168,8 +164,6 @@ const ManagePortfolio = () => {
 					</div>
 					
 				</div>
-				
-				
 			)
 		} else if (selectedStock.length == 0 || selectedList.length == 0) {
 			return (
@@ -265,8 +259,8 @@ const ManagePortfolio = () => {
 					)}
 				</div>
 			</Card>
-			<div className="flex flex-row  my-4  gap-4">
-				<div className="flex min-w-[20vw] flex-col gap-2 overflow-y-scroll">
+			<div className="flex flex-row my-4 gap-4">
+				<div className={`flex min-w-[20vw] flex-col gap-2 w-1/3`}>
 					<div className="flex gap-4 items-center justify-between">
 						<h1 className="text-xl text-left w-fit">Stocks and Lists</h1>
 
@@ -309,38 +303,42 @@ const ManagePortfolio = () => {
 							</li>
 						</ul>
 					</div>
-					{(showStocks == true || showStocks == null) ? (
-						stocks.map((stock, index) => (
-							<button key={stock.symbol} onMouseDown={() => setSelectedStock(stock)}>
-								<Card
-									className={ (!(selectedStock[0] == stock[0]) ? ("flex gap-4 items-center scale-95 hover:shadow-xl transition-all bg-white") : (
-										"flex gap-4 items-center hover:scale-100 hover:shadow-xl transition-all bg-blue-500 text-white"
-									))}
-								>
-									<div className="text-left">
-										<h5 className="card-title">{stock[0]}</h5>
-										<p className="card-text">Quantity: {stock[1]}</p>
-									</div>
-								</Card>
-							</button>
-						))
-					) : (
-						stocklists.map((list, index) => (
-							<button key={list.id} onMouseDown={() => setSelectedList(list)}>
-								<Card
-									className={ ((selectedList.id != list.id) ? ("flex gap-4 items-center scale-95 hover:scale-100 hover:shadow-xl transition-all bg-white") : (
-										"flex gap-4 items-center hover:scale-100 hover:shadow-xl transition-all bg-blue-500 text-white"
-									))}
-								>									<div className="text-left">
-										<h5 className="card-title">{list.name}</h5>
-										<PrivacyIcon privacy={list.privacy} />
-									</div>
-								</Card>
-							</button>
-						))
-					)}
+						<div className={`${stocks.length > 0 ? 'overflow-y-scroll' : ''} h-64`}>
+							{(showStocks == true || showStocks == null) ? (
+								stocks.map((stock, index) => (
+									<button className="w-full" key={stock.symbol} onMouseDown={() => setSelectedStock(stock)}>
+										<Card
+											className={ (!(selectedStock[0] == stock[0]) ? ("items-center scale-95 hover:shadow-xl transition-all bg-white") : (
+												"items-center hover:scale-100 hover:shadow-xl transition-all bg-blue-500 text-white"
+											))}
+										>
+											<div className="text-left">
+												<h5 className="card-title">{stock[0]}</h5>
+												<p className="card-text">Quantity: {stock[1]}</p>
+											</div>
+										</Card>
+									</button>
+								))
+							) : (
+								stocklists.map((list, index) => (
+									<button className="w-full"key={list.id} onMouseDown={() => setSelectedList(list)}>
+										<Card
+											className={ ((selectedList.id != list.id) ? ("items-center scale-95 hover:scale-100 hover:shadow-xl transition-all bg-white") : (
+												"items-center hover:scale-100 hover:shadow-xl transition-all bg-blue-500 text-white"
+											))}
+										>	<div className="text-left">
+												<div className="absolute top-2 right-2">
+													<button><FontAwesomeIcon icon={faX} className="text-red-500 hover:text-red-300 text-lg ml-4" onClick={(e) => handleDeleteList(selectedList.id)}/></button>
+												</div>
+												<h5 className="card-title">{list.name}</h5>
+												<PrivacyIcon privacy={list.privacy} />
+											</div>
+										</Card>
+									</button>
+								))
+							)}
+						</div>
 				</div>
-
 				<div className="flex-1 flex flex-col gap-2">
 					<h1 className="text-xl text-left">Details</h1>
 					<Card className="h-full bg-white">{displayDetails()}</Card>
