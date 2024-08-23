@@ -1,7 +1,8 @@
 import { useEffect, useState, useRef } from "react";
+import { useNavigate } from "react-router-dom";
 import AxiosClient from "../api/AxiosClient";
 
-const BuySellPopup = ({ toggle, id}) => {
+const BuySellPopup = ({ toggle, id }) => {
   const [visible, setVisible] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [amount, setAmount] = useState("");
@@ -9,6 +10,7 @@ const BuySellPopup = ({ toggle, id}) => {
   const [symbol, setSymbol] = useState("");
   const [isButtonDisabled, setIsButtonDisabled] = useState(true);
   const formRef = useRef(null);
+  const navigate = useNavigate();
 
   useEffect(() => {
     // Check form validity on initial render
@@ -21,7 +23,6 @@ const BuySellPopup = ({ toggle, id}) => {
       return;
     }
     setIsLoading(false);
-
   }, [isLoading]);
 
   const handleToggle = () => {
@@ -32,7 +33,7 @@ const BuySellPopup = ({ toggle, id}) => {
     setIsButtonDisabled(!formRef.current.checkValidity());
   };
 
-  //Prevents the popup from closing when clicking inside the popup
+  // Prevents the popup from closing when clicking inside the popup
   const handlePopupClick = (e) => {
     e.stopPropagation();
   };
@@ -42,24 +43,16 @@ const BuySellPopup = ({ toggle, id}) => {
     try {
       const response = await AxiosClient.get(`portfolio/check/${id}/${symbol}`);
       const ifBought = response.data;
-      if (ifBought == -1){
-        try {
-          AxiosClient.post(`portfolio/trade/${id}/${symbol}/${amount}/${type}`);
-          toggle();
-          navigate(0);
-        } catch (error) {
-          console.error(error);
-        }
+      const url = `portfolio/trade/${id}/${symbol}/${amount}/${type}`;
+      
+      if (ifBought == -1) {
+        await AxiosClient.post(url);
+      } else if (ifBought > -1) {
+        await AxiosClient.patch(url);
       }
-      else if (ifBought > -1){
-        try {
-          AxiosClient.patch(`portfolio/trade/${id}/${symbol}/${amount}/${type}`);
-          toggle();
-          navigate(0);
-        } catch (error) {
-          console.error(error);
-        }
-      }
+      
+      toggle();
+      navigate(0); // Refresh the page
     } catch (error) {
       console.error(error);
     }
