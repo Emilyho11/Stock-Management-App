@@ -100,7 +100,7 @@ const Friends = () => {
 					<h1 className="text-xl">Incoming Requests</h1>
 					<div className="h-max-screen w-full rounded-lg">
 						{incoming.map((friendship) => (
-								<Card key={friendship.username} className="m-4 bg-white scale-90 w-[330px] flex items-center justify-between">
+								<Card key={friendship.username} className="m-4 bg-white scale-90 w-[335px] flex items-center justify-between">
 									<div className="flex items-center">
 										<img
 											src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png"
@@ -121,7 +121,7 @@ const Friends = () => {
 					<h1 className="text-xl">Sent Requests</h1>
 					<div className="h-max-screen w-full rounded-lg">
 						{outgoing.map((friendship) => (
-								<Card key={friendship.username} className="m-4 bg-white scale-90 w-[330px]">
+								<Card key={friendship.username} className="m-4 bg-white scale-90 w-[335px]">
 									<img
 										src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png"
 										alt="profile pic"
@@ -137,7 +137,7 @@ const Friends = () => {
 					<h1 className="text-xl">Your Friends</h1>
 					<div className="h-max-screen w-full rounded-lg">
 						{friends.map((friendship) => (
-								<Card key={friendship.username} className="m-4 bg-white scale-90 w-[330px]">
+								<Card key={friendship.username} className="m-4 bg-white scale-90 w-[335px]">
 									<img
 										src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png"
 										alt="profile pic"
