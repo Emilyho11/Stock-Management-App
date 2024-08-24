@@ -121,9 +121,9 @@ const ManagePortfolio = () => {
 	}
 
 	const handleDeleteList = (id) => {
-		AxiosClient.delete(`stocklist/delete/${id}`)
+		AxiosClient.delete(`stocklist/delete/${id}`);
 		navigate(0);
-	}
+	}	
 
 	const displayDetails = () => {
 		if ((showStocks || showStocks == null)  && selectedStock.length > 0){
@@ -151,8 +151,10 @@ const ManagePortfolio = () => {
 						</div>
 					</div>
 					
-					<div className={`flex w-full flex-col gap-2 h-52 ${listStocks.length > 0 ? 'overflow-y-scroll' : ''}`}>
+					<div className={`flex w-full flex-col gap-2 h-60 ${listStocks.length > 0 ? 'overflow-y-scroll' : ''}`}>
 					<h1 className="text-xl text-left">Stocks</h1>
+					<p className="text-left">Number of companies: {listStocks.length}</p>
+					<p className="text-left">Number of stocks: {listStocks.reduce((acc, stock) => acc + stock[1], 0)}</p>
 					{listStocks.map((liststock, index) => (
 						<button key={liststock[0]} className="min-w-[20vw] px-4 py-4 rounded-lg flex gap-4 items-center hover:shadow-xl transition-all bg-gray-800 text-white border-e-2 border-gray-300">
 								<div className="text-left">
@@ -207,7 +209,7 @@ const ManagePortfolio = () => {
 					<p className="font-semibold uppercase tracking-wide">Home</p>
 				</Button>
 			</Link>
-			<Card className="min-h-[50vh] !bg-transparent !items-start !p-0 max-lg:flex-col">
+			<Card className="min-h-[45vh] lg:min-h-[35vh] !bg-transparent !items-start !p-0 max-lg:flex-col">
 				<div className="scale-75 ml-auto ">
 					<h1 className="text-left text-4xl">{portfolio.name}</h1>
 				</div>
@@ -223,7 +225,6 @@ const ManagePortfolio = () => {
 					</div>
 					{showMatrix && (
 						<div className="modal">
-
 							<Button onClick={handleCalculateCOV}>Calculate COV of each stock</Button>
 							{matrixData.map((item, rowIndex) => (
 								<tr key={rowIndex} >
@@ -259,7 +260,7 @@ const ManagePortfolio = () => {
 					)}
 				</div>
 			</Card>
-			<div className="flex flex-row my-4 gap-4">
+			<div className="flex flex-row gap-4">
 				<div className={`flex min-w-[20vw] flex-col gap-2 w-1/3`}>
 					<div className="flex gap-4 items-center justify-between">
 						<h1 className="text-xl text-left w-fit">Stocks and Lists</h1>
@@ -282,7 +283,7 @@ const ManagePortfolio = () => {
 								<button
 									onClick={() => setShowStocks(true)}
 									className={
-										"inline-block w-full p-2 px-4 bg-gray-400/50 border-r border-gray-200 hover:bg-gray-300 rounded-s-lg active focus:outline-none  " +
+										"inline-block w-full p-2 px-4 bg-gray-400/50 border-r border-gray-200 hover:bg-gray-300 hover:text-gray-700 rounded-s-lg active focus:outline-none  " +
 										((showStocks == true || showStocks == null) ? "!bg-dark_red/80 !text-white font-bold shadow" : "shadow-inner")
 									}
 									aria-current="page"
@@ -303,10 +304,10 @@ const ManagePortfolio = () => {
 							</li>
 						</ul>
 					</div>
-						<div className={`${stocks.length > 0 ? 'overflow-y-scroll' : ''} h-64`}>
+						<div className="overflow-y-scroll h-64">
 							{(showStocks == true || showStocks == null) ? (
 								stocks.map((stock, index) => (
-									<button className="w-full" key={stock.symbol} onMouseDown={() => setSelectedStock(stock)}>
+									<button className="w-full pt-1" key={stock.symbol} onMouseDown={() => setSelectedStock(stock)}>
 										<Card
 											className={ (!(selectedStock[0] == stock[0]) ? ("items-center scale-95 hover:shadow-xl transition-all bg-white") : (
 												"items-center hover:scale-100 hover:shadow-xl transition-all bg-blue-500 text-white"
@@ -341,7 +342,7 @@ const ManagePortfolio = () => {
 				</div>
 				<div className="flex-1 flex flex-col gap-2">
 					<h1 className="text-xl text-left">Details</h1>
-					<Card className="h-full bg-white">{displayDetails()}</Card>
+					<Card className="bg-white">{displayDetails()}</Card>
 				</div>
 			</div>
 		</div>
