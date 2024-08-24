@@ -155,11 +155,19 @@ public class StockListController {
         Portfolio.addStockListToPortfolio(portfolio_id, stocklist_id, conn);
     }
 
+    // Delete stock from stocklist
+    @DeleteMapping("/delete/{stocklist_id}/{symbol}")
+    public void deleteStock(@PathVariable int stocklist_id, @PathVariable String symbol) {
+        StockList.deleteStock(stocklist_id, symbol, conn);
+    }
+
+    // Delete stocklist from portfolio
     @DeleteMapping("/moveout/{portfolio_id}/{stocklist_id}")
     public void moveOutStockListFromPortfolio(@PathVariable int portfolio_id, @PathVariable int stocklist_id) {
         Portfolio.deleteStockListFromPortfolio(portfolio_id, stocklist_id, conn);
     }
 
+    // Delete stocklist
     @DeleteMapping("/delete/{id}")
     public void deleteStockList(@PathVariable int id) {
         StockList.deleteStockListGlobal(id, conn);
