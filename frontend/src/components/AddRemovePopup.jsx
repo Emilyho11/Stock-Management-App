@@ -110,7 +110,7 @@ const AddRemovePopup = ({ toggle, type, id}) => {
           <label htmlFor="amount">Amount: </label>
           <input
             type="number" 
-            min="0" 
+            min="1" 
             step="1"
             id="amount"
             name="amount"
