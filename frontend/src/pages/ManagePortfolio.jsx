@@ -128,7 +128,7 @@ const ManagePortfolio = () => {
 	const displayDetails = () => {
 		if ((showStocks || showStocks == null)  && selectedStock.length > 0){
 			return (
-				<Card className="h-full bg-white">
+				<Card className="h-full">
 				<div className="flex flex-col  my-4  gap-4">
 					<div className="flex min-w-[20vw] flex-col gap-2">
 					<h1 className="text-xl text-left">Information</h1>
@@ -140,7 +140,7 @@ const ManagePortfolio = () => {
 			)
 		} else if (showStocks == false && !Array.isArray(selectedList)){
 			return (
-				<div className="flex flex-row gap-4 place-items-center">
+				<div className="flex flex-row gap-4 pt-4">
 					<div className="min-w-[20vw] flex flex-col items-center gap-4">
 						<Button className="h-1/7 w-3/4" onClick={() => handleStockListDetails()}>
 							View Details
@@ -225,14 +225,14 @@ const ManagePortfolio = () => {
 					</div>
 					{showMatrix && (
 						<div className="modal">
-							<Button onClick={handleCalculateCOV}>Calculate COV of each stock</Button>
+							{/* <Button onClick={handleCalculateCOV}>Calculate COV of each stock</Button>
 							{matrixData.map((item, rowIndex) => (
 								<tr key={rowIndex} >
 									<td>{item.stock}</td>
 									<td>{item.value}</td>
 								</tr>
 							))}
-							{/* <h2>Statistics Matrix</h2>
+							<h2>Statistics Matrix</h2>
 							<div>
 								<Button onClick={handleCalculateCOV}>Calculate COV of 2 Stocks</Button>
 								<Button onClick={handleCalculateCorrelation}>Calculate Correlation</Button>
@@ -291,7 +291,7 @@ const ManagePortfolio = () => {
 									Stocks
 								</button>
 							</li>
-							<li className="w-full focus-within:z-10">
+							<li className="w-full focus-within:z-10 mr-5">
 								<button
 									onClick={() => setShowStocks(false)}
 									className={
@@ -322,7 +322,7 @@ const ManagePortfolio = () => {
 								))
 							) : (
 								stocklists.map((list, index) => (
-									<button className="w-full"key={list.id} onMouseDown={() => setSelectedList(list)}>
+									<button className="w-full pt-1"key={list.id} onMouseDown={() => setSelectedList(list)}>
 										<Card
 											className={ ((selectedList.id != list.id) ? ("items-center scale-95 hover:scale-100 hover:shadow-xl transition-all bg-white") : (
 												"items-center hover:scale-100 hover:shadow-xl transition-all bg-blue-500 text-white"
