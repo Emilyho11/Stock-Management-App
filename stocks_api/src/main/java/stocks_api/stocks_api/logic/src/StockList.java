@@ -195,13 +195,15 @@ public class StockList extends Table {
     //creates a new lists tuple
     private static void createListStock(int stocklist_id, String symbol, int total, Connection conn){
         try {
+            if (total > 0) {
                 PreparedStatement stmt;
                 stmt = conn.prepareStatement("INSERT INTO lists (stocklist_id, symbol, quantity) VALUES (?, ?, ?);");
                 stmt.setInt(1, stocklist_id);
                 stmt.setString(2, symbol);
                 stmt.setInt(3, total);
                 stmt.executeUpdate();
-            System.out.println("Created lists tuple successfully");
+                System.out.println("Created lists tuple successfully");
+            }
         } catch (SQLException ex) {
             System.out.println("Error creating lists tuple portfolio");
             ex.printStackTrace();
@@ -231,7 +233,13 @@ public class StockList extends Table {
             updateListStock(stocklist_id, symbol, totalStock+quantity, conn);
         }
         else if (type.equals("remove") && totalStock > -1){
-            updateListStock(stocklist_id, symbol, totalStock-quantity, conn);
+            int newTotal = totalStock-quantity;
+            if (newTotal <= 0) {
+                deleteStock(stocklist_id, symbol, conn);
+            }
+            else {
+                updateListStock(stocklist_id, symbol, newTotal, conn);
+            }
         }
     }
 
@@ -240,6 +248,21 @@ public class StockList extends Table {
         int totalStock = getTotalStock(stocklist_id, symbol, conn);
         if (type.equals("add") && totalStock == -1){    
             createListStock(stocklist_id, symbol, quantity, conn);
+        }
+    }
+
+    // Delete stock from the stock list
+    public static void deleteStock(int stocklist_id, String symbol, Connection conn) {
+        try {
+            PreparedStatement stmt;
+            stmt = conn.prepareStatement("DELETE FROM lists "
+                    + "WHERE (stocklist_id = ? AND symbol = ?);");
+            stmt.setInt(1, stocklist_id);
+            stmt.setString(2, symbol);
+            stmt.executeUpdate();
+            System.out.println("Deleted stock from stock list successfully");
+        } catch (SQLException ex) {
+            System.out.println("Error deleting stock: " + ex.getMessage());
         }
     }
 
@@ -261,16 +284,19 @@ public class StockList extends Table {
     public static void deleteStockListGlobal(int stocklist_id, Connection conn) {
         try {
             StockList.deleteStockList(stocklist_id, conn);
-            PreparedStatement stmt;
+            PreparedStatement stmt, stmt2, stmt3;
             stmt = conn.prepareStatement("DELETE FROM contains "
                     + "WHERE (stocklist_id = ?);");
             stmt.setInt(1, stocklist_id);
             stmt.executeUpdate();
-            PreparedStatement stmt2;
             stmt2 = conn.prepareStatement("DELETE FROM created "
                     + "WHERE (stocklist_id = ?);");
             stmt2.setInt(1, stocklist_id);
             stmt2.executeUpdate();
+            stmt3 = conn.prepareStatement("DELETE FROM lists "
+                    + "WHERE (stocklist_id = ?);");
+            stmt3.setInt(1, stocklist_id);
+            stmt3.executeUpdate();
             System.out.println("Deleted stock list globally successfully");
             } catch (SQLException ex) {
                 System.out.println("Error deleting stock list globally: " + ex.getMessage());
