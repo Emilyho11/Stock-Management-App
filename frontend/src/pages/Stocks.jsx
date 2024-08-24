@@ -219,8 +219,10 @@ const Stocks = () => {
                                                     step="0.1"
                                                     value={time}
                                                     onChange={(e) => {
-                                                        const value = e.target.value;
-                                                        if (value > 0) {
+                                                        const value = parseFloat(e.target.value);
+                                                        if (value <= 0) {
+                                                            alert("Time in years must be greater than 0");
+                                                        } else {
                                                             setTime(value);
                                                         }
                                                     }}

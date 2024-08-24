@@ -145,7 +145,7 @@ const StocksGraph = ( { symbol, startDate, endDate, viewType, time, setDateBound
     };
 
     return (
-        <div className="relative h-[80vh] w-[110%]">
+        <div className="relative h-[80vh] w-[110%] pt-4">
             {!symbol ? (
                 <h2>Click on a stock to view the graph</h2>
             ) : (
