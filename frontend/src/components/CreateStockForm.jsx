@@ -53,7 +53,7 @@ const CreateStockForm = () => {
 
     return (
         <>
-            <form className="bg-white p-6 rounded-md w-1/3 mb-4 mx-auto shadow-lg border border-gray-300 mt-20" onSubmit={handleCreateStockSubmit}>
+            <form className="bg-white p-6 rounded-md lg:w-1/3 mb-4 mx-auto shadow-lg border border-gray-300 mt-10" onSubmit={handleCreateStockSubmit}>
                 <h2 className="text-xl mb-4">Create New Stock</h2>
                 <div className="flex flex-wrap -mx-2 mb-4">
                     <div className="w-1/2 px-2 mb-4">
