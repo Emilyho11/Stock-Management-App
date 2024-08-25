@@ -125,7 +125,7 @@ const Stocks = () => {
                 </Button>
                 <input
                     type="text"
-                    placeholder="Search for a stock symbol..."
+                    placeholder="Search stock symbol..."
                     value={search}
                     onChange={(e) => setSearch(e.target.value)}
                     className="w-full p-2 mb-4 border border-gray-300 rounded"
@@ -149,7 +149,7 @@ const Stocks = () => {
             </div>
             
             <div className="w-3/4 p-4 h-fit">
-                <div className="flex space-x-2 mb-4">
+                <div className="md:flex md:space-x-2 mb-4">
                     <Button
                         onClick={() => {
                             setViewType("future");
