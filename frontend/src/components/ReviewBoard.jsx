@@ -71,15 +71,15 @@ const ReviewBoard = (props) => {
 
 	const ReviewBox = () => {
 		if (isOwner) {
-			return <p className="text-sm text-gray-300">You cannot review your own stock list.</p>;
+			return <p className="text-sm text-gray-300 py-2">You cannot review your own stock list.</p>;
 		}
 		if (alreadyReviewed) {
-			return <p className="text-sm text-gray-300">You have already reviewed this stock list.</p>;
+			return <p className="text-sm text-gray-300 py-2">You have already reviewed this stock list.</p>;
 		} else {
 			return (
-				<div className="w-full">
-					<h2 className="text-xl text-left">Write a Review</h2>
-					<p className="text-sm text-gray-400 text-left">*Reviews are moderated.</p>
+				<div className="w-full text-left">
+					<h2 className="text-xl">Write a Review</h2>
+					<p className="text-sm text-gray-400 text-left py-2">*Reviews are moderated.</p>
 					<textarea
 						className="w-full p-2 rounded-md bg-white border min-h-[15vh]"
 						placeholder="Write your review here..."
@@ -148,10 +148,12 @@ const ReviewBoard = (props) => {
 
 	return (
 		<>
-			{ReviewBox()}
-			<h2 className="text-xl">{reviews.length} REVIEWS</h2>
-			<div className="flex flex-col gap-12">
-				{displayReviews()}
+			<div className="text-left">
+				{ReviewBox()}
+				<h2 className="text-xl my-4">{reviews.length} REVIEWS</h2>
+				<div className="flex flex-col gap-8">
+					{displayReviews()}
+				</div>
 			</div>
 		</>
 	);
