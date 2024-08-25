@@ -129,7 +129,7 @@ const ManagePortfolio = () => {
 		if ((showStocks || showStocks == null)  && selectedStock.length > 0){
 			return (
 				<Card className="h-full">
-				<div className="flex flex-col  my-4  gap-4">
+				<div className="flex flex-col my-4 gap-4">
 					<div className="flex min-w-[20vw] flex-col gap-2">
 					<h1 className="text-xl text-left">Information</h1>
 					<p className="text-lg text-left">Current Market Value per Holding: ${stockPrice}</p>
@@ -209,7 +209,7 @@ const ManagePortfolio = () => {
 					<p className="font-semibold uppercase tracking-wide">Home</p>
 				</Button>
 			</Link>
-			<Card className="min-h-[45vh] lg:min-h-[35vh] !bg-transparent !items-start !p-0 max-lg:flex-col">
+			<Card className="min-h-[45vh] lg:min-h-[38vh] !bg-transparent !items-start !p-0 max-lg:flex-col">
 				<div className="scale-75 ml-auto ">
 					<h1 className="text-left text-4xl">{portfolio.name}</h1>
 				</div>

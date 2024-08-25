@@ -95,12 +95,12 @@ const Friends = () => {
 					<SendFriendRequestButton className="" username={user} target={targetname}></SendFriendRequestButton>
 				</div>
 			</div>
-			<div className="grid grid-cols-3 mt-8 place-items-center">
-				<div className="w-1/3 min-w-fit flex flex-col h-full">
+			<div className="grid sm:grid-cols-3 mt-8 place-items-center">
+				<div className="w-1/3 min-w-fit h-full">
 					<h1 className="text-xl">Incoming Requests</h1>
 					<div className="h-max-screen w-full rounded-lg">
 						{incoming.map((friendship) => (
-								<Card key={friendship.username} className="m-4 bg-white scale-90 w-[335px] flex items-center justify-between">
+								<Card key={friendship.username} className="m-4 bg-white scale-90 w-[330px] sm:w-[230px] md:w-[280px] lg:w-[350px] flex items-center justify-between">
 									<div className="flex items-center">
 										<img
 											src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png"
@@ -121,14 +121,16 @@ const Friends = () => {
 					<h1 className="text-xl">Sent Requests</h1>
 					<div className="h-max-screen w-full rounded-lg">
 						{outgoing.map((friendship) => (
-								<Card key={friendship.username} className="m-4 bg-white scale-90 w-[335px]">
+								<Card key={friendship.username} className="m-4 bg-white flex scale-90 w-[330px] sm:w-[230px] md:w-[280px] lg:w-[350px]">
 									<img
 										src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png"
 										alt="profile pic"
 										className="w-20 h-20 rounded-md"
 									/>
-									<h1 className="text-xl">{friendship.username}</h1>
-									{friendship.status == "Pending" && <p className="ml-auto">{friendship.status}...</p>}
+									<div className="text-left flex flex-col gap-2 md:flex-row md:items-center md:justify-between md:w-full">
+										<h1 className="text-xl">{friendship.username}</h1>
+										{friendship.status == "Pending" && <p>{friendship.status}...</p>}
+									</div>
 								</Card>
 							))}
 					</div>
@@ -137,7 +139,7 @@ const Friends = () => {
 					<h1 className="text-xl">Your Friends</h1>
 					<div className="h-max-screen w-full rounded-lg">
 						{friends.map((friendship) => (
-								<Card key={friendship.username} className="m-4 bg-white scale-90 w-[335px]">
+								<Card key={friendship.username} className="m-4 bg-white scale-90 flex w-[330px] sm:w-[230px] md:w-[280px] lg:w-[350px]">
 									<img
 										src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png"
 										alt="profile pic"
