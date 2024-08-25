@@ -81,7 +81,7 @@ const Friends = () => {
 			<h1 className="text-center">Friends</h1>
 			<div className="flex flex-col items-center w-full gap-4">
 				<div className="text-center">You have {friends.length} friends.</div>
-				<div className="flex items-center gap-2">
+				<div className="flex place-items-center gap-2">
 					<input
 						type="search"
 						id="targetname"
@@ -92,7 +92,7 @@ const Friends = () => {
 						value={targetname}
 						onChange={(e) => setTargetname(e.target.value)}
 					/>
-					<SendFriendRequestButton className="" username={user} target={targetname}></SendFriendRequestButton>
+					<SendFriendRequestButton className="mt-2" username={user} target={targetname}></SendFriendRequestButton>
 				</div>
 			</div>
 			<div className="grid sm:grid-cols-3 mt-8 place-items-center">
