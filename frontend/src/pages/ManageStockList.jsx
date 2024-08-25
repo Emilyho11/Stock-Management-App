@@ -119,14 +119,16 @@ const ManageStockList = () => {
 					<p className="font-semibold uppercase tracking-wide">Return</p>
 				</Button>
 			</Link>
-			<Card className="min-h-[50vh] !bg-transparent !items-start !p-0 max-lg:flex-col">
-				<div className="scale-75 flex flex-col" onClick={(e) => {
-					if (isOwner) {
-						handlePrivacyClick(stocklist);
-					}
-				}}>
-					<h1 className="text-left text-4xl">{stocklist.name}</h1>
-					<PrivacyIcon className={`pt-4 text-gray-500 ${isOwner ? "hover:text-blue-600 cursor-pointer" : ""}`} privacy={privacy}/>	
+			<Card className="flex flex-col min-h-[45vh] lg:min-h-[38vh] !bg-transparent !items-start !p-0 lg:flex-row">
+				<div>
+					<h1 className="text-left text-2xl">{stocklist.name}</h1>
+					<div className="flex text-sm mb-2" onClick={(e) => {
+						if (isOwner) {
+							handlePrivacyClick(stocklist);
+						}
+					}}>
+						<PrivacyIcon className={`pt-4 text-gray-500 ${isOwner ? "hover:text-blue-600 cursor-pointer" : ""}`} privacy={privacy}/>
+					</div>
 				</div>
 				<Card className="w-full h-full !items-start flex-col py-8 px-12 bg-white">
 					<div className="flex flex-row">

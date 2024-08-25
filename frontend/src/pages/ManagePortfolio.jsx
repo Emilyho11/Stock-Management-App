@@ -141,13 +141,13 @@ const ManagePortfolio = () => {
 		} else if (showStocks == false && !Array.isArray(selectedList)){
 			return (
 				<div className="flex flex-row gap-4 pt-4">
-					<div className="min-w-[20vw] flex flex-col items-center gap-4">
+					<div className="min-w-[20vw] flex flex-col items-center xl:gap-4">
 						<Button className="h-1/7 w-3/4" onClick={() => handleStockListDetails()}>
 							View Details
 						</Button>
-						<div className="md:flex">
-							<CreateButton className=" bg-green-500 hover:bg-green-800" username={username} type={"add"} id={selectedList.id}/>
-							<CreateButton className=" bg-red-500 hover:bg-red-800" username={username} type={"remove"} id={selectedList.id}/>
+						<div className="xl:flex">
+							<CreateButton className=" bg-green-500 hover:bg-green-800 w-[170px] xl:w-[130px] 2xl:w-[150px]" username={username} type={"add"} id={selectedList.id}/>
+							<CreateButton className=" bg-red-500 hover:bg-red-800 w-[170px] xl:w-[130px] 2xl:w-[150px]" username={username} type={"remove"} id={selectedList.id}/>
 						</div>
 					</div>
 					
@@ -209,10 +209,8 @@ const ManagePortfolio = () => {
 					<p className="font-semibold uppercase tracking-wide">Home</p>
 				</Button>
 			</Link>
-			<Card className="min-h-[45vh] lg:min-h-[38vh] !bg-transparent !items-start !p-0 max-lg:flex-col">
-				<div className="scale-75 ml-auto ">
-					<h1 className="text-left text-4xl">{portfolio.name}</h1>
-				</div>
+			<Card className="flex flex-col min-h-[45vh] lg:min-h-[38vh] !bg-transparent !items-start !p-0 lg:flex-row">
+				<h1 className="text-left text-2xl mb-2">{portfolio.name}</h1>
 				<div className="bg-white w-full h-full rounded-lg flex-col">
 					<div className="w-full h-full !items-start flex flex-row py-8 px-12  rounded-lg">
 						<CreateButton className='bg-blue-50'username={username} type={"createlistin"} id={portfolio.id}/>
@@ -260,7 +258,7 @@ const ManagePortfolio = () => {
 					)}
 				</div>
 			</Card>
-			<div className="flex flex-row gap-4">
+			<div className="flex flex-row gap-4 pt-6">
 				<div className={`flex min-w-[20vw] flex-col gap-2 w-1/3`}>
 					<div className="flex gap-4 items-center justify-between">
 						<h1 className="text-xl text-left w-fit">Stocks and Lists</h1>
