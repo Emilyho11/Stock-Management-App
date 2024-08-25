@@ -65,7 +65,7 @@ const CreateListPopup = ({ toggle, username, id}) => {
     <div
       className={`fixed inset-0 flex items-center justify-center transition-opacity duration-300 ${
         visible ? "opacity-100" : "opacity-0"
-      }`}
+      } z-50`}
       onClick={handleToggle}
     >
       {id ? (<div></div>): ( <div className="absolute inset-0 bg-black bg-opacity-40"></div>)}
