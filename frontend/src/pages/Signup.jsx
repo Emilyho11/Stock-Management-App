@@ -44,7 +44,7 @@ const Signup = () => {
 					backgroundPosition: "center",
 				}}
 			></div>
-			<Card className="relative z-10 w-full md:w-1/4 px-14 flex flex-col bg-gray-100 py-24">
+			<Card className="relative z-10 md:w-1/2 lg:w-1/3 px-14 flex flex-col bg-gray-100 py-24 md:py-16">
 				<h1>Signup</h1>
 
 				<form
