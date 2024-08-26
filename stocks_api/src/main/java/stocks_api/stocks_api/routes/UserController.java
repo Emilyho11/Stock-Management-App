@@ -15,8 +15,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import stocks_api.stocks_api.logic.src.DBHandler;
-import stocks_api.stocks_api.logic.src.ParserUtil;
-import stocks_api.stocks_api.logic.src.Stocks;
 import stocks_api.stocks_api.logic.src.User;
 import stocks_api.stocks_api.utils.BasicResponse;
 
@@ -28,7 +26,7 @@ public class UserController {
 
     // Api that returns all users in the database
     @GetMapping("/")
-    public ArrayList<User> getAllStocks() {
+    public ArrayList<User> getAllUsers() {
         try {
             String sqlQuery = "SELECT username, email FROM users;";
             PreparedStatement preparedStatement = DBHandler.getInstance().getConnection().prepareStatement(sqlQuery.toString());
