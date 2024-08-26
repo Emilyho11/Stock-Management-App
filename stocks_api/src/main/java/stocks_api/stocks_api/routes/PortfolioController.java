@@ -157,4 +157,11 @@ public class PortfolioController {
         double correlation = Stocks.calculateCorrelation(symbol1, symbol2);
         return correlation;
     }
+
+    // Calculate covariance between two stocks api
+    @GetMapping("/calculateCovBetween2/{symbol1}/{symbol2}")
+    public double calculateCovBetween2(@PathVariable String symbol1, @PathVariable String symbol2) {
+        double covariance = Stocks.calculateCOVBetweenTwoStocks(symbol1, symbol2);
+        return covariance;
+    }
 }

@@ -1,7 +1,6 @@
 package stocks_api.stocks_api.logic.src;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.HashMap;
 import java.util.Map;
@@ -206,7 +205,7 @@ public class Stocks extends Table<Stocks> {
     }
 
     // COV calculation between two symbols
-    public static void calculateCOVBetweenTwoStocks(String symbol1, String symbol2) {
+    public static double calculateCOVBetweenTwoStocks(String symbol1, String symbol2) {
         try {
             // Query to calculate the COV for each stock
             String sqlQuery = "WITH stock1_stats AS (" +
@@ -227,15 +226,15 @@ public class Stocks extends Table<Stocks> {
             preparedStatement.setString(1, symbol1);
             preparedStatement.setString(2, symbol2);
             ResultSet rs = preparedStatement.executeQuery();
-            
+            double covariance = 0;
             if (rs.next()) {
-                Double cov1 = rs.getDouble("cov1");
-                Double cov2 = rs.getDouble("cov2");
-                System.out.println("Coefficient of Variation for " + symbol1 + ": " + cov1);
-                System.out.println("Coefficient of Variation for " + symbol2 + ": " + cov2);
+                covariance = rs.getDouble("cov1") * rs.getDouble("cov2");
+                System.out.println("Covariance between " + symbol1 + " and " + symbol2 + ": " + covariance);
             }
+            return covariance;
         } catch (Exception e) {
             e.printStackTrace();
+            return -1;
         }
     }
 }

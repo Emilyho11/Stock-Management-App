@@ -32,8 +32,8 @@ const ManagePortfolio = () => {
 	const { getUsername, isLoggedIn } = useAuth();
 	const username = getUsername();
 	const navigate = useNavigate();
-	const [symbol1, setSymbol1] = React.useState("");
-	const [symbol2, setSymbol2] = React.useState("");
+	const [correlation, setCorrelation] = React.useState(0);
+	const [covariance, setCovariance] = React.useState(0);
 
 	useEffect(() => {
 		const getOwnedStocks = async () => {
@@ -151,10 +151,12 @@ const ManagePortfolio = () => {
 						</div>
 					</div>
 					
-					<div className={`flex w-full flex-col gap-2 h-60 ${listStocks.length > 0 ? 'overflow-y-scroll' : ''}`}>
-					<h1 className="text-xl text-left">Stocks</h1>
-					<p className="text-left">Number of companies: {listStocks.length}</p>
-					<p className="text-left">Number of stocks: {listStocks.reduce((acc, stock) => acc + stock[1], 0)}</p>
+					<div className={`flex w-full flex-col gap-2 h-52 ${listStocks.length > 0 ? 'overflow-y-scroll' : ''}`}>
+					<div className="-space-y-1">
+						<h1 className="text-xl text-left">Stocks</h1>
+						<p className="text-left">Number of companies: {listStocks.length}</p>
+						<p className="text-left">Number of stocks: {listStocks.reduce((acc, stock) => acc + stock[1], 0)}</p>
+					</div>
 					{listStocks.map((liststock, index) => (
 						<button key={liststock[0]} className="min-w-[20vw] px-4 py-4 rounded-lg flex gap-4 items-center hover:shadow-xl transition-all bg-gray-800 text-white border-e-2 border-gray-300">
 								<div className="text-left">
@@ -177,14 +179,11 @@ const ManagePortfolio = () => {
 
 	const handleCalculateCOV = async () => {
 		try {
-			const response = await AxiosClient.get(`portfolio/calculatePortfolioCOV/${portfolio.id}`);
-			const data = response.data;
-			console.log(data);
-            const parsedData = Object.keys(data).map((key) => ({
-                stock: key.trim(),
-                value: data[key],
-            }));
-            setMatrixData(parsedData);
+			const response = await AxiosClient.get(`portfolio/calculateCovBetween2/AAPL/O`);
+			const covariance = response.data;
+			console.log(covariance);
+			setCovariance(covariance);
+
         } catch (error) {
             console.error("Error calculating COV:", error);
         }
@@ -195,7 +194,7 @@ const ManagePortfolio = () => {
 			const response = await AxiosClient.get(`portfolio/calculateCorrelation/AAPL/O`);
 			const correlationValue = response.data; // Assuming data is a double
 			console.log(correlationValue);
-			// Use the correlationValue as needed in your application
+			setCorrelation(correlationValue);
 		} catch (error) {
 			console.error("Error calculating statistics:", error);
 		}
@@ -218,7 +217,7 @@ const ManagePortfolio = () => {
 						<CashflowButton className='bg-red-500 hover:bg-red-800' type={"stock"} id={portfolio.id}></CashflowButton>
 						<Button onClick={() => setShowMatrix(true)} className='bg-gray-800 hover:bg-black'> <FontAwesomeIcon icon={faChartSimple}/> Statistics </Button>
 					</div>
-					<div className="w-full h-full !items-start py-8 px-12 ">
+					<div className="w-full h-full !items-start py-4 px-12 ">
 						<PortfolioHistory id={portfolio.id}/>
 					</div>
 					{showMatrix && (
@@ -302,7 +301,7 @@ const ManagePortfolio = () => {
 							</li>
 						</ul>
 					</div>
-						<div className="overflow-y-scroll h-64">
+						<div className="overflow-y-scroll h-48 mb-8">
 							{(showStocks == true || showStocks == null) ? (
 								stocks.map((stock, index) => (
 									<button className="w-full pt-1" key={stock.symbol} onMouseDown={() => setSelectedStock(stock)}>
@@ -338,7 +337,7 @@ const ManagePortfolio = () => {
 							)}
 						</div>
 				</div>
-				<div className="flex-1 flex flex-col gap-2">
+				<div className="flex-1 flex flex-col gap-2 mb-8">
 					<h1 className="text-xl text-left">Details</h1>
 					<Card className="bg-white">{displayDetails()}</Card>
 				</div>
