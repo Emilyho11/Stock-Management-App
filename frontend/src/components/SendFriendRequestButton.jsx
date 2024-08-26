@@ -5,10 +5,14 @@ import Button from "../components/Button";
 import AxiosClient from "../api/AxiosClient";
 import { useNavigate } from "react-router-dom";
 
-const SendFriendRequestButton = ({className, username, target}) => {
+const SendFriendRequestButton = ({className, username, target, users}) => {
   const navigate = useNavigate();
 
   const sendFriendReq = () => {
+    if (!users.includes(target)) {
+      alert("User does not exist.");
+      return;
+    }
     try {
       AxiosClient.post(`friends/${username}/${target}`);
       navigate(0);
