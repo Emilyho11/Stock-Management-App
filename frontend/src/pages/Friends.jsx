@@ -1,7 +1,6 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import Card from "../components/Card";
 import { useAuth } from "../components/AuthContext";
-import { useEffect } from "react";
 import AxiosClient from "../api/AxiosClient";
 import SendFriendRequestButton from "../components/SendFriendRequestButton";
 import { faCircleCheck, faCircleXmark, faX } from "@fortawesome/free-solid-svg-icons";
@@ -14,8 +13,17 @@ const Friends = () => {
 	const [incoming, setIncoming] = useState([]);
 	const [outgoing, setOutgoing] = useState([]);
 	const [friends, setFriends] = useState([]);
+	const [users, setUsers] = useState([]);
+	const [showUsersList, setShowUsersList] = useState(false);
 	const [targetname, setTargetname] = useState("");
 	const navigate = useNavigate();
+	const dropdownRef = useRef(null);
+
+	const handleClickOutside = (event) => {
+		if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+		  	setShowUsersList(false); // Close the dropdown if clicking outside
+		}
+	};
 
 	useEffect(() => {
 		const getFriends = async () => {
@@ -56,11 +64,35 @@ const Friends = () => {
 			  console.error("Error fetching data:", error);
 			}
 		  };
+
+		  const getUsers = async() => {
+			try {
+				const response = await AxiosClient.get("/users/");
+				if (response.data) {
+					const usernames = response.data.map(user => user.username);
+					setUsers(usernames);
+				}
+				else {
+					console.error("Unexpected data format:", response.data);
+				}
+			}
+			catch (error) {
+				console.error("Error fetching users:", error);
+			}
+		};
 	
 		getFriends();
 		getIncoming();
 		getSent();
+		getUsers();
 	  }, [isLoggedIn]);
+
+	useEffect(() => {
+		document.addEventListener('mousedown', handleClickOutside);
+		return () => {
+		  	document.removeEventListener('mousedown', handleClickOutside);
+		};
+	}, []);
 
 	const handleAcceptFriend = (targ) => {
 		AxiosClient.post(`friends/accept/${user}/${targ}`);
@@ -76,23 +108,44 @@ const Friends = () => {
 		AxiosClient.delete(`friends/delete/${user}/${targ}`);
 		navigate(0);
 	}
+
 	return (
 		<div>
 			<h1 className="text-center">Friends</h1>
 			<div className="flex flex-col items-center w-full gap-4">
 				<div className="text-center">You have {friends.length} friends.</div>
-				<div className="flex place-items-center gap-2">
-					<input
-						type="search"
-						id="targetname"
-						name="targetname"
-						required
-						className="border-2 p-2 rounded-md border-gray-500"
-						placeholder="Search friends..."
-						value={targetname}
-						onChange={(e) => setTargetname(e.target.value)}
-					/>
-					<SendFriendRequestButton className="mt-2" username={user} target={targetname}></SendFriendRequestButton>
+				<div className="relative w-full max-w-md">
+					<div className="flex place-items-center gap-2">
+						<input
+							type="search"
+							id="targetname"
+							name="targetname"
+							required
+							className="border-2 p-2 rounded-md border-gray-500"
+							placeholder="Search friends..."
+							value={targetname}
+							onChange={(e) => setTargetname(e.target.value)}
+							onClick={() => setShowUsersList(true)}
+						/>
+						<SendFriendRequestButton
+							className="mt-2"
+							username={user}
+							target={targetname}
+							users={users}>
+							</SendFriendRequestButton>
+					</div>
+					{showUsersList && (
+						<div ref={dropdownRef} className="absolute z-50 w-2/5 p-2 bg-white rounded-lg text-sm">
+							{users.filter((username) => username.includes(targetname)).map((username) => (
+								<div key={username} className="flex p-1 hover:bg-gray-200 cursor-pointer" onClick={() => {
+									setTargetname(username);
+									setShowUsersList(false);
+								}}>
+									<p>{username}</p>
+								</div>
+							))}
+						</div>
+					)}
 				</div>
 			</div>
 			<div className="grid sm:grid-cols-3 mt-8 place-items-center">
