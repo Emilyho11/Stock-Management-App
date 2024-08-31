@@ -44,7 +44,7 @@ const Login = () => {
 					backgroundPosition: "center",
 				}}
 			></div>
-            <Card className="relative z-10 md:w-1/2 lg:w-1/3 px-14 flex flex-col bg-gray-100 py-24 md:py-16">
+            <Card className="relative z-10 w-4/5 md:w-1/2 lg:w-1/3 xl:w-1/4 px-14 flex flex-col bg-gray-100 py-24 md:py-16">
                 <h1>Login</h1>
                 <form
                     onSubmit={handleSubmit}
