@@ -50,8 +50,8 @@ const CreateButton = ({className, username, type, id}) => {
 
   return (
     <>
-      <Button className={`${className} items-center gap-2 flex w-fit`} onClick={toggleDisplay}>
-        {type == "remove" ? (<FontAwesomeIcon icon={faMinus}/>):(<FontAwesomeIcon icon={faPlus}/>)}
+      <Button className={`${className} items-center`} onClick={toggleDisplay}>
+        {type == "remove" ? (<FontAwesomeIcon icon={faMinus} style={{ marginRight: "8px" }}/>):(<FontAwesomeIcon icon={faPlus} style={{ marginRight: "8px" }}/>)}
         {type ? createType() : null}
       </Button>
       {display ? choosePopup(type) : null}

@@ -27,16 +27,16 @@ const CashflowButton = (props) => {
 
   const cashflowType = () => {
     if (props.type == "cash"){
-      return <><FontAwesomeIcon icon={faMoneyBillTransfer} /> Deposit/Withdraw</>
+      return <><FontAwesomeIcon icon={faMoneyBillTransfer} style={{ marginRight: "8px" }}/> Deposit/Withdraw</>
     } else if (props.type == "stock") {
-      return <><FontAwesomeIcon icon={faCreditCard} /> Buy/Sell Stock</>
+      return <><FontAwesomeIcon icon={faCreditCard} style={{ marginRight: "8px" }}/> Buy/Sell Stock</>
     }
     
   }
 
   return (
     <>
-      <Button className={`${props.className} items-center gap-2 flex w-fit`} onClick={toggleDisplay}>
+      <Button className={`${props.className} items-center`} onClick={toggleDisplay}>
         {props.type ? cashflowType() : null}
       </Button>
       {display ? choosePopup() : null}
