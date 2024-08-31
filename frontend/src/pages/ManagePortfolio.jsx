@@ -178,29 +178,6 @@ const ManagePortfolio = () => {
 		}
 	}
 
-	const handleCalculateCOV = async () => {
-		try {
-			const response = await AxiosClient.get(`portfolio/calculateCovBetween2/AAPL/O`);
-			const covariance = response.data;
-			console.log(covariance);
-			setCovariance(covariance);
-
-        } catch (error) {
-            console.error("Error calculating COV:", error);
-        }
-    };
-
-	const handleCalculateCorrelation = async () => {
-		try {
-			const response = await AxiosClient.get(`portfolio/calculateCorrelation/AAPL/O`);
-			const correlationValue = response.data; // Assuming data is a double
-			console.log(correlationValue);
-			setCorrelation(correlationValue);
-		} catch (error) {
-			console.error("Error calculating statistics:", error);
-		}
-	};
-
 	return (
 		<div className="md:w-2/3 ml-auto mr-auto flex flex-col gap-2">
 			<Link to="/">
