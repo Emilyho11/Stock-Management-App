@@ -30,9 +30,7 @@ public class CashHistory{
             stmt = conn.prepareStatement("SELECT balance FROM cash_history WHERE (portfolio_id = ?) ORDER BY timestamp DESC FETCH FIRST 1 ROW ONLY;");
             stmt.setInt(1, id);
             ResultSet rs = stmt.executeQuery();
-            System.out.println("Retrieved the latest balance of the portfolio");
             if (rs.next()){
-                System.out.println(rs.getDouble(1));
                 return rs.getDouble(1);
             }
             return 0;
@@ -49,7 +47,6 @@ public class CashHistory{
             stmt = conn.prepareStatement("SELECT timestamp, type, amount, balance FROM cash_history WHERE (portfolio_id = ?);");
             stmt.setInt(1, id);
             ResultSet rs = stmt.executeQuery();
-            System.out.println("Retrieved the cash transactions of the portfolio");
             return rs;
         } catch (SQLException ex) {
             System.out.println("Error getting a portfolios balance" + ex.getMessage());

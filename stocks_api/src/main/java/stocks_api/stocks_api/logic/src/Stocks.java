@@ -195,7 +195,6 @@ public class Stocks extends Table<Stocks> {
             double correlation = 0;
             if (rs.next()) {
                 correlation = rs.getDouble("correlation");
-                System.out.println("Correlation between " + symbol1 + " and " + symbol2 + ": " + correlation);
             }
             return correlation;
         } catch (Exception e) {
@@ -229,7 +228,6 @@ public class Stocks extends Table<Stocks> {
             double covariance = 0;
             if (rs.next()) {
                 covariance = rs.getDouble("cov1") * rs.getDouble("cov2");
-                System.out.println("Covariance between " + symbol1 + " and " + symbol2 + ": " + covariance);
             }
             return covariance;
         } catch (Exception e) {

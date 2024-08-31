@@ -98,7 +98,6 @@ public class Portfolio {
             stmt = conn.prepareStatement("SELECT portfolio_id, name, beta FROM portfolio WHERE (portfolio_id IN (SELECT portfolio_id FROM owns WHERE (username = ?)));");
             stmt.setString(1, username);
             ResultSet rs = stmt.executeQuery();
-            System.out.println("Retrieved this user's portfolio successfully");
             return rs;
         } catch (SQLException ex) {
             System.out.println("Error finding this user's portfolio: ");
@@ -116,7 +115,6 @@ public class Portfolio {
             stmt.setString(1, name);
             stmt.setString(2, username);
             ResultSet rs = stmt.executeQuery();
-            System.out.println("Retrieved this user's portfolio with that name successfully");
             return rs;
         } catch (SQLException ex) {
             System.out.println("Error finding this user's portfolio: ");
@@ -133,7 +131,6 @@ public class Portfolio {
     //gets all the cash transactions for a given portfolio
     public static ResultSet getPortfolioCashHistory(int portfolioId, Connection conn){
         ResultSet rs = CashHistory.getCashHistory(portfolioId, conn);
-        System.out.println("Retrieved this portfolios cash history successfully");
         return rs;
     }
 
@@ -156,7 +153,6 @@ public class Portfolio {
             stmt.setString(1, symbol);
             stmt.setInt(2, id);
             ResultSet rs = stmt.executeQuery();
-            System.out.println("Retrieved this user's portfolio with that name successfully");
             if (rs.next()){
                 return rs.getInt(1);
             }
@@ -176,7 +172,6 @@ public class Portfolio {
                     + "WHERE (portfolio_id = ?);");
             stmt.setInt(1, id);
             ResultSet rs = stmt.executeQuery();
-            System.out.println("Retrieved this user's portfolio stocks");
             return rs;
         } catch (SQLException ex) {
             System.out.println("Error finding this user's portfolio stocks: ");
@@ -196,7 +191,6 @@ public class Portfolio {
             "WHERE b.portfolio_id = ?;");
             stmt.setInt(1, id);
             ResultSet rs = stmt.executeQuery();
-            System.out.println("Retrieved this user's portfolio stocks estimate");
             if (rs.next()){
                 return rs.getDouble(1);
             }
@@ -232,7 +226,6 @@ public class Portfolio {
                 stmt.setString(2, symbol);
                 stmt.setInt(3, total);
                 stmt.executeUpdate();
-            System.out.println("Created bought stock for portfolio successfully");
         } catch (SQLException ex) {
             System.out.println("Error creating bought stock for portfolio");
             ex.printStackTrace();
@@ -248,7 +241,6 @@ public class Portfolio {
                 stmt.setInt(2, portfolioId);
                 stmt.setString(3, symbol);
                 stmt.executeUpdate();
-                System.out.println("Updated bought stock for portfolio successfully");
         } catch (SQLException ex) {
             System.out.println("Error updating stock for portfolio");
             ex.printStackTrace();
@@ -333,7 +325,6 @@ public class Portfolio {
             stmt = conn.prepareStatement("SELECT stocklist_id, name, privacy FROM stock_list WHERE (stocklist_id IN (SELECT stocklist_id FROM contains WHERE portfolio_id = ?));");
             stmt.setInt(1, portfolioId);
             ResultSet rs = stmt.executeQuery();
-            System.out.println("Retrieved stock lists in this portfolio successfully");
             return rs;
         } catch (SQLException ex) {
             System.out.println("Error getting stock lists in this portfolio" + ex.getMessage());

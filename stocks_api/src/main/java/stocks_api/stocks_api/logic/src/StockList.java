@@ -163,7 +163,6 @@ public class StockList extends Table {
             stmt.setString(1, symbol);
             stmt.setInt(2, id);
             ResultSet rs = stmt.executeQuery();
-            System.out.println("Retrieved this user's stocks in the stock list successfully");
             if (rs.next()){
                 return rs.getInt(1);
             }
@@ -183,7 +182,6 @@ public class StockList extends Table {
                     + "WHERE (stocklist_id = ?);");
             stmt.setInt(1, id);
             ResultSet rs = stmt.executeQuery();
-            System.out.println("Retrieved this user's stock list stocks");
             return rs;
         } catch (SQLException ex) {
             System.out.println("Error finding this user's stock list stocks: ");
