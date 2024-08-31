@@ -15,6 +15,7 @@ import CashflowButton from "../components/CashflowButton";
 import { useNavigate } from "react-router-dom";
 import PortfolioHistory from "../components/PortfolioHistory";
 import { useAuth } from "../components/AuthContext";
+import StatsMatrix from "../components/StatsMatrix";
 
 const ManagePortfolio = () => {
 	const [showStocks, setShowStocks] = React.useState(null);
@@ -140,7 +141,7 @@ const ManagePortfolio = () => {
 			)
 		} else if (showStocks == false && !Array.isArray(selectedList)){
 			return (
-				<div className="flex flex-row gap-4 pt-4">
+				<div className="md:flex md:flex-row gap-4 pt-4">
 					<div className="min-w-[20vw] flex flex-col items-center xl:gap-4">
 						<Button className="h-1/7 w-3/4" onClick={() => handleStockListDetails()}>
 							View Details
@@ -208,7 +209,7 @@ const ManagePortfolio = () => {
 					<p className="font-semibold uppercase tracking-wide">Home</p>
 				</Button>
 			</Link>
-			<Card className="flex flex-col min-h-[45vh] lg:min-h-[38vh] !bg-transparent !items-start !p-0 lg:flex-row">
+			<Card className="flex flex-col !bg-transparent !items-start !p-0 lg:flex-row mb-14">
 				<h1 className="text-left text-2xl mb-2">{portfolio.name}</h1>
 				<div className="bg-white w-full h-full rounded-lg flex-col">
 					<div className="w-full h-full !items-start grid  md:grid-cols-2 2xl:grid-cols-4 py-8 px-16 rounded-lg">
@@ -220,48 +221,18 @@ const ManagePortfolio = () => {
 					<div className="w-full h-full !items-start py-4 px-12 ">
 						<PortfolioHistory id={portfolio.id}/>
 					</div>
-					{showMatrix && (
-						<div className="modal">
-							{/* <Button onClick={handleCalculateCOV}>Calculate COV of each stock</Button>
-							{matrixData.map((item, rowIndex) => (
-								<tr key={rowIndex} >
-									<td>{item.stock}</td>
-									<td>{item.value}</td>
-								</tr>
-							))}
-							<h2>Statistics Matrix</h2>
-							<div>
-								<Button onClick={handleCalculateCOV}>Calculate COV of 2 Stocks</Button>
-								<Button onClick={handleCalculateCorrelation}>Calculate Correlation</Button>
-							</div>
-							<table>
-								<thead>
-									{matrixData.map((item, rowIndex) => (
-										<th key={rowIndex}>
-											<th>{item.stock}</th>
-										</th>
-									))}
-								</thead>
-								<tbody>
-									{matrixData.map((item, rowIndex) => (
-										<tr key={rowIndex}>
-											<td>{item.stock}</td>
-										</tr>
-									))}
-								</tbody>
-							</table> */}
-							<Button onClick={() => { setShowMatrix(false); setMatrixData([]); }}>
-								Close
-							</Button>
-						</div>
-					)}
 				</div>
 			</Card>
+			{showMatrix && (
+						<div>
+							<StatsMatrix companies={stocks.map(stock => stock[0])} onClose={() => { setShowMatrix(false); setMatrixData([]); }}/>
+						</div>
+					)}
 			<div className="flex flex-row gap-4 pt-6">
-				<div className={`flex min-w-[20vw] flex-col gap-2 w-1/3`}>
-					<div className="flex gap-4 items-center justify-between">
+				<div className="flex min-w-[20vw] flex-col gap-2 w-1/3">
+					<div className="lg:flex gap-4 items-center justify-between">
 						<h1 className="text-xl text-left w-fit">Stocks and Lists</h1>
-
+						{/* 
 						<div className="sm:hidden">
 							<label for="tabs" className="sr-only">
 								Portfolio Type
@@ -273,9 +244,9 @@ const ManagePortfolio = () => {
 								<option>Stocks</option>
 								<option>Lists</option>
 							</select>
-						</div>
+						</div> */}
 
-						<ul className="hidden text-sm font-medium text-center text-gray-400 rounded-lg sm:flex">
+						<ul className="text-sm font-medium text-center text-gray-400 rounded-lg flex">
 							<li className="w-full focus-within:z-10">
 								<button
 									onClick={() => setShowStocks(true)}
