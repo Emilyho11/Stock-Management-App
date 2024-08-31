@@ -20,9 +20,9 @@ const ManagePortfolio = () => {
 	const [showStocks, setShowStocks] = React.useState(null);
 	const { state } = useLocation();
   const { portfolio } = state;
-	const [stocks, setStocks] = React.useState([])
-	const [stocklists, setStockLists] = React.useState([])
-	const [listStocks, setListStocks] = React.useState([])
+	const [stocks, setStocks] = React.useState([]);
+	const [stocklists, setStockLists] = React.useState([]);
+	const [listStocks, setListStocks] = React.useState([]);
 	const [selectedStock, setSelectedStock] = React.useState([]);
 	const [selectedList, setSelectedList] = React.useState([]);
 	const [stockPrice, setStockPrice] = React.useState(0);
@@ -47,7 +47,7 @@ const ManagePortfolio = () => {
 		  } catch (error) {
 			console.error("Error fetching data:", error);
 		  }
-		};
+		}
 
 		const getPortfolioStockLists = async () => {
 			try {
@@ -60,7 +60,7 @@ const ManagePortfolio = () => {
 			} catch (error) {
 			  console.error("Error fetching data:", error);
 			}
-		  };
+		  }
 		
 		const getListStocks = async () => {
 		
@@ -107,7 +107,7 @@ const ManagePortfolio = () => {
 		}
 		
 		getStockCOV();	
-		getStockPrice()
+		getStockPrice();
 		getOwnedStocks();
 		getPortfolioStockLists();
 		getListStocks();
@@ -211,7 +211,7 @@ const ManagePortfolio = () => {
 			<Card className="flex flex-col min-h-[45vh] lg:min-h-[38vh] !bg-transparent !items-start !p-0 lg:flex-row">
 				<h1 className="text-left text-2xl mb-2">{portfolio.name}</h1>
 				<div className="bg-white w-full h-full rounded-lg flex-col">
-					<div className="w-full h-full !items-start flex flex-row py-8 px-12  rounded-lg">
+					<div className="w-full h-full !items-start grid  md:grid-cols-2 lg:grid-cols-4 py-8 px-16 rounded-lg">
 						<CreateButton className='bg-blue-50'username={username} type={"createlistin"} id={portfolio.id}/>
 						<CashflowButton className="bg-green-500 hover:bg-green-800" type={"cash"} id={portfolio.id}></CashflowButton>
 						<CashflowButton className='bg-red-500 hover:bg-red-800' type={"stock"} id={portfolio.id}></CashflowButton>
