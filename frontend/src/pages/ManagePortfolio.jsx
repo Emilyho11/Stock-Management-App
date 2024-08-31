@@ -276,8 +276,8 @@ const ManagePortfolio = () => {
 												<div className="absolute top-2 right-2">
 													<button><FontAwesomeIcon icon={faX} className="text-red-500 hover:text-red-300 text-lg ml-4" onClick={(e) => handleDeleteList(selectedList.id)}/></button>
 												</div>
-												<h5 className="card-title">{list.name}</h5>
-												<PrivacyIcon privacy={list.privacy} />
+												<p className="card-title text-xl">{list.name}</p>
+												<PrivacyIcon privacy={list.privacy} className='text-sm' />
 											</div>
 										</Card>
 									</button>

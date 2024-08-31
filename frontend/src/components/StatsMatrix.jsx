@@ -42,13 +42,13 @@ const StatsMatrix = ({ companies, onClose }) => {
       </button>
       <div className="flex mb-4 gap-6 justify-center">
         <button
-          className="bg-dark_red text-white px-4 py-2 rounded"
+          className="bg-dark_red hover:bg-red-900 text-white px-4 py-2 rounded"
           onClick={handleCalculateCorrelation}
         >
           Calculate Correlation
         </button>
         <button
-          className="bg-dark_red text-white px-4 py-2 rounded"
+          className="bg-dark_red hover:bg-red-900 text-white px-4 py-2 rounded"
           onClick={handleCalculateCOV}
         >
           Calculate Covariance
