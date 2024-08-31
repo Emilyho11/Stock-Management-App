@@ -136,12 +136,12 @@ const StocksManager = () => {
 					</div>
 					<div className="text-black">
 						<h1 className="text-base text-left w-fit tracking-wide uppercase">Portfolios</h1>
-							<div className="grid md:grid-cols-2 lg:grid-cols-3 gap-x-14 gap-y-4 w-full max-h-screen py-4">
+							<div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 p-4">
 								{portfolios
 									.map((portfolio) => (
-										<div key={portfolio.id} className="relative flex gap-4 items-center px-8 hover:!bg-white transition-all bg-white p-2 rounded-md w-72 md:w-60 lg:w-56 xl:w-72 min-h-3 hover:shadow-lg flex-col" onClick={() => handleOpenPortfolio(portfolio)}>
+										<div key={portfolio.id} className="relative flex gap-4 items-center hover:!bg-white transition-all bg-white p-4 rounded-md min-h-3 hover:shadow-lg flex-col" onClick={() => handleOpenPortfolio(portfolio)}>
 											<FontAwesomeIcon icon={faX} className="absolute top-2 right-2 text-red-500 hover:text-red-300 text-md cursor-pointer" onClick={(e) => handleDeletePortfolio(portfolio.id)}/>
-											<p className="uppercase text-sm bg-gray-100  w-fit rounded-md px-2 py-1 ml-auto mr-auto">
+											<p className="uppercase text-sm bg-gray-100 rounded-md px-2 py-1 ml-auto mr-auto">
 												Portfolio
 											</p>
 											<h1 className="text-xl font-normal">{portfolio.name}</h1>
@@ -149,11 +149,11 @@ const StocksManager = () => {
 									))}
 							</div>
 						<h1 className="text-base text-left w-fit tracking-wide uppercase">My Stock Lists</h1>
-						<div className="grid md:grid-cols-2 lg:grid-cols-3 gap-x-14 gap-y-4 w-full max-h-screen py-4">
+						<div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 p-4">
 								{stockLists
 									.map((list) => (
-										<div key={list.id} className="relative flex gap-4 items-center px-8 hover:!bg-white transition-all bg-white p-2 rounded-md w-72 md:w-60 lg:w-56 xl:w-72 min-h-3 hover:shadow-lg flex-col" onClick={() => handleOpenStockList(list, username)}>
-											<p className="uppercase text-sm bg-gray-100  w-fit rounded-md px-2 py-1 ml-auto mr-auto">
+										<div key={list.id} className="relative flex gap-4 items-center hover:!bg-white transition-all bg-white p-2 rounded-md min-h-3 hover:shadow-lg flex-col" onClick={() => handleOpenStockList(list, username)}>
+											<p className="uppercase text-sm bg-gray-100 rounded-md px-2 py-1 ml-auto mr-auto">
 												Stock List
 											</p>
 											<FontAwesomeIcon icon={faX} className="absolute top-2 right-2 text-red-500 hover:text-red-300 text-md ml-4" onClick={(e) => handleDeleteList(list.id)}/>
@@ -166,11 +166,11 @@ const StocksManager = () => {
 									))}
 							</div>
 						<h1 className="text-base text-left w-fit tracking-wide uppercase">Friends' Stock Lists</h1>
-						<div className="grid md:grid-cols-2 lg:grid-cols-3 gap-x-14 gap-y-4 w-full max-h-screen py-4">
+						<div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 p-4">
 								{friendLists
 									.map((list) => (
-										<div key={list.id} className="flex gap-4 items-center px-8 hover:!bg-white transition-all bg-white p-2 rounded-md w-72 md:w-60 lg:w-56 xl:w-72 min-h-3 hover:shadow-lg flex-col" onClick={() => handleOpenStockList(list[1], list[0])}>
-											<p className="uppercase text-sm bg-gray-100  w-fit rounded-md px-2 py-1 ml-auto mr-auto">
+										<div key={list.id} className="flex gap-4 items-center hover:!bg-white transition-all bg-white p-2 rounded-md min-h-3 hover:shadow-lg flex-col" onClick={() => handleOpenStockList(list[1], list[0])}>
+											<p className="uppercase text-sm bg-gray-100 rounded-md px-2 py-1 ml-auto mr-auto">
 												Stock List
 											</p>
 											<h1 className="text-xl font-normal">{list[1].name}</h1>
@@ -181,11 +181,11 @@ const StocksManager = () => {
 									))}
 							</div>
 							<h1 className="text-base text-left w-fit tracking-wide uppercase">Public Stock Lists</h1>
-						<div className="grid md:grid-cols-2 lg:grid-cols-3 gap-x-14 gap-y-4 w-full max-h-screen py-4">
+						<div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 p-4">
 								{publicLists
 									.map((list) => (
-										<div key={list[1].id} className="flex gap-4 items-center px-8 hover:!bg-white transition-all bg-white p-2 rounded-md w-72 md:w-60 lg:w-56 xl:w-72 min-h-3 hover:shadow-lg flex-col" onClick={() => handleOpenStockList(list[1], list[0])}>
-											<p className="uppercase text-sm bg-gray-100  w-fit rounded-md px-2 py-1 ml-auto mr-auto">
+										<div key={list[1].id} className="flex gap-4 items-center hover:!bg-white transition-all bg-white p-2 rounded-md min-h-3 hover:shadow-lg flex-col" onClick={() => handleOpenStockList(list[1], list[0])}>
+											<p className="uppercase text-sm bg-gray-100 rounded-md px-2 py-1 ml-auto mr-auto">
 												Stock List
 											</p>
 											<h1 className="text-xl font-normal">{list[1].name}</h1>
