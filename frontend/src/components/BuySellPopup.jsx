@@ -72,7 +72,7 @@ const BuySellPopup = ({ toggle, id }) => {
         onClick={handlePopupClick}
       >
         <button
-          className="absolute top-1 right-3 text-lg text-gray-300"
+          className="absolute top-1 right-3 text-lg text-red-600 hover:text-red-300"
           onClick={handleToggle}
         >
           x
