@@ -35,7 +35,7 @@ const StatsMatrix = ({ companies, onClose }) => {
   const handleCalculateCorrelation = () => fetchMatrixData('Correlation');
 
   return (
-    <div className='bg-white p-4 rounded-lg relative'>
+    <div className='bg-white shadow-md p-4 rounded-lg relative'>
       <h2 className='text-2xl pb-4'>Statistics Matrix</h2>
       <button className='absolute top-2 right-2 text-red-600 hover:text-red-300' onClick={onClose}>
         <FontAwesomeIcon icon={faX} />
