@@ -40,6 +40,10 @@ const BuySellPopup = ({ toggle, id }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    // if (!stocks.includes(symbol)) {
+    //   alert("The stock does not exist.");
+    //   return;
+    // }
     try {
       const response = await AxiosClient.get(`portfolio/check/${id}/${symbol}`);
       const ifBought = response.data;
@@ -68,11 +72,11 @@ const BuySellPopup = ({ toggle, id }) => {
       {id ? (<div></div>): ( <div className="absolute inset-0 bg-black bg-opacity-40"></div>)}
      
       <div
-        className="relative flex flex-col bg-white shadow-2xl border-b-2 border-gray-100 rounded-lg p-2 z-10"
+        className="relative flex flex-col bg-white shadow-2xl border-b-2 border-gray-100 rounded-lg p-2 mt-20"
         onClick={handlePopupClick}
       >
         <button
-          className="absolute top-1 right-3 text-lg text-red-600 hover:text-red-300"
+          className="absolute top-1 right-3 text-lg text-red-600 hover:text-red-300 cursor-pointer"
           onClick={handleToggle}
         >
           x

@@ -33,8 +33,6 @@ const ManagePortfolio = () => {
 	const { getUsername, isLoggedIn } = useAuth();
 	const username = getUsername();
 	const navigate = useNavigate();
-	const [correlation, setCorrelation] = React.useState(0);
-	const [covariance, setCovariance] = React.useState(0);
 
 	useEffect(() => {
 		const getOwnedStocks = async () => {
@@ -205,7 +203,7 @@ const ManagePortfolio = () => {
 							<StatsMatrix companies={stocks.map(stock => stock[0])} onClose={() => { setShowMatrix(false); setMatrixData([]); }}/>
 						</div>
 					)}
-			<div className="flex flex-row gap-4 pt-6">
+			<div className="flex flex-row gap-4 pt-8">
 				<div className="flex min-w-[20vw] flex-col gap-2 w-1/3">
 					<div className="lg:flex gap-4 items-center justify-between">
 						<h1 className="text-xl text-left w-fit">Stocks and Lists</h1>
@@ -285,7 +283,7 @@ const ManagePortfolio = () => {
 							)}
 						</div>
 				</div>
-				<div className="flex-1 flex flex-col gap-2 mb-8">
+				<div className="flex-1 flex flex-col gap-6 mb-8">
 					<h1 className="text-xl text-left">Details</h1>
 					<Card className="bg-white">{displayDetails()}</Card>
 				</div>
