@@ -21,7 +21,7 @@ const Stocks = () => {
     const [endDate, setEndDate] = useState(null);
     const [search, setSearch] = useState("");
     const [viewType, setViewType] = useState("present"); // New state for view type
-    const [time, setTime] = useState(0.1); // New state for time
+    const [time, setTime] = useState(1); // New state for time
     const [graphData, setGraphData] = useState({}); // State for graph data
     const [clickedSymbol, setClickedSymbol] = useState(null);
     const [clickedButton, setClickedButton] = useState(null); // New state for clicked button
@@ -220,17 +220,19 @@ const Stocks = () => {
                                                     value={time}
                                                     onChange={(e) => {
                                                         const value = parseFloat(e.target.value);
-                                                        if (value <= 0) {
-                                                            alert("Time in years must be greater than 0");
-                                                        } else {
-                                                            setTime(value);
-                                                        }
+                                                        setTime(value);
                                                     }}
                                                     className="w-full p-2 border border-gray-300 rounded"
                                                     placeholder="Enter time"
                                                 />
                                             </div>
-                                            <Button onClick={handleFutureStocksSubmit}>Submit</Button>
+                                            <Button onClick={() => {
+                                                if (time <= 0) {
+                                                    alert("Time in years must be greater than 0");
+                                                } else {
+                                                    handleFutureStocksSubmit();
+                                                }
+                                            }}>Submit</Button>
                                         </>
                                     )}
                                 </div>

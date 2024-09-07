@@ -4,20 +4,20 @@ import { Chart as ChartJS, CategoryScale, LinearScale, PointElement, LineElement
 import { useAuth } from "../components/AuthContext";
 import AxiosClient from "../api/AxiosClient";
 
-const StocksGraph = ( { symbol, startDate, endDate, viewType, time, setDateBounds } ) => {
-	ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend);
-	
-	// Get stocks data from api
+const StocksGraph = ({ symbol, startDate, endDate, viewType, time, setDateBounds }) => {
+    ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend);
+    
+    // Get stocks data from api
     const [backupStocks, setBackupStocks] = useState([]);
-	const [stocks, setStocks] = useState([]);
+    const [stocks, setStocks] = useState([]);
     const [lastSymbol, setLastSymbol] = useState("");
 
-    const fetchStocksData = async (viewTypeChanged=false) => {
+    const fetchStocksData = async (viewTypeChanged = false) => {
         try {
             let response = "";
             let data = "";
 
-            if ( (symbol !== lastSymbol && symbol !== "") || viewTypeChanged) {
+            if ((symbol !== lastSymbol && symbol !== "") || viewTypeChanged) {
                 if (viewType === "future") {
                     response = await AxiosClient.get(`stocks/future/${symbol}/${time}`);
                     if (!(response.data && Array.isArray(response.data))) {
@@ -94,8 +94,42 @@ const StocksGraph = ( { symbol, startDate, endDate, viewType, time, setDateBound
         fetchStocksData();
     }, [endDate, startDate]); 
 
+    const daysInYear = 365;
+    const daysToShow = Math.abs(time) * daysInYear;
+
+    const filteredStocks = stocks.slice(0, daysToShow);
+
+    const generateLabels = () => {
+        if (time > 100) {
+            const labels = [];
+            const yearsToShow = Math.ceil(time);
+            for (let i = 1; i <= yearsToShow; i++) {
+                labels.push(`Year ${i}`);
+            }
+            return labels;
+        } else if (time > 10) {
+            const labels = [];
+            const monthsToShow = Math.ceil(daysToShow / 30);
+            for (let i = 1; i <= monthsToShow; i++) {
+                labels.push(`Month ${i}`);
+            }
+            return labels;
+        } else if (time > 3) {
+            const labels = [];
+            const daysToShow2 = Math.ceil(daysToShow / 10);
+            for (let i = 1; i <= daysToShow2; i++) {
+                labels.push(`Day ${i * 10}`);
+            }
+            return labels;
+        } else {
+            return filteredStocks.map((_, index) => `Day ${index + 1}`);
+        }
+    };
+
     const data = {
-        labels: viewType === "future" ? stocks.map((_, index) => `Day ${index + 1}`) : stocks.map(stock => stock.timestamp),
+        labels: viewType === "future" 
+            ? generateLabels() 
+            : stocks.map(stock => new Date(stock.timestamp).toLocaleDateString()),
         datasets: [
             {
                 label: viewType === "future" ? 'Predicted Close Price' : 'Close Price',
@@ -122,26 +156,26 @@ const StocksGraph = ( { symbol, startDate, endDate, viewType, time, setDateBound
                 }
             },
         },
-		scales: {
+        scales: {
             x: {
                 title: {
                     display: true,
-                    text: 'Day',
+                    text: 'Time',
                     font: {
                         size: 18
                     }
                 }
             },
-			y: {
-				title: {
-					display: true,
-					text: 'Price',
+            y: {
+                title: {
+                    display: true,
+                    text: 'Price',
                     font: {
                         size: 18
                     }
-				}
-			}
-		}
+                }
+            }
+        }
     };
 
     return (
@@ -149,7 +183,9 @@ const StocksGraph = ( { symbol, startDate, endDate, viewType, time, setDateBound
             {!symbol ? (
                 <h2>Click on a stock to view the graph</h2>
             ) : (
-                <Line data={data} options={options} width={"100%"} height={"100%"}/>
+                <div className="h-[80vh]">
+                    <Line data={data} options={options} width={"100%"} height={"100%"}/>
+                </div>
             )}
         </div>
     );
