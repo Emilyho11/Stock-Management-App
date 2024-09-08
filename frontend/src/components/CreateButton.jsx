@@ -6,7 +6,7 @@ import { faPlus, faMinus } from "@fortawesome/free-solid-svg-icons";
 import Button from "../components/Button";
 import AddRemovePopup from "./AddRemovePopup";
 
-const CreateButton = ({className, username, type, id}) => {
+const CreateButton = ({className, username, type, id, stockList}) => {
   const [display, setDisplay] = useState(false);
 
   const toggleDisplay = () => {
@@ -30,7 +30,7 @@ const CreateButton = ({className, username, type, id}) => {
       )
     } else if (type == "add" || type == "remove") {
       return (
-        <AddRemovePopup toggle={toggleDisplay} type={type} id={id}/>
+        <AddRemovePopup toggle={toggleDisplay} type={type} id={id} stockList={stockList}/>
       )
     }
   }

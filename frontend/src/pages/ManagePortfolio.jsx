@@ -33,8 +33,23 @@ const ManagePortfolio = () => {
 	const { getUsername, isLoggedIn } = useAuth();
 	const username = getUsername();
 	const navigate = useNavigate();
+	const [allStocks, setAllStocks] = React.useState([]);
 
 	useEffect(() => {
+		const getAllStocks = async () => {
+			try {
+				const response = await AxiosClient.get("/stocks/");
+				if (response.data) {
+					const symbols = response.data.map(stock => stock.f_symbol.trim());
+            		setAllStocks(symbols);
+				} else {
+					console.error("Unexpected data format:", response.data);
+				}
+			} catch (error) {
+				console.error("Error fetching data:", error);
+			}
+		};
+
 		const getOwnedStocks = async () => {
 		  try {
 			const response = await AxiosClient.get(`portfolio/getStocks/${portfolio.id}`);
@@ -104,7 +119,7 @@ const ManagePortfolio = () => {
 				console.error("Error fetching data:", error);
 			  }
 		}
-		
+		getAllStocks();
 		getStockCOV();	
 		getStockPrice();
 		getOwnedStocks();
@@ -145,8 +160,8 @@ const ManagePortfolio = () => {
 							View Details
 						</Button>
 						<div className="xl:flex">
-							<CreateButton className=" bg-green-500 hover:bg-green-800 w-[170px] xl:w-[130px] 2xl:w-[150px]" username={username} type={"add"} id={selectedList.id}/>
-							<CreateButton className=" bg-red-500 hover:bg-red-800 w-[170px] xl:w-[130px] 2xl:w-[150px]" username={username} type={"remove"} id={selectedList.id}/>
+							<CreateButton className=" bg-green-500 hover:bg-green-800 w-[170px] xl:w-[130px] 2xl:w-[150px]" username={username} type={"add"} id={selectedList.id} stockList={allStocks}/>
+							<CreateButton className=" bg-red-500 hover:bg-red-800 w-[170px] xl:w-[130px] 2xl:w-[150px]" username={username} type={"remove"} id={selectedList.id} stockList={allStocks}/>
 						</div>
 					</div>
 					

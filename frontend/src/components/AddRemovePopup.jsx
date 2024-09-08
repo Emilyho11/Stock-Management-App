@@ -2,12 +2,13 @@ import { useEffect, useState, useRef } from "react";
 import AxiosClient from "../api/AxiosClient";
 import { useNavigate } from "react-router-dom";
 
-const AddRemovePopup = ({ toggle, type, id}) => {
+const AddRemovePopup = ({ toggle, type, id, stockList }) => {
   const [visible, setVisible] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [amount, setAmount] = useState("");
   const [symbol, setSymbol] = useState("");
   const [isButtonDisabled, setIsButtonDisabled] = useState(true);
+  const [filteredSymbols, setFilteredSymbols] = useState([]);
   const formRef = useRef(null);
   const navigate = useNavigate();
 
@@ -22,7 +23,6 @@ const AddRemovePopup = ({ toggle, type, id}) => {
       return;
     }
     setIsLoading(false);
-
   }, [isLoading]);
 
   const handleToggle = () => {
@@ -38,8 +38,28 @@ const AddRemovePopup = ({ toggle, type, id}) => {
     e.stopPropagation();
   };
 
+  const handleSymbolChange = (e) => {
+    const input = e.target.value.toUpperCase();
+    setSymbol(input);
+    if (input) {
+      const filtered = stockList.filter(stock => stock.includes(input));
+      setFilteredSymbols(filtered);
+    } else {
+      setFilteredSymbols([]);
+    }
+  };
+
+  const handleSymbolSelect = (symbol) => {
+    setSymbol(symbol);
+    setFilteredSymbols([]);
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (!stockList.includes(symbol.trim().toUpperCase())) {
+      alert("Stock does not exist");
+      return;
+    }
     try {
       const response = await AxiosClient.get(`stocklist/check/${id}/${symbol}`);
       const ifListed = response.data;
@@ -52,7 +72,7 @@ const AddRemovePopup = ({ toggle, type, id}) => {
           console.error(error);
         }
       }
-      else if (ifListed > -1){
+      else if (ifListed > -1) {
         try {
           AxiosClient.patch(`stocklist/list/${id}/${symbol}/${amount}/${type}`);
           toggle();
@@ -67,9 +87,8 @@ const AddRemovePopup = ({ toggle, type, id}) => {
   };
 
   const checkAdd = () => {
-    console.log(type === "add")
-    return (type === "add")
-  }
+    return (type === "add");
+  };
 
   return (
     <div
@@ -78,14 +97,14 @@ const AddRemovePopup = ({ toggle, type, id}) => {
       }`}
       onClick={handleToggle}
     >
-      {id ? (<div></div>): ( <div className="absolute inset-0 bg-black bg-opacity-40"></div>)}
+      {id ? (<div></div>) : ( <div className="absolute inset-0 bg-black bg-opacity-40"></div>)}
      
       <div
         className="relative flex flex-col bg-white shadow-2xl border-b-2 border-gray-100 rounded-lg p-2 z-10"
         onClick={handlePopupClick}
       >
         <button
-          className="absolute top-1 right-3 text-lg text-gray-300"
+          className="absolute top-1 right-3 text-lg text-red-600 hover:text-red-300"
           onClick={handleToggle}
         >
           x
@@ -105,8 +124,21 @@ const AddRemovePopup = ({ toggle, type, id}) => {
             required
             className="border-2 p-2 rounded-sm"
             value={symbol}
-            onChange={(e) => setSymbol(e.target.value)}
+            onChange={handleSymbolChange}
           />
+          {filteredSymbols.length > 0 && (
+            <ul className="border-2 border-gray-200 rounded-sm max-h-40 overflow-y-auto">
+            {filteredSymbols.map((stock, index) => (
+              <li
+                key={index}
+                className="p-2 cursor-pointer hover:bg-gray-200"
+                onClick={() => handleSymbolSelect(stock)}
+              >
+                {stock}
+              </li>
+            ))}
+            </ul>
+          )}
           <label htmlFor="amount">Amount: </label>
           <input
             type="number" 
@@ -132,6 +164,6 @@ const AddRemovePopup = ({ toggle, type, id}) => {
       </div>
     </div>
   );
-}
+};
 
 export default AddRemovePopup;
