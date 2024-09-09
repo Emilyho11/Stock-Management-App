@@ -2,7 +2,7 @@ import { useEffect, useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import AxiosClient from "../api/AxiosClient";
 
-const BuySellPopup = ({ toggle, id }) => {
+const BuySellPopup = ({ toggle, id, stockList }) => {
   const [visible, setVisible] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [amount, setAmount] = useState("");
@@ -40,8 +40,8 @@ const BuySellPopup = ({ toggle, id }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    // if (!stocks.includes(symbol)) {
-    //   alert("The stock does not exist.");
+    // if (!stockList.includes(symbol.trim().toUpperCase())) {
+    //   alert("Stock does not exist");
     //   return;
     // }
     try {

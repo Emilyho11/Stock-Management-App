@@ -5,7 +5,7 @@ import Button from "../components/Button";
 import DepositWithdrawPopup from "./DepositWithdrawPopup";
 import BuySellPopup from "./BuySellPopup";
 
-const CashflowButton = (props) => {
+const CashflowButton = (props, stockList) => {
   const [display, setDisplay] = useState(false);
 
   const toggleDisplay = () => {
@@ -20,7 +20,7 @@ const CashflowButton = (props) => {
     }
     else if (props.type == "stock"){
       return (
-        <BuySellPopup toggle={toggleDisplay} id={props.id}/>
+        <BuySellPopup toggle={toggleDisplay} id={props.id} stockList={stockList}/>
       )
     }
   }
