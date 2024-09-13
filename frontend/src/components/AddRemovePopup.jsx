@@ -56,7 +56,8 @@ const AddRemovePopup = ({ toggle, type, id, stockList }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!stockList.includes(symbol.trim().toUpperCase())) {
+    const trimmedSymbol = symbol.trim().toUpperCase();
+    if (!stockList.includes(trimmedSymbol)) {
       alert("Stock does not exist");
       return;
     }
