@@ -204,7 +204,7 @@ const ManagePortfolio = () => {
 				<div className="bg-white w-full h-full rounded-lg flex-col">
 					<div className="w-full h-full !items-start grid  md:grid-cols-2 2xl:grid-cols-4 py-8 px-16 rounded-lg">
 						<CreateButton className='bg-blue-50'username={username} type={"createlistin"} id={portfolio.id}/>
-						<CashflowButton className="bg-green-500 hover:bg-green-800" type={"cash"} id={portfolio.id}></CashflowButton>
+						<CashflowButton className="bg-green-500 hover:bg-green-800" type={"cash"} id={portfolio.id} stockList={allStocks}></CashflowButton>
 						<CashflowButton className='bg-red-500 hover:bg-red-800' type={"stock"} id={portfolio.id} stockList={allStocks}></CashflowButton>
 						<Button onClick={() => setShowMatrix(true)} className='bg-gray-800 hover:bg-black'> <FontAwesomeIcon icon={faChartSimple} style={{ marginRight: "8px" }}/> Statistics </Button>
 					</div>

@@ -9,6 +9,7 @@ const BuySellPopup = ({ toggle, id, stockList }) => {
   const [type, setType] = useState("");
   const [symbol, setSymbol] = useState("");
   const [isButtonDisabled, setIsButtonDisabled] = useState(true);
+  const [filteredSymbols, setFilteredSymbols] = useState([]);
   const formRef = useRef(null);
   const navigate = useNavigate();
 
@@ -38,12 +39,29 @@ const BuySellPopup = ({ toggle, id, stockList }) => {
     e.stopPropagation();
   };
 
+  const handleSymbolChange = (e) => {
+    const input = e.target.value.toUpperCase();
+    setSymbol(input);
+    if (input) {
+      const filtered = stockList.filter(stock => stock.includes(input));
+      setFilteredSymbols(filtered);
+    } else {
+      setFilteredSymbols([]);
+    }
+  };
+
+  const handleSymbolSelect = (symbol) => {
+    setSymbol(symbol);
+    setFilteredSymbols([]);
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
-    // if (!stockList.includes(symbol.trim().toUpperCase())) {
-    //   alert("Stock does not exist");
-    //   return;
-    // }
+    const trimmedSymbol = symbol.trim().toUpperCase();
+    if (!stockList.includes(trimmedSymbol)) {
+      alert("Stock does not exist");
+      return;
+    }
     try {
       const response = await AxiosClient.get(`portfolio/check/${id}/${symbol}`);
       const ifBought = response.data;
@@ -56,7 +74,7 @@ const BuySellPopup = ({ toggle, id, stockList }) => {
       }
       
       toggle();
-      navigate(0); // Refresh the page
+      // navigate(0); // Refresh the page
     } catch (error) {
       console.error(error);
     }
@@ -96,8 +114,21 @@ const BuySellPopup = ({ toggle, id, stockList }) => {
             required
             className="border-2 p-2 rounded-sm"
             value={symbol}
-            onChange={(e) => setSymbol(e.target.value)}
+            onChange={handleSymbolChange}
           />
+          {filteredSymbols.length > 0 && (
+            <ul className="border-2 border-gray-200 rounded-sm max-h-40 overflow-y-auto">
+            {filteredSymbols.map((stock, index) => (
+              <li
+                key={index}
+                className="p-2 cursor-pointer hover:bg-gray-200"
+                onClick={() => handleSymbolSelect(stock)}
+              >
+                {stock}
+              </li>
+            ))}
+            </ul>
+          )}
           <label htmlFor="amount">Amount: </label>
           <input
             type="number" 
