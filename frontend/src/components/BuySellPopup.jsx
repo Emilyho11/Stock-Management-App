@@ -10,6 +10,8 @@ const BuySellPopup = ({ toggle, id, stockList }) => {
   const [symbol, setSymbol] = useState("");
   const [isButtonDisabled, setIsButtonDisabled] = useState(true);
   const [filteredSymbols, setFilteredSymbols] = useState([]);
+  const [balance, setBalance] = useState(0);
+  const [stockPrice, setStockPrice] = useState(0);
   const formRef = useRef(null);
   const navigate = useNavigate();
 
@@ -26,8 +28,44 @@ const BuySellPopup = ({ toggle, id, stockList }) => {
     setIsLoading(false);
   }, [isLoading]);
 
+  useEffect(() => {
+    // Fetch balance and stock price when the component mounts
+    const fetchData = async () => {
+      await getBalance();
+      await getStockPrice(symbol);
+    };
+    fetchData();
+  }, [symbol]);
+
   const handleToggle = () => {
     toggle();
+  };
+
+  const getBalance = async () => {
+    try {
+      const response = await AxiosClient.get(`portfolio/getBalance/${id}`);
+      if (response.data) {
+        setBalance(response.data);
+      } else {
+        console.error("Unexpected data format:", response.data);
+      }
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
+  };
+
+  const getStockPrice = async (symbol) => {
+    try {
+      const response = await AxiosClient.get(`stocks/current/${symbol}`)
+      if (response.data) {
+        setStockPrice(response.data)
+        console.log("hmmmm PRCIE", response.data)
+      } else {
+        console.error("Unexpected data format:", response.data);
+      }
+      } catch (error) {
+      console.error("Error fetching data:", error);
+      }
   };
 
   const handleFormChange = () => {
@@ -60,6 +98,10 @@ const BuySellPopup = ({ toggle, id, stockList }) => {
     const trimmedSymbol = symbol.trim().toUpperCase();
     if (!stockList.includes(trimmedSymbol)) {
       alert("Stock does not exist");
+      return;
+    }
+    if (balance < stockPrice * amount && type == "buy") {
+      alert("Insufficient balance. Please deposit more money.");
       return;
     }
     try {
