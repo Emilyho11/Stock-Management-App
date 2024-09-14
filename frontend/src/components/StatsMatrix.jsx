@@ -6,6 +6,8 @@ import { faX } from '@fortawesome/free-solid-svg-icons';
 const StatsMatrix = ({ companies, onClose }) => {
   const [matrix, setMatrix] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [isCovButton, setIsCovButton] = useState(false);
+  const [isCorrButton, setIsCorrButton] = useState(false);
 
   const fetchMatrixData = async (type) => {
     setLoading(true);
@@ -31,8 +33,16 @@ const StatsMatrix = ({ companies, onClose }) => {
     }
   };
 
-  const handleCalculateCOV = () => fetchMatrixData('CovBetween2');
-  const handleCalculateCorrelation = () => fetchMatrixData('Correlation');
+  const handleCalculateCOV = () => {
+    fetchMatrixData('CovBetween2');
+    setIsCovButton(true);
+    setIsCorrButton(false);
+  }
+  const handleCalculateCorrelation = () => {
+    fetchMatrixData('Correlation');
+    setIsCorrButton(true);
+    setIsCovButton(false);
+  }
 
   return (
     <div className='bg-white shadow-md p-4 rounded-lg relative'>
@@ -42,13 +52,13 @@ const StatsMatrix = ({ companies, onClose }) => {
       </button>
       <div className="flex mb-4 gap-6 justify-center">
         <button
-          className="bg-dark_red hover:bg-red-900 text-white px-4 py-2 rounded"
+          className={`${isCorrButton ? "bg-red-900" : "bg-dark_red"} hover:bg-red-900 text-white px-4 py-2 rounded`}
           onClick={handleCalculateCorrelation}
         >
           Calculate Correlation
         </button>
         <button
-          className="bg-dark_red hover:bg-red-900 text-white px-4 py-2 rounded"
+          className={`${isCovButton ? "bg-red-900" : "bg-dark_red"} hover:bg-red-900 text-white px-4 py-2 rounded`}
           onClick={handleCalculateCOV}
         >
           Calculate Covariance
