@@ -74,7 +74,7 @@ const BuySellPopup = ({ toggle, id, stockList }) => {
       }
       
       toggle();
-      // navigate(0); // Refresh the page
+      navigate(0); // Refresh the page
     } catch (error) {
       console.error(error);
     }
@@ -82,7 +82,7 @@ const BuySellPopup = ({ toggle, id, stockList }) => {
 
   return (
     <div
-      className={`fixed inset-0 flex items-center justify-center transition-opacity duration-300 w-full ${
+      className={`fixed inset-0 -top-24 flex items-center justify-center transition-opacity duration-300 w-full h-[26rem] ${
         visible ? "opacity-100" : "opacity-0"
       }`}
       onClick={handleToggle}
@@ -90,7 +90,7 @@ const BuySellPopup = ({ toggle, id, stockList }) => {
       {id ? (<div></div>): ( <div className="absolute inset-0 bg-black bg-opacity-40"></div>)}
      
       <div
-        className="relative flex flex-col bg-white shadow-2xl border-b-2 border-gray-100 rounded-lg p-2 mt-20"
+        className="relative flex flex-col bg-white shadow-2xl border-b-2 border-gray-100 rounded-lg p-2 mt-20 max-h-full overflow-auto"
         onClick={handlePopupClick}
       >
         <button
@@ -163,7 +163,7 @@ const BuySellPopup = ({ toggle, id, stockList }) => {
           <button
             type="submit"
             className={`p-2 rounded-lg ${
-              isButtonDisabled ? "bg-gray-300" : "bg-blue-500 text-white"
+              isButtonDisabled ? "bg-gray-300" : "bg-blue-500 hover:bg-blue-300 text-white"
             }`}
             disabled={isButtonDisabled}
           >

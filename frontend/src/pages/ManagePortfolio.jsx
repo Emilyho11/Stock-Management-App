@@ -262,7 +262,7 @@ const ManagePortfolio = () => {
 							</li>
 						</ul>
 					</div>
-						<div className="overflow-y-scroll h-48 mb-8">
+						<div className="overflow-y-scroll h-52 lg:h-72 mb-8">
 							{(showStocks == true || showStocks == null) ? (
 								stocks.map((stock, index) => (
 									<button className="w-full pt-1" key={stock.symbol} onMouseDown={() => setSelectedStock(stock)}>
