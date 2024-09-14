@@ -235,12 +235,12 @@ public class Portfolio {
     //updates a bought tuple
     private static void updateStockBought(int portfolioId, String symbol, int newtotal, Connection conn){
         try {
-                PreparedStatement stmt;
-                stmt = conn.prepareStatement("UPDATE bought SET total = ? WHERE (portfolio_id = ? AND symbol = ?);");
-                stmt.setInt(1, newtotal);
-                stmt.setInt(2, portfolioId);
-                stmt.setString(3, symbol);
-                stmt.executeUpdate();
+            PreparedStatement stmt;
+            stmt = conn.prepareStatement("UPDATE bought SET total = ? WHERE (portfolio_id = ? AND symbol = ?);");
+            stmt.setInt(1, newtotal);
+            stmt.setInt(2, portfolioId);
+            stmt.setString(3, symbol);
+            stmt.executeUpdate();
         } catch (SQLException ex) {
             System.out.println("Error updating stock for portfolio");
             ex.printStackTrace();

@@ -29,3 +29,13 @@ Install dependencies:
 
 Run the App:
 `npm run dev`
+
+## Here are some images of the project
+Google Stock Graph:
+![Google Stock graph](frontend/src/assets/images/stocksGoogleGraph.png)
+
+Portfolio Page:
+![Portfolio page](frontend/src/assets/images/portfolioPage.png)
+
+Covariance and Correlation Calculation:
+![Cov and corr calculation](frontend/src/assets/images/covarianceCalc.png)

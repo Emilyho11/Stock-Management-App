@@ -59,7 +59,6 @@ const BuySellPopup = ({ toggle, id, stockList }) => {
       const response = await AxiosClient.get(`stocks/current/${symbol}`)
       if (response.data) {
         setStockPrice(response.data)
-        console.log("hmmmm PRCIE", response.data)
       } else {
         console.error("Unexpected data format:", response.data);
       }
