@@ -30,7 +30,8 @@ Install dependencies:
 Run the App:
 `npm run dev`
 
-## Here are some images of the project
+
+# Here are some images of the project
 Google Stock Graph:
 ![Google Stock graph](frontend/src/assets/images/stocksGoogleGraph.png)
 
