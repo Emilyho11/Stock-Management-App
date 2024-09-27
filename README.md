@@ -7,6 +7,15 @@ Elevate your stock trading experience with this innovative app that lets you exp
 - React.js and Tailwind.css in the frontend
 - GCP (Google Cloud Platform) to host the app in a VM
 
+## Starting the App in the GCP VM
+- Start the VM
+- Open SSH and type the following to start postgres in the VM:
+    - `cd /data/postgres`
+    - `sudo su postgres`
+    - `bash`
+    - `source ~/.bash_profile`
+    - `pg_ctl start`
+
 ## Running the App in the Backend
 Go to the directory:
 `cd stocks_api`
