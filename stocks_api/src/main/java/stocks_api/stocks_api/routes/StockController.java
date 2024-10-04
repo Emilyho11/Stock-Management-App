@@ -40,7 +40,7 @@ public class StockController {
     @GetMapping("/")
     public ArrayList<Stocks> getAllStocks() {
         try {
-            String sqlQuery = "SELECT symbol, cov FROM stocks;";
+            String sqlQuery = "SELECT symbol, cov FROM stocks ORDER BY symbol ASC;";
             PreparedStatement preparedStatement = DBHandler.getInstance().getConnection().prepareStatement(sqlQuery.toString());
             ResultSet rs = preparedStatement.executeQuery();
             ArrayList<Stocks> stocks = new ArrayList<Stocks>();
