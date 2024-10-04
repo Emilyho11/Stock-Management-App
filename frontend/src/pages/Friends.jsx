@@ -132,7 +132,7 @@ const Friends = () => {
 							username={user}
 							target={targetname}
 							users={users}>
-							</SendFriendRequestButton>
+						</SendFriendRequestButton>
 					</div>
 					{showUsersList && (
 						<div ref={dropdownRef} className="absolute z-50 w-2/5 p-2 bg-white rounded-lg text-sm">
