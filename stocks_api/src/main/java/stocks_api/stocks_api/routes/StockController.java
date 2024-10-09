@@ -314,56 +314,6 @@ public class StockController {
         }
     }
 
-    // Calculate the future value of a stock
-    // Use the formula for compound interest: FV = PV * (1 + r)^t
-    // Where:
-    // FV = Future Value
-    // PV = Present Value
-    // r = rate of interest
-    // t = time in years
-    // For example, if the present value of a stock is $1000, the rate of interest is 10% and the time is 5 years,
-    // the future value of the stock would be:
-    // FV = 1000 * (1 + 0.1)^5 = 1000 * 1.61 = 1610
-//     @GetMapping("/future/{symbol}/{time}")
-//     @ResponseBody
-//     public ArrayList<Double> getFutureValue(@PathVariable String symbol,
-//                                             @PathVariable double time) {
-//         ArrayList<Double> futureValues = new ArrayList<>();
-//         StringBuilder sqlQuery = new StringBuilder("SELECT close FROM stock_data WHERE symbol = ?");
-//         // StringBuilder sqlQuery = new StringBuilder("SELECT close, low, high, open FROM stock_data WHERE symbol = ? LIMIT ?");
-//         String sqlQueryCOV = "SELECT cov FROM stocks WHERE symbol = ?";
-
-//         try (PreparedStatement preparedStatement = DBHandler.getInstance().getConnection().prepareStatement(sqlQuery.toString());
-//             PreparedStatement preparedStatementCOV = DBHandler.getInstance().getConnection().prepareStatement(sqlQueryCOV)) {
-
-//             preparedStatement.setString(1, symbol);
-//             // preparedStatement.setInt(2, (int) time);
-//             preparedStatementCOV.setString(1, symbol);
-
-//             try (ResultSet rs = preparedStatement.executeQuery();
-//                 ResultSet rsCOV = preparedStatementCOV.executeQuery()) {
-
-//                 if (rsCOV.next()) {
-//                     double cov = rsCOV.getDouble("cov");
-
-//                     while (rs.next()) {
-//                         double averagePrice = rs.getDouble("close");
-//                         double futureValue = averagePrice * Math.pow(1 + cov, time);
-//                         futureValues.add(futureValue);
-//                     }
-//                 }
-//             }
-//         } catch (Exception e) {
-//             e.printStackTrace();
-//             // Return an empty list instead of null to avoid potential NullPointerException
-//             return new ArrayList<>();
-//         }
-
-//         return futureValues;
-//     }
-// }
-
-
     @GetMapping("/future/{symbol}/{time}")
     @ResponseBody
     public ArrayList<Double> getFutureValue(@PathVariable String symbol,

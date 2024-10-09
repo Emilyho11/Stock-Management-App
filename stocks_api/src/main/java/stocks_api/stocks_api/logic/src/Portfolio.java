@@ -164,7 +164,7 @@ public class Portfolio {
         }
     }
 
-    // Gets the all the stocks in a portfolio
+    // Gets all the stocks in a portfolio
     public static ResultSet getStocks(int id, Connection conn) {
         try {
             PreparedStatement stmt;
@@ -217,37 +217,48 @@ public class Portfolio {
         return realbal+realval;
     }
 
-    //creates a new bought tuple
+    // Creates a new bought tuple
     private static void createStockBought(int portfolioId, String symbol, int total, Connection conn){
         try {
+            if (total > 0) {
                 PreparedStatement stmt;
                 stmt = conn.prepareStatement("INSERT INTO bought (portfolio_id, symbol, total) VALUES (?, ?, ?);");
                 stmt.setInt(1, portfolioId);
                 stmt.setString(2, symbol);
                 stmt.setInt(3, total);
                 stmt.executeUpdate();
+            }
         } catch (SQLException ex) {
             System.out.println("Error creating bought stock for portfolio");
             ex.printStackTrace();
         }
     }
 
-    //updates a bought tuple
+    // Updates a bought tuple. If new total is 0 or less, delete instead
     private static void updateStockBought(int portfolioId, String symbol, int newtotal, Connection conn){
         try {
-            PreparedStatement stmt;
-            stmt = conn.prepareStatement("UPDATE bought SET total = ? WHERE (portfolio_id = ? AND symbol = ?);");
-            stmt.setInt(1, newtotal);
-            stmt.setInt(2, portfolioId);
-            stmt.setString(3, symbol);
-            stmt.executeUpdate();
+            if (newtotal > 0) {
+                PreparedStatement stmt;
+                stmt = conn.prepareStatement("UPDATE bought SET total = ? WHERE (portfolio_id = ? AND symbol = ?);");
+                stmt.setInt(1, newtotal);
+                stmt.setInt(2, portfolioId);
+                stmt.setString(3, symbol);
+                stmt.executeUpdate();
+            }
+            else {
+                PreparedStatement stmt;
+                stmt = conn.prepareStatement("DELETE FROM bought WHERE (portfolio_id = ? AND symbol = ?);");
+                stmt.setInt(1, portfolioId);
+                stmt.setString(2, symbol);
+                stmt.executeUpdate();
+            }
         } catch (SQLException ex) {
             System.out.println("Error updating stock for portfolio");
             ex.printStackTrace();
         }
     }
 
-    //creates a buy stock transaction, and also updates the cash history, and the bought table
+    // Creates a buy stock transaction, and also updates the cash history, and the bought table
     public static void tradeStocksUpdate(int portfolioId, String symbol, String type, int quantity, Connection conn){
         double stockprice = Stocks.getCurrentStockPrice(symbol);
         double totalCost = stockprice*quantity;
