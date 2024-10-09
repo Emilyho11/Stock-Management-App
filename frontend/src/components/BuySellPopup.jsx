@@ -12,6 +12,7 @@ const BuySellPopup = ({ toggle, id, stockList }) => {
   const [filteredSymbols, setFilteredSymbols] = useState([]);
   const [balance, setBalance] = useState(0);
   const [stockPrice, setStockPrice] = useState(0);
+  const [boughtStocks, setBoughtStocks] = useState([]);
   const formRef = useRef(null);
   const navigate = useNavigate();
 
@@ -67,6 +68,20 @@ const BuySellPopup = ({ toggle, id, stockList }) => {
       }
   };
 
+  // Get list of bought stocks
+  const getBoughtStocks = async () => {
+    try {
+      const response = await AxiosClient.get(`portfolio//getStocks/${id}`);
+      if (response.data) {
+        setBoughtStocks(response.data);
+      } else {
+        console.error("Unexpected data format:", response.data);
+      }
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
+  };
+
   const handleFormChange = () => {
     setIsButtonDisabled(!formRef.current.checkValidity());
   };
@@ -97,6 +112,14 @@ const BuySellPopup = ({ toggle, id, stockList }) => {
     const trimmedSymbol = symbol.trim().toUpperCase();
     if (!stockList.includes(trimmedSymbol)) {
       alert("Stock does not exist");
+      return;
+    }
+    if (type == "sell" && !boughtStocks.includes(trimmedSymbol)) {
+      alert("You do not own this stock");
+      return;
+    }
+    if (amount <= 0) {
+      alert("Amount must be greater than 0");
       return;
     }
     if (balance < stockPrice * amount && type == "buy") {
