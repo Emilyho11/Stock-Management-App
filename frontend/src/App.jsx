@@ -22,7 +22,7 @@ function App() {
 			<AuthProvider>
 				<div className="min-h-screen flex flex-col">
 					<Navbar />
-					<div className="flex-1 bg-gray-100 relative pt-4">
+					<div className="flex-1 bg-blue-50 relative">
 						<Routes>
 							<Route path="/stocks" element={<Stocks />} />
 							<Route path="/portfolio/:id" element={<ManagePortfolio />} />

@@ -43,7 +43,7 @@ const Navbar = () => {
 							to={link.to}
 							className={({ isActive }) =>
 								[
-									"text-gray-600 hover:text-stock_color transition-all pb-2 ",
+									"text-stock_color hover:text-dark_red transition-all pb-2 ",
 									!isActive ? "active" : "!text-dark_red scale-110 border-b-2 border-dark_red",
 								].join(" ")
 							}
@@ -71,8 +71,8 @@ const Navbar = () => {
 							onClick={() => setIsOpen(false)}
 							className={({ isActive }) =>
 								[
-									"text-gray-400 hover:text-stock_color transition-all text-right mr-8",
-									!isActive ? "active" : "!text-white scale-110",
+									"text-white hover:text-stock_color transition-all text-right mr-8",
+									!isActive ? "active" : "!text-stock_color scale-110",
 								].join(" ")
 							}
 						>

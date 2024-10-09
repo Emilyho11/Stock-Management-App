@@ -148,7 +148,7 @@ const Stocks = () => {
                 
             </div>
             
-            <div className="w-3/4 p-4 h-fit">
+            <div className="w-3/4 p-4 h-fit pt-12">
                 <div className="md:flex md:space-x-2 mb-4">
                     <Button
                         onClick={() => {
