@@ -169,7 +169,7 @@ public class Portfolio {
         try {
             PreparedStatement stmt;
             stmt = conn.prepareStatement("SELECT symbol, total FROM bought "
-                    + "WHERE (portfolio_id = ?);");
+                    + "WHERE (portfolio_id = ?) ORDER BY symbol ASC;");
             stmt.setInt(1, id);
             ResultSet rs = stmt.executeQuery();
             return rs;

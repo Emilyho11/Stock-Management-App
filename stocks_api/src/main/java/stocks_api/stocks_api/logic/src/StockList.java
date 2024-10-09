@@ -61,7 +61,7 @@ public class StockList extends Table {
         this.privacy = privacy;
     }
 
-    //creates a new stock list id
+    // Creates a new stock list id
     private static int getNewId(Connection conn){
         try {
             PreparedStatement stmt;
@@ -79,7 +79,7 @@ public class StockList extends Table {
         }
     }
 
-    //adds a new stock list to the database
+    // Adds a new stock list to the database
     public static int createStockList(String owner, String name, String privacy, Connection conn){
         //int newid = StockList.getNewId(conn);
         //if(newid > -1){
@@ -104,7 +104,7 @@ public class StockList extends Table {
         // }
     }
 
-    //changes the privacy of a given stock list
+    // Changes the privacy of a given stock list
     public static void changePrivacy(int id, String privacy, Connection conn) {
         try {
             PreparedStatement stmt;
@@ -120,7 +120,7 @@ public class StockList extends Table {
         }
     }
 
-    //changes the name of a stock list
+    // Changes the name of a stock list
     public static void renameStockList(int stocklist_id, String newname, Connection conn) {
         try {
             PreparedStatement stmt;
@@ -174,12 +174,12 @@ public class StockList extends Table {
         }
     }
 
-    // Gets the all the stocks in a list
+    // Gets all the stocks in a list
     public static ResultSet getStocks(int id, Connection conn) {
         try {
             PreparedStatement stmt;
             stmt = conn.prepareStatement("SELECT symbol, quantity FROM lists "
-                    + "WHERE (stocklist_id = ?);");
+                    + "WHERE (stocklist_id = ?) ORDER BY symbol ASC;");
             stmt.setInt(1, id);
             ResultSet rs = stmt.executeQuery();
             return rs;
@@ -190,7 +190,7 @@ public class StockList extends Table {
         }
     }
 
-    //creates a new lists tuple
+    // Creates a new lists tuple
     private static void createListStock(int stocklist_id, String symbol, int total, Connection conn){
         try {
             if (total > 0) {
