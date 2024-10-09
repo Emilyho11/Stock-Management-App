@@ -30,11 +30,27 @@ const BuySellPopup = ({ toggle, id, stockList }) => {
   }, [isLoading]);
 
   useEffect(() => {
+     // Get list of bought stocks
+    const getBoughtStocks = async () => {
+      try {
+        const response = await AxiosClient.get(`portfolio/getStocks/${id}`);
+        if (response.data) {
+          const symbols = response.data.map(stock => stock[0].trim());
+          setBoughtStocks(symbols);
+        } else {
+          console.error("Unexpected data format:", response.data);
+        }
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    };
+
     // Fetch balance and stock price when the component mounts
     const fetchData = async () => {
       await getBalance();
       await getStockPrice(symbol);
     };
+    getBoughtStocks();
     fetchData();
   }, [symbol]);
 
@@ -66,20 +82,6 @@ const BuySellPopup = ({ toggle, id, stockList }) => {
       } catch (error) {
       console.error("Error fetching data:", error);
       }
-  };
-
-  // Get list of bought stocks
-  const getBoughtStocks = async () => {
-    try {
-      const response = await AxiosClient.get(`portfolio//getStocks/${id}`);
-      if (response.data) {
-        setBoughtStocks(response.data);
-      } else {
-        console.error("Unexpected data format:", response.data);
-      }
-    } catch (error) {
-      console.error("Error fetching data:", error);
-    }
   };
 
   const handleFormChange = () => {

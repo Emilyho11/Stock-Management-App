@@ -22,10 +22,25 @@ const ManageStockList = () => {
 	const [stockPrice, setStockPrice] = React.useState(0);
 	const [stockCov, setStockCov] = React.useState(0);
 	const { getUsername, isLoggedIn } = useAuth();
+	const [allStocks, setAllStocks] = React.useState([]);
 	const username = getUsername();
 	const navigate = useNavigate();
 
 	useEffect(() => {
+		const getAllStocks = async () => {
+			try {
+				const response = await AxiosClient.get("/stocks/");
+				if (response.data) {
+					const symbols = response.data.map(stock => stock.f_symbol.trim());
+            		setAllStocks(symbols);
+				} else {
+					console.error("Unexpected data format:", response.data);
+				}
+			} catch (error) {
+				console.error("Error fetching data:", error);
+			}
+		};
+
 		const getListedStocks = async () => {
 		  try {
 			const response = await AxiosClient.get(`stocklist/getStocks/${stocklist.id}`);
@@ -64,6 +79,7 @@ const ManageStockList = () => {
 				console.error("Error fetching data:", error);
 			  }
 		}
+		getAllStocks();
 		getStockCOV();
 		getListedStocks();
 		getStockPrice();
@@ -133,25 +149,24 @@ const ManageStockList = () => {
 				<Card className="w-full h-full !items-start flex-col py-8 px-12 bg-white">
 					<div className="flex flex-row">
 						{isOwner ? (<>
-						<CreateButton className=" bg-green-500 hover:bg-green-800" username={username} type={"add"} id={stocklist.id}/>
-						<CreateButton className=" bg-red-500 hover:bg-red-800" username={username} type={"remove"} id={stocklist.id}/></>) : (null)}
+						<CreateButton className=" bg-green-500 hover:bg-green-800" username={username} type={"add"} id={stocklist.id} stockList={allStocks}/>
+						<CreateButton className=" bg-red-500 hover:bg-red-800" username={username} type={"remove"} id={stocklist.id} stockList={allStocks}/>
+						</>) : (<></>)}
 					</div>			
 					<ReviewBoard stockListId={stocklist.id} privacy={privacy} isOwner={isOwner} />
 				</Card>
 			</Card>
-			{/* <hr className="mb-2" /> */}
-			<div className="flex flex-row  my-4  gap-4">
-				<div className="flex min-w-[20vw] flex-col gap-2">
-					<div className="flex gap-4 items-center justify-between">
-						
-						<h1 className="text-xl text-left w-fit">Stocks</h1>
-					</div>
+			<div className="flex gap-4 items-center justify-between">
+				<h1 className="text-xl text-left">Stocks</h1>
+			</div>
+			<div className="flex my-4 gap-4">
+				<div className="flex min-w-[20vw] flex-col gap-2 overflow-y-scroll h-52 lg:h-72">
 					{
 						stocks.map((stock, index) => (
 							<button key={stock.symbol} onMouseDown={() => setSelectedStock(stock)}>
 								<Card
-									className={ (!(selectedStock[0] == stock[0]) ? ("flex gap-4 items-center hover:scale-105 hover:shadow-xl transition-all bg-white") : (
-										"flex gap-4 items-center hover:scale-105 hover:shadow-xl transition-all bg-blue-500 text-white"
+									className={ (!(selectedStock[0] == stock[0]) ? ("flex gap-4 items-center hover:scale-100 hover:shadow-xl transition-all bg-white") : (
+										"flex gap-4 items-center hover:scale-100 hover:shadow-xl transition-all bg-blue-500 text-white"
 									))}
 								>
 									<div className="text-left">
@@ -166,7 +181,6 @@ const ManageStockList = () => {
 
 				<div className="flex-1 flex flex-col gap-2">
 					<h1 className="text-xl text-left">Details</h1>
-					{/* <div className="h-full bg-white">{displayDetails()}</div> */}
 					<Card className="h-full bg-white">{displayDetails()}</Card>
 				</div>
 			</div>

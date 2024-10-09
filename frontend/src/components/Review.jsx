@@ -35,7 +35,7 @@ const Review = (props) => {
 	return (
 		<div className="grid grid-cols-3 grid-rows-1 gap-12 w-full text-left">
 			<h4 className="text-base font-semibold">
-				<FontAwesomeIcon icon={faX} className="mr-2 text-red-700 scale-75 hover:scale-100 cursor-pointer"
+				<FontAwesomeIcon icon={faX} className="mr-2 text-red-700 scale-75 hover:text-red-400 cursor-pointer"
 				onClick={deleteReview} />
 				{data.username}</h4>
 			<p className="col-span-2">
