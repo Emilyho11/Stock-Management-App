@@ -43,8 +43,8 @@ const Navbar = () => {
 							to={link.to}
 							className={({ isActive }) =>
 								[
-									"text-stock_color hover:text-dark_red transition-all pb-2 ",
-									!isActive ? "active" : "!text-dark_red scale-110 border-b-2 border-dark_red",
+									"text-dark_red hover:text-stock_color transition-all pb-2 ",
+									!isActive ? "active" : "!text-stock_color scale-110 border-b-2 border-stock_color",
 								].join(" ")
 							}
 						>
@@ -57,13 +57,13 @@ const Navbar = () => {
 			<div className="lg:hidden flex items-center absolute top-0 right-0 m-4">
 				<button
 					onClick={() => setIsOpen(!isOpen)}
-					className="text-white hover:text-stock_color focus:outline-none"
+					className="text-dark_red hover:text-stock_color focus:outline-none"
 				>
 					<FontAwesomeIcon icon={faBars} className="text-2xl text-black hover:text-stock_color" />
 				</button>
 			</div>
 			{isOpen && (
-				<div className="lg:hidden absolute top-14 right-0 w-full md:w-1/3 bg-dark_red shadow-lg flex flex-col text-lg z-10 gap-2 p-2">
+				<div className="lg:hidden absolute top-14 right-0 w-1/2 md:w-1/3 bg-gray-200 shadow-lg flex flex-col text-lg z-10 gap-2 p-2">
 					{myLinks.map((link, index) => (
 						<NavLink
 							key={index}
@@ -71,7 +71,7 @@ const Navbar = () => {
 							onClick={() => setIsOpen(false)}
 							className={({ isActive }) =>
 								[
-									"text-white hover:text-stock_color transition-all text-right mr-8",
+									"text-dark_red hover:text-stock_color transition-all text-right mr-8",
 									!isActive ? "active" : "!text-stock_color scale-110",
 								].join(" ")
 							}
